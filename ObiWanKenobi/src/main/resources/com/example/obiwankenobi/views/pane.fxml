@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane layoutY="116.0" prefHeight="506.0" prefWidth="1000.0" style="-fx-background-color: B3FFB3;">
+         <children>
+            <Label alignment="CENTER" layoutX="93.0" layoutY="82.0" prefHeight="74.0" prefWidth="260.0" text="Obi" textAlignment="CENTER" textFill="FORESTGREEN">
+               <font>
+                  <Font name="System Bold" size="40.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="197.0" layoutY="179.0" prefHeight="74.0" prefWidth="260.0" text="Wan" textAlignment="CENTER" textFill="FORESTGREEN">
+               <font>
+                  <Font name="System Bold" size="40.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="93.0" layoutY="278.0" prefHeight="74.0" prefWidth="260.0" text="Kenobi" textAlignment="CENTER" textFill="FORESTGREEN">
+               <font>
+                  <Font name="System Bold" size="40.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="239.0" fitWidth="268.0" layoutX="610.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/logo.jpg" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <VBox id="vbox" layoutX="533.0" layoutY="39.0" prefHeight="660.0" prefWidth="390.0" />
+   </children>
+</AnchorPane>

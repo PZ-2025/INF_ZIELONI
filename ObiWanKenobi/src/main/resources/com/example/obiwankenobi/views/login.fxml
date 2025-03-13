@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="vbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="390.0" style="-fx-background-color: #0C3105;" styleClass="loginPane" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.MainController">
+<VBox fx:id="vbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="390.0" styleClass="panel" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.MainController">
    <children>
       <Label alignment="CENTER" prefHeight="35.0" prefWidth="120.0" text="E-mail" textFill="WHITE">
          <font>
@@ -41,7 +41,7 @@
             <Font size="18.0" />
          </font>
       </TextField>
-      <Button id="loginButton" mnemonicParsing="false" onAction="#openStart" prefHeight="80.0" prefWidth="150.0" style="-fx-background-color: FFC849;" text="ZALOGUJ">
+      <Button id="loginButton" mnemonicParsing="false" onAction="#login" prefHeight="80.0" prefWidth="150.0" style="-fx-background-color: FFC849;" text="ZALOGUJ">
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="500.0" style="-fx-background-color: #02ff20;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox layoutX="14.0" prefHeight="100.0" prefWidth="500.0" style="-fx-background-color: #afff00;" AnchorPane.leftAnchor="0.0">
+         <children>
+            <Label alignment="CENTER" prefWidth="400.0" text="Dodaj nowe zadanie" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="50.0" right="35.0" top="20.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+      <HBox layoutX="30.0" layoutY="130.0" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="130.0">
+         <children>
+            <Label prefHeight="40.0" prefWidth="150.0" text="Nazwa zadania:" underline="true">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <TextField prefHeight="40.0" prefWidth="180.0" promptText="tytuł" style="-fx-background-color: white;">
+               <HBox.margin>
+                  <Insets left="70.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+         </children>
+      </HBox>
+      <HBox layoutX="30.0" layoutY="200.0" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="200.0">
+         <children>
+            <Label prefHeight="40.0" prefWidth="150.0" text="Opis" underline="true">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <HBox.margin>
+                  <Insets top="30.0" />
+               </HBox.margin>
+            </Label>
+            <TextArea prefHeight="130.0" prefWidth="180.0" promptText="podaj krótki opis zadania" style="-fx-background-color: white;">
+               <HBox.margin>
+                  <Insets left="70.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextArea>
+         </children>
+      </HBox>
+      <HBox layoutX="30.0" layoutY="370.0" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="370.0">
+         <children>
+            <Label prefHeight="40.0" prefWidth="150.0" text="Pracownik" underline="true">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <ChoiceBox prefHeight="40.0" prefWidth="180.0" style="-fx-background-color: white;">
+               <HBox.margin>
+                  <Insets left="70.0" />
+               </HBox.margin>
+            </ChoiceBox>
+         </children>
+      </HBox>
+      <HBox layoutX="30.0" layoutY="440.0" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="440.0">
+         <children>
+            <Label prefHeight="40.0" prefWidth="150.0" text="Data wykonania:" underline="true">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <DatePicker prefHeight="40.0" prefWidth="180.0" promptText="koncowy termin" style="-fx-background-color: white;">
+               <HBox.margin>
+                  <Insets left="70.0" />
+               </HBox.margin>
+            </DatePicker>
+         </children>
+      </HBox>
+      <Button fx:id="addTask" layoutX="94.0" layoutY="513.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: yellow;" text="Dodaj" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="520.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="clearTask" layoutX="333.0" layoutY="513.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: red;" text="Wyczyść" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="520.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

@@ -2,10 +2,14 @@
     -fx-background-color: transparent;
 }
 
-.loginPane{
-    -fx-background-color: #0C3105;
+.pane{
+   -fx-background-color: #B3FFB3;
 }
 
-.startPane{
+.white{
+    -fx-background-color: transparent;
+}
+
+.panel{
     -fx-background-color: #0C3105;
 }

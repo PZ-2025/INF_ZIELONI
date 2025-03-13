@@ -9,33 +9,41 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class MainController implements Initializable{
 
     @FXML
     private VBox vbox;
+
     private Parent fxml;
+
+    @FXML
+    private Button backButton;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        TranslateTransition t = new TranslateTransition(Duration.seconds(0.8), vbox);
-        t.setToX(450);
-        t.play();
-        t.setOnFinished((e) ->{
-            try{
+        if (vbox.getChildren().isEmpty()) {
+            vbox.setTranslateX(450);
+
+            try {
                 fxml = FXMLLoader.load(getClass().getResource("/com/example/obiwankenobi/views/start.fxml"));
-                vbox.getChildren().clear();
                 vbox.getChildren().setAll(fxml);
-            }catch(IOException ex){
-
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-        });
-
+        }
     }
+
+
     @FXML
-    private void openStart(ActionEvent event){
+    private void goBack(ActionEvent event) {
+        System.out.println("xdxdadad");
         TranslateTransition t = new TranslateTransition(Duration.seconds(1), vbox);
         t.setToX(450);
         t.play();
@@ -49,22 +57,39 @@ public class MainController implements Initializable{
             }
         });
     }
+
+
+    @FXML
+    private void login(ActionEvent event) {
+        try {
+            Stage currentStage = (Stage) vbox.getScene().getWindow();
+            currentStage.close();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/mainView.fxml"));
+            Parent root = loader.load();
+
+            Stage newStage = new Stage();
+            newStage.setScene(new Scene(root));
+            newStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @FXML
     private void openLogin(ActionEvent event){
-        System.out.println("Przycisk został naciśnięty");
         TranslateTransition t = new TranslateTransition(Duration.seconds(1), vbox);
-        t.setToX(0);
+        t.setToX(-450);
         t.play();
         t.setOnFinished((e) ->{
             try{
-                System.out.println("Ładowanie login.fxml...");
                 fxml = FXMLLoader.load(getClass().getResource("/com/example/obiwankenobi/views/login.fxml"));
                 vbox.getChildren().clear();
                 vbox.getChildren().setAll(fxml);
-            }catch(IOException ex){
-                System.out.println("Błąd ładowania FXML: " + ex.getMessage());
+            }catch(IOException _){
+
             }
         });
     }
-
 }

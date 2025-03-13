@@ -1,0 +1,11 @@
+.parent{
+    -fx-background-color: transparent;
+}
+
+.loginPane{
+    -fx-background-color: #0C3105;
+}
+
+.startPane{
+    -fx-background-color: #0C3105;
+}

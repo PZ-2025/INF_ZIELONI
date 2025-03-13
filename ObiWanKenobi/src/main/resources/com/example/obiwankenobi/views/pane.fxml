@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" styleClass="parent" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.MainController">
    <children>
-      <AnchorPane layoutY="116.0" prefHeight="506.0" prefWidth="1000.0" style="-fx-background-color: B3FFB3;">
+      <AnchorPane layoutY="96.0" prefHeight="506.0" prefWidth="1000.0" style="-fx-background-color: B3FFB3;">
          <children>
             <Label alignment="CENTER" layoutX="93.0" layoutY="82.0" prefHeight="74.0" prefWidth="260.0" text="Obi" textAlignment="CENTER" textFill="FORESTGREEN">
                <font>
@@ -33,6 +33,6 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <VBox id="vbox" layoutX="533.0" layoutY="39.0" prefHeight="660.0" prefWidth="390.0" />
+      <VBox id="vbox" fx:id="vbox" layoutX="36.0" layoutY="49.0" prefHeight="600.0" prefWidth="390.0" style="-fx-background-color: #fff;" />
    </children>
 </AnchorPane>

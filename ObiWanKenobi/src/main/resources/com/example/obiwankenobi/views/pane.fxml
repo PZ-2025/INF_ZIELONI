@@ -12,17 +12,17 @@
    <children>
       <AnchorPane layoutY="96.0" prefHeight="506.0" prefWidth="1000.0" styleClass="pane">
          <children>
-            <Label alignment="CENTER" layoutX="93.0" layoutY="82.0" prefHeight="74.0" prefWidth="260.0" text="Obi" textAlignment="CENTER" textFill="FORESTGREEN">
+            <Label alignment="CENTER" layoutX="93.0" layoutY="82.0" prefHeight="74.0" prefWidth="260.0" styleClass="textBigPane" text="Obi" textAlignment="CENTER" textFill="FORESTGREEN">
                <font>
                   <Font name="System Bold" size="40.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" layoutX="197.0" layoutY="179.0" prefHeight="74.0" prefWidth="260.0" text="Wan" textAlignment="CENTER" textFill="FORESTGREEN">
+            <Label alignment="CENTER" layoutX="197.0" layoutY="179.0" prefHeight="74.0" prefWidth="260.0" styleClass="textBigPane" text="Wan" textAlignment="CENTER" textFill="FORESTGREEN">
                <font>
                   <Font name="System Bold" size="40.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" layoutX="93.0" layoutY="278.0" prefHeight="74.0" prefWidth="260.0" text="Kenobi" textAlignment="CENTER" textFill="FORESTGREEN">
+            <Label alignment="CENTER" layoutX="93.0" layoutY="278.0" prefHeight="74.0" prefWidth="260.0" styleClass="textBigPane" text="Kenobi" textAlignment="CENTER" textFill="FORESTGREEN">
                <font>
                   <Font name="System Bold" size="40.0" />
                </font>
@@ -32,7 +32,7 @@
                   <Image url="@../img/logo.jpg" />
                </image>
             </ImageView>
-            <Button fx:id="backButton" onAction="#goBack" layoutX="681.0" layoutY="322.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="100.0" style="-fx-background-color: #0C3105;" text="Powrót" textFill="WHITE">
+            <Button fx:id="backButton" layoutX="681.0" layoutY="322.0" mnemonicParsing="false" onAction="#goBack" prefHeight="60.0" prefWidth="100.0" style="-fx-background-color: #0C3105;" styleClass="button" text="powrót" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="21.0" />
                </font>

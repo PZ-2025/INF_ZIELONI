@@ -12,4 +12,50 @@
 
 .panel{
     -fx-background-color: #0C3105;
+    -fx-font-family: 'Alata';
+}
+
+@font-face {
+    font-family: 'Alata';
+    src: url('../fonts/Alata-Regular.ttf');
+}
+
+.textBig {
+    -fx-font-family: 'Alata';
+    -fx-font-size: 36px;
+    -fx-text-fill: white;
+}
+
+.textSmall {
+    -fx-font-family: 'Alata';
+    -fx-font-size: 21px;
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-font-family: 'Alata';
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.input{
+    -fx-font-family: 'Alata';
+    -fx-text-fill: white;
+    -fx-font-size: 19px;
+}
+
+.textBigPane{
+    -fx-font-family: 'Alata';
+    -fx-font-size: 40px;
+    -fx-text-fill: #0C3105;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+.forgotPass{
+    -fx-font-family: 'Alata';
+    -fx-font-size: 21px;
+    -fx-text-fill: #B3FFB3;
+    -fx-underline: true;
 }

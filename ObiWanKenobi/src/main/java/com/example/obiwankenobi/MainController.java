@@ -14,6 +14,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 
 public class MainController implements Initializable{
 
@@ -91,5 +93,21 @@ public class MainController implements Initializable{
 
             }
         });
+    }
+
+    @FXML
+    private void forgotPass(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/addTask.fxml")); // ZAMIENIC NA OKIENKO Z PRZYPOMNIENIEM HASŁA JAK KTOS ZROBI
+            Parent root = loader.load();
+
+            Stage newStage = new Stage();
+            newStage.setScene(new Scene(root));
+            newStage.initModality(Modality.APPLICATION_MODAL);
+            newStage.setTitle("przypomnij hasło");
+            newStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

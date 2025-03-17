@@ -12,7 +12,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
@@ -98,16 +100,20 @@ public class MainController implements Initializable{
     @FXML
     private void forgotPass(MouseEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/addTask.fxml")); // ZAMIENIC NA OKIENKO Z PRZYPOMNIENIEM HASŁA JAK KTOS ZROBI
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/forgotPass.fxml"));
             Parent root = loader.load();
 
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
             Stage newStage = new Stage();
-            newStage.setScene(new Scene(root));
+            newStage.setScene(scene);
+            newStage.initStyle(StageStyle.TRANSPARENT);
             newStage.initModality(Modality.APPLICATION_MODAL);
-            newStage.setTitle("przypomnij hasło");
+            newStage.setTitle("Przypomnij hasło");
             newStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

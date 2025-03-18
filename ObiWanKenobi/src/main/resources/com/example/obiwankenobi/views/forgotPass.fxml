@@ -2,63 +2,36 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="415.0" prefWidth="800.0" styleClass="parent" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.ForgotPassController">
-
-    <children>
-
-        <AnchorPane prefHeight="468.0" prefWidth="800.0" styleClass="pane">
-            <children>
-
-                <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="325.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@../img/logo.jpg" />
-                    </image>
-                </ImageView>
-
-                <!-- Nagłówek -->
-                <Label alignment="CENTER" layoutX="190.0" layoutY="178.0" prefHeight="58.0" prefWidth="449.0" styleClass="textBigPane" text="Przypomnienie Hasła" textFill="FORESTGREEN">
+<AnchorPane prefHeight="420.0" prefWidth="450.0" style="-fx-border-color: #B3FFB3;" styleClass="panel" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.ForgotPassController">
+                <Label alignment="CENTER" layoutX="65.0" layoutY="181.0" prefHeight="58.0" prefWidth="300.0" styleClass="textBig" text="Przypomnij hasło:" textFill="FORESTGREEN" AnchorPane.leftAnchor="75.0">
                     <font>
                         <Font name="System Bold" size="26.0" />
                     </font>
                 </Label>
 
-                <!-- E-mail -->
-                <Label layoutX="180.0" layoutY="250.0" text="Podaj e-mail:" textFill="BLACK">
+                <Label layoutX="53.0" layoutY="255.0" prefHeight="35.0" prefWidth="150.0" styleClass="textSmall" text="Podaj e-mail:" textFill="BLACK" AnchorPane.leftAnchor="53.0" AnchorPane.topAnchor="255.0">
                     <font>
                         <Font size="16.0" />
                     </font>
                 </Label>
-                <TextField fx:id="emailField" layoutX="306.0" layoutY="250.0" prefWidth="300.0" />
+                <TextField fx:id="emailField" layoutX="101.0" layoutY="234.0" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #228B22; -fx-border-color: B3FFB3;" styleClass="input" AnchorPane.rightAnchor="75.0" AnchorPane.topAnchor="250.0" />
 
 
-                <Label layoutX="183.0" layoutY="298.0" text="Nowe hasło:" textFill="BLACK">
-                    <font>
-                        <Font size="16.0" />
-                    </font>
-                </Label>
-                <PasswordField fx:id="newPasswordField" layoutX="306.0" layoutY="298.0" prefWidth="300.0" />
-
-
-                <Button fx:id="sendButton" layoutX="259.0" layoutY="350.0" mnemonicParsing="false" onAction="#handlePasswordReset" style="-fx-background-color: #0C3105;" styleClass="button" text="Zmień hasło" textFill="WHITE">
+                <Button fx:id="closeButton" layoutX="169.0" layoutY="324.0" mnemonicParsing="false" onAction="#handleClose" prefHeight="60.0" prefWidth="110.0" style="-fx-background-color: FFC849;" styleClass="button" stylesheets="@../style/style.css" text="powrót" textFill="BLACK" AnchorPane.leftAnchor="171.0" AnchorPane.rightAnchor="170.0" AnchorPane.topAnchor="323.0">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </Button>
+   <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="132.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0">
+      <image>
+         <Image url="@../img/logo.jpg" />
+      </image>
+   </ImageView>
 
-
-                <Button fx:id="closeButton" layoutX="440.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleClose" style="-fx-background-color: #A0A0A0;" styleClass="button" text="Powrót" textFill="BLACK">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Button>
-            </children>
-        </AnchorPane>
-    </children>
 </AnchorPane>

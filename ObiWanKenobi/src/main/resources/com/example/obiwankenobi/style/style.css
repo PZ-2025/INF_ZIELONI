@@ -32,6 +32,12 @@
     -fx-text-fill: white;
 }
 
+.textSmallDark {
+    -fx-font-family: 'Alata';
+    -fx-font-size: 19px;
+    -fx-text-fill: #0C3105;
+}
+
 .button {
     -fx-font-family: 'Alata';
     -fx-font-size: 20px;

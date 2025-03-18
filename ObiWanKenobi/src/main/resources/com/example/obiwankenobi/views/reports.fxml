@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="400.0" style="-fx-background-color: #B3FFB3;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="500.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #B3FFB3;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox prefHeight="100.0" prefWidth="400.0" style="-fx-background-color: #0C3105;">
          <children>
-            <Label alignment="CENTER" prefWidth="350.0" text="Generowanie raportów" textFill="WHITE">
+            <Label alignment="CENTER" prefHeight="53.0" prefWidth="450.0" styleClass="textBig" text="Generowanie raportów" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
@@ -26,51 +26,87 @@
             <Insets top="20.0" />
          </VBox.margin>
          <children>
-            <VBox spacing="10">
-               <Label text="Raport wszystkich zadań">
+            <VBox prefWidth="320.0" spacing="10">
+               <Label prefHeight="30.0" prefWidth="320.0" styleClass="textSmallDark" text="Raport wszystkich zadań">
                   <font>
                      <Font size="18.0" />
-                  </font></Label>
-               <Label text="Raport zakończonych zadań">
+                  </font>
+                  <padding>
+                     <Insets top="10.0" />
+                  </padding></Label>
+               <Label prefHeight="30.0" prefWidth="320.0" styleClass="textSmallDark" text="Raport zakończonych zadań">
                   <font>
                      <Font size="18.0" />
-                  </font></Label>
-               <Label prefHeight="27.0" prefWidth="282.0" text="Raport zadań w trakcie wykonania">
+                  </font>
+                  <VBox.margin>
+                     <Insets top="25.0" />
+                  </VBox.margin></Label>
+               <Label prefHeight="30.0" prefWidth="320.0" styleClass="textSmallDark" text="Raport zadań w trakcie wykonania">
                   <font>
                      <Font size="18.0" />
-                  </font></Label>
-               <Label text="Raport zatrudnionych pracowników">
+                  </font>
+                  <VBox.margin>
+                     <Insets top="25.0" />
+                  </VBox.margin></Label>
+               <Label prefHeight="30.0" prefWidth="320.0" styleClass="textSmallDark" text="Raport zatrudnionych pracowników">
                   <font>
                      <Font size="18.0" />
-                  </font></Label>
+                  </font>
+                  <VBox.margin>
+                     <Insets top="25.0" />
+                  </VBox.margin></Label>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
             </VBox>
-            <VBox spacing="10">
-               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #FFC849;" text="Pobierz">
+            <VBox prefWidth="110.0" spacing="10">
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #FFC849;" text="pobierz">
                   <font>
                      <Font name="System Bold" size="12.0" />
-                  </font></Button>
-               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #FFC849;" text="Pobierz">
+                  </font>
+                  <VBox.margin>
+                     <Insets left="5.0" right="5.0" />
+                  </VBox.margin></Button>
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #FFC849;" text="pobierz">
                   <font>
                      <Font name="System Bold" size="12.0" />
-                  </font></Button>
-               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #FFC849;" text="Pobierz">
+                  </font>
+                  <VBox.margin>
+                     <Insets left="5.0" right="5.0" top="10.0" />
+                  </VBox.margin></Button>
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #FFC849;" text="pobierz">
                   <font>
                      <Font name="System Bold" size="12.0" />
-                  </font></Button>
-               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #FFC849;" text="Pobierz">
+                  </font>
+                  <VBox.margin>
+                     <Insets left="5.0" right="5.0" top="10.0" />
+                  </VBox.margin></Button>
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #FFC849;" text="pobierz">
                   <font>
                      <Font name="System Bold" size="12.0" />
-                  </font></Button>
+                  </font>
+                  <VBox.margin>
+                     <Insets left="5.0" right="5.0" top="10.0" />
+                  </VBox.margin></Button>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
             </VBox>
          </children>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
       </HBox>
-      <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #A0A0A0;" text="Powrót" textAlignment="CENTER" textFill="WHITE">
+      <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #7D0A0A;" text="powrót" textAlignment="CENTER" textFill="WHITE">
          <VBox.margin>
-            <Insets left="150.0" right="150.0" top="30.0" />
+            <Insets left="175.0" right="175.0" top="5.0" />
          </VBox.margin>
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
+         <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </padding>
       </Button>
    </children>
 </VBox>

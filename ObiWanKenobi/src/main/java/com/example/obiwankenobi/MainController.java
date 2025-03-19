@@ -34,14 +34,16 @@ public class MainController implements Initializable{
 
     private Parent fxml;
 
-    @FXML
-    private Button backButton;
 
     @FXML
     private TextField loginMail;
 
     @FXML
     private PasswordField loginPassword;
+
+    @FXML
+    private Button closeButton;
+
 
 
     @Override
@@ -56,6 +58,7 @@ public class MainController implements Initializable{
                 ex.printStackTrace();
             }
         }
+
     }
 
     @FXML
@@ -69,6 +72,8 @@ public class MainController implements Initializable{
 
             Stage newStage = new Stage();
             newStage.setScene(new Scene(root));
+            newStage.initStyle(StageStyle.TRANSPARENT);
+            newStage.setResizable(false); // 🚀 Zablokowanie powiększania
             newStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,17 +81,20 @@ public class MainController implements Initializable{
     }
 
 
+
+
     @FXML
     private void openLogin(ActionEvent event){
         TranslateTransition t = new TranslateTransition(Duration.seconds(1), vbox);
         t.setToX(-450);
         t.play();
-        t.setOnFinished((e) ->{
-            try{
+        t.setOnFinished((e) -> {
+            try {
                 fxml = FXMLLoader.load(getClass().getResource("/com/example/obiwankenobi/views/login.fxml"));
                 vbox.getChildren().clear();
                 vbox.getChildren().setAll(fxml);
-            }catch(IOException _){
+
+            } catch(IOException ex) {
 
             }
         });
@@ -125,6 +133,11 @@ public class MainController implements Initializable{
             e.printStackTrace();
             return false;
         }
+    }
+    @FXML
+    private void handleClose() {
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+        stage.close();
     }
 
 }

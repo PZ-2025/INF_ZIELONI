@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -8,7 +9,9 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" styleClass="parent" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.MainController">
+
    <children>
+      
       <AnchorPane layoutY="96.0" prefHeight="506.0" prefWidth="1000.0" style="-fx-border-color: #0C3105; -fx-border-width: 5;" styleClass="pane">
          <children>
             <Label alignment="CENTER" layoutX="93.0" layoutY="82.0" prefHeight="74.0" prefWidth="260.0" styleClass="textBigPane" text="Obi" textAlignment="CENTER" textFill="FORESTGREEN">
@@ -31,8 +34,12 @@
                   <Image url="@../img/logo.jpg" />
                </image>
             </ImageView>
+
+            <Button fx:id="closeButton" layoutX="946.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleClose" style="-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 5;" text="X" />
          </children>
       </AnchorPane>
+
+
       <VBox id="vbox" fx:id="vbox" layoutX="36.0" layoutY="49.0" prefHeight="600.0" prefWidth="390.0" styleClass="white" stylesheets="@../style/style.css" AnchorPane.leftAnchor="100.0" />
    </children>
 </AnchorPane>

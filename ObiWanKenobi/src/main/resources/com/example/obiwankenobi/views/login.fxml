@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.PasswordField?>
 <VBox fx:id="vbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="390.0" styleClass="panel" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.MainController">
    <children>
       <Label styleClass="textBig" text="Wprowadź dane">
@@ -23,7 +24,7 @@
             <Insets left="20.0" top="40.0" />
          </VBox.margin>
       </Label>
-      <TextField prefHeight="30.0" prefWidth="150.0" promptText="podaj maila:" style="-fx-background-color: #228B22; -fx-border-color: B3FFB3;" styleClass="input">
+      <TextField fx:id="loginMail" prefHeight="30.0" prefWidth="150.0" promptText="podaj maila:" style="-fx-background-color: #228B22; -fx-border-color: B3FFB3;" styleClass="input">
          <VBox.margin>
             <Insets left="20.0" right="20.0" top="20.0" />
          </VBox.margin>
@@ -39,14 +40,14 @@
             <Insets left="20.0" top="20.0" />
          </VBox.margin>
       </Label>
-      <TextField prefHeight="30.0" prefWidth="150.0" promptText="podaj hasło:" style="-fx-background-color: #228B22; -fx-border-color: B3FFB3;" styleClass="input">
+      <PasswordField fx:id="loginPassword" prefHeight="30.0" prefWidth="150.0" promptText="podaj hasło:" style="-fx-background-color: #228B22; -fx-border-color: B3FFB3;" styleClass="input">
          <VBox.margin>
             <Insets left="20.0" right="20.0" top="20.0" />
          </VBox.margin>
          <font>
             <Font size="18.0" />
          </font>
-      </TextField>
+      </PasswordField >
       <Button id="loginButton" mnemonicParsing="false" onAction="#login" prefHeight="80.0" prefWidth="150.0" style="-fx-background-color: FFC849;" styleClass="button" stylesheets="@../style/style.css" text="zaloguj">
          <padding>
             <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />

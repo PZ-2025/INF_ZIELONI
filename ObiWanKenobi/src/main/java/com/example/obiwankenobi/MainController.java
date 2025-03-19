@@ -16,6 +16,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -39,7 +41,7 @@ public class MainController implements Initializable{
     private TextField loginMail;
 
     @FXML
-    private TextField loginPassword;
+    private PasswordField loginPassword;
 
 
     @Override
@@ -56,32 +58,13 @@ public class MainController implements Initializable{
         }
     }
 
-
-    @FXML
-    private void goBack(ActionEvent event) {
-        System.out.println("xdxdadad");
-        TranslateTransition t = new TranslateTransition(Duration.seconds(1), vbox);
-        t.setToX(450);
-        t.play();
-        t.setOnFinished((e) ->{
-            try{
-                fxml = FXMLLoader.load(getClass().getResource("/com/example/obiwankenobi/views/start.fxml"));
-                vbox.getChildren().clear();
-                vbox.getChildren().setAll(fxml);
-            }catch(IOException ex){
-
-            }
-        });
-    }
-
-
     @FXML
     private void login(ActionEvent event) {
         try {
             Stage currentStage = (Stage) vbox.getScene().getWindow();
             currentStage.close();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/mainView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/mainPanel.fxml"));
             Parent root = loader.load();
 
             Stage newStage = new Stage();

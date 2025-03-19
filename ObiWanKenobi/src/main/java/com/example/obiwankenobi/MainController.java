@@ -3,8 +3,13 @@ package com.example.obiwankenobi;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,6 +26,7 @@ import javafx.stage.Modality;
 
 public class MainController implements Initializable{
 
+
     @FXML
     private VBox vbox;
 
@@ -28,6 +34,12 @@ public class MainController implements Initializable{
 
     @FXML
     private Button backButton;
+
+    @FXML
+    private TextField loginMail;
+
+    @FXML
+    private TextField loginPassword;
 
 
     @Override
@@ -113,6 +125,22 @@ public class MainController implements Initializable{
             newStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private boolean authenticateUser(String login, String password) {
+        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, login);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next(); // Jeśli znajdzie użytkownika, zwróci true
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

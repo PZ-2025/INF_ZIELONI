@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -34,7 +35,6 @@ public class MainController implements Initializable{
 
     private Parent fxml;
 
-
     @FXML
     private TextField loginMail;
 
@@ -43,6 +43,10 @@ public class MainController implements Initializable{
 
     @FXML
     private Button closeButton;
+
+//    @FXML
+//    private Button logoutBtn;
+
 
 
 
@@ -64,17 +68,25 @@ public class MainController implements Initializable{
     @FXML
     private void login(ActionEvent event) {
         try {
-            Stage currentStage = (Stage) vbox.getScene().getWindow();
-            currentStage.close();
+            String login = loginMail.getText();
+            String password = loginPassword.getText();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/mainPanel.fxml"));
-            Parent root = loader.load();
+            if(authenticateUser(login, password) == true) {
 
-            Stage newStage = new Stage();
-            newStage.setScene(new Scene(root));
-            newStage.initStyle(StageStyle.TRANSPARENT);
-            newStage.setResizable(false); // 🚀 Zablokowanie powiększania
-            newStage.show();
+                Stage currentStage = (Stage) vbox.getScene().getWindow();
+                currentStage.close();
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/mainPanel.fxml"));
+                Parent root = loader.load();
+
+                Stage newStage = new Stage();
+                newStage.setScene(new Scene(root));
+                newStage.initStyle(StageStyle.TRANSPARENT);
+                newStage.setResizable(false); // 🚀 Zablokowanie powiększania
+                newStage.show();
+            }else {
+                System.out.printf("nie ma takiego uzytkownika");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -139,5 +151,24 @@ public class MainController implements Initializable{
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
     }
+
+
+    //to jeszcze nie smiga
+//    @FXML
+//    void logout(ActionEvent event) {
+//        try {
+//            // Załaduj ekran logowania
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/views/login.fxml"));
+//            Parent root = loader.load();
+//
+//            // Pobierz aktualną scenę
+//            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//            stage.setScene(new Scene(root));
+//            stage.show();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
 
 }

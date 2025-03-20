@@ -29,42 +29,6 @@ public class Launcher extends Application {
     }
 
     public static void main(String[] args) throws SQLException {
-//        Connection conn = DatabaseConnection.getConnection();
-//
-//        if (conn != null) {
-//            System.out.println("✅ Połączenie do MySQL działa poprawnie!");
-//            addUser("maciek", "maciek@gmail");
-//            conn.close();
-//        } else {
-//            System.out.println("❌ Błąd połączenia z bazą danych.");
-//        }
-
         launch(args);
-
     }
-
-
-    //TO NA TESTA JEST INO
-//    public static void addUser(String username, String email) {
-//        String sql = "INSERT INTO users (name, email) VALUES (?, ?)";
-//
-//        try (Connection conn = getConnection();
-//             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//
-//            pstmt.setString(1, username);
-//            pstmt.setString(2, email);
-//
-//            int rowsAffected = pstmt.executeUpdate();
-//            if (rowsAffected > 0) {
-//                System.out.println("✅ Użytkownik został dodany pomyślnie!");
-//            } else {
-//                System.out.println("⚠️ Nie udało się dodać użytkownika.");
-//            }
-//
-//        } catch (SQLException e) {
-//            System.err.println("❌ Błąd podczas dodawania użytkownika.");
-//            e.printStackTrace();
-//        }
-//    }
-
 }

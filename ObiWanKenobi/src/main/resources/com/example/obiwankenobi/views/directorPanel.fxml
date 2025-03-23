@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #B3FFB3;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <!-- Menu boczne -->
+      <HBox spacing="20">
+         <VBox prefWidth="200.0" style="-fx-background-color: #0C3105; -fx-padding: 20;">
+            <Label text="Witaj, Dyrektorze!" textFill="WHITE" styleClass="textBig">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <VBox spacing="15">
+               <Button text="Raporty" prefWidth="150.0" style="-fx-background-color: #FFC849;" />
+               <Button text="Podgląd" prefWidth="150.0" style="-fx-background-color: #FFC849;" />
+            </VBox>
+         </VBox>
+
+         <!-- Główna zawartość -->
+         <VBox spacing="20" prefWidth="600.0">
+            <!-- Nagłówek -->
+            <Label text="Podgląd działań" styleClass="textBig">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+
+            <!-- Tabela działań -->
+            <TableView prefWidth="580.0" prefHeight="400.0">
+               <columns>
+                  <TableColumn text="Nazwa Działu" prefWidth="290.0" />
+                  <TableColumn text="Działania" prefWidth="290.0" />
+               </columns>
+            </TableView>
+         </VBox>
+      </HBox>
+   </children>
+</VBox>

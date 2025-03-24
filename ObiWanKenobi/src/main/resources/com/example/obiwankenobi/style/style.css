@@ -26,6 +26,12 @@
     -fx-text-fill: white;
 }
 
+.textBigDark {
+    -fx-font-family: 'Alata';
+    -fx-font-size: 36px;
+    -fx-text-fill: #0C3105;
+}
+
 .textSmall {
     -fx-font-family: 'Alata';
     -fx-font-size: 21px;

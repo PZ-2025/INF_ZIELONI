@@ -44,8 +44,6 @@ public class MainController implements Initializable{
     @FXML
     private Button closeButton;
 
-//    @FXML
-//    private Button logoutBtn;
 
 
 
@@ -54,7 +52,6 @@ public class MainController implements Initializable{
     public void initialize(URL url, ResourceBundle rb) {
         if (vbox.getChildren().isEmpty()) {
             vbox.setTranslateX(450);
-
             try {
                 fxml = FXMLLoader.load(getClass().getResource("/com/example/obiwankenobi/views/start.fxml"));
                 vbox.getChildren().setAll(fxml);
@@ -153,22 +150,7 @@ public class MainController implements Initializable{
     }
 
 
-    //to jeszcze nie smiga
-//    @FXML
-//    void logout(ActionEvent event) {
-//        try {
-//            // Załaduj ekran logowania
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/views/login.fxml"));
-//            Parent root = loader.load();
-//
-//            // Pobierz aktualną scenę
-//            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//            stage.setScene(new Scene(root));
-//            stage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+
 
 
 }

@@ -16,8 +16,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -137,12 +137,48 @@ public class MainController implements Initializable{
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
 
-            return rs.next(); // Jeśli znajdzie użytkownika, zwróci true
+            if (rs.next()) {
+                // Użytkownik znaleziony - sukces
+                showSuccessAlert("Zalogowano pomyślnie!", "Witaj w systemie");
+                return true;
+            } else {
+                // Użytkownik nie znaleziony - błąd
+                showErrorAlert("Błąd logowania", "Nieprawidłowy email lub hasło");
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            showErrorAlert("Błąd systemu", "Wystąpił problem podczas logowania");
             return false;
         }
     }
+
+    private void showSuccessAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Sukces");
+        alert.setHeaderText(title);
+        alert.setContentText(message);
+
+        // Stylizacja alertu
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: #B3FFB3; -fx-font-family: 'Alata';");
+
+        alert.showAndWait();
+    }
+
+    private void showErrorAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Błąd");
+        alert.setHeaderText(title);
+        alert.setContentText(message);
+
+        // Stylizacja alertu
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: #FFB3B3; -fx-font-family: 'Alata';");
+
+        alert.showAndWait();
+    }
+
     @FXML
     private void handleClose() {
         Stage stage = (Stage) closeButton.getScene().getWindow();

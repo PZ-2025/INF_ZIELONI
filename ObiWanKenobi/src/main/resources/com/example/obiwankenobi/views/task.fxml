@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="419.0" prefWidth="500.0" spacing="15" style="-fx-background-color: #B3FFB3;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="419.0" prefWidth="500.0" spacing="15" style="-fx-background-color: #B3FFB3;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.TaskInfo">
     <children>
         <!-- Nagłówek -->
         <HBox alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="500.0" style="-fx-background-color: #0C3105;">
@@ -35,25 +35,25 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-                <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text=" Zadanie 1" />
+                <Label fx:id="taskTitle" style="-fx-font-size: 16; -fx-font-weight: bold;" text=" Zadanie 1" />
 
                 <Label prefHeight="17.0" prefWidth="460.0" style="-fx-background-color: #91ee91;" styleClass="textSmallDark" text=" Opis zadania:">
                <font>
                   <Font size="14.0" />
                </font></Label>
-                <Label prefWidth="460.0" style="-fx-font-size: 14;" text=" Tutaj znajduje się dłuższy opis zadania..." wrapText="true" />
+                <Label fx:id="taskDescription" prefWidth="460.0" style="-fx-font-size: 14;" text=" Tutaj znajduje się dłuższy opis zadania..." wrapText="true" />
 
                 <Label prefHeight="17.0" prefWidth="460.0" style="-fx-background-color: #91ee91;" styleClass="textSmallDark" text=" Data wykonania:">
                <font>
                   <Font size="14.0" />
                </font></Label>
-                <Label style="-fx-font-size: 16;" text=" 28.03.2025" />
+                <Label fx:id="taskDeadline" style="-fx-font-size: 16;" text=" 28.03.2025" />
 
                 <Label prefHeight="17.0" prefWidth="469.0" style="-fx-background-color: #91ee91;" styleClass="textSmallDark" text=" Status:">
                <font>
                   <Font size="14.0" />
                </font></Label>
-                <Label style="-fx-font-size: 16;" text=" W trakcie" />
+                <Label fx:id="taskStatus" style="-fx-font-size: 16;" text=" W trakcie" />
             </children>
          <opaqueInsets>
             <Insets />

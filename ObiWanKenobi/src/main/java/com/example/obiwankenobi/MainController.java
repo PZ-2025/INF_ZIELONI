@@ -3,8 +3,6 @@ package com.example.obiwankenobi;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -13,7 +11,6 @@ import java.sql.ResultSet;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -29,23 +26,15 @@ import javafx.stage.Modality;
 
 public class MainController implements Initializable{
 
-
     @FXML
     private VBox vbox;
-
     private Parent fxml;
-
     @FXML
     private TextField loginMail;
-
     @FXML
     private PasswordField loginPassword;
-
     @FXML
     private Button closeButton;
-
-
-
 
 
     @Override
@@ -68,29 +57,34 @@ public class MainController implements Initializable{
             String login = loginMail.getText();
             String password = loginPassword.getText();
 
-            if(authenticateUser(login, password) == true) {
+            String role = authenticateUser(login, password);
 
+            if (role != null) {
                 Stage currentStage = (Stage) vbox.getScene().getWindow();
                 currentStage.close();
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/mainPanel.fxml"));
-                Parent root = loader.load();
+                String viewPath = getViewForRole(role);
 
-                Stage newStage = new Stage();
-                newStage.setScene(new Scene(root));
-                newStage.initStyle(StageStyle.TRANSPARENT);
-                newStage.setResizable(false);
-                newStage.show();
-            }else {
-                System.out.printf("nie ma takiego uzytkownika");
+                if (viewPath != null) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
+                    Parent root = loader.load();
+
+                    Stage newStage = new Stage();
+                    newStage.setScene(new Scene(root));
+                    newStage.initStyle(StageStyle.TRANSPARENT);
+                    newStage.setResizable(false);
+                    newStage.show();
+                } else {
+                    showErrorAlert("Nieznana rola użytkownika!");
+                }
+            } else {
+                showErrorAlert("Nieprawidłowy email lub hasło");
             }
         } catch (IOException e) {
             e.printStackTrace();
+            showErrorAlert("Wystąpił błąd podczas logowania");
         }
     }
-
-
-
 
     @FXML
     private void openLogin(ActionEvent event){
@@ -128,8 +122,11 @@ public class MainController implements Initializable{
         }
     }
 
-    private boolean authenticateUser(String login, String password) {
-        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
+    private String authenticateUser(String login, String password) {
+        String query = "SELECT u.id, u.first_name, u.last_name, r.name FROM users u " +
+                "JOIN roles r ON u.role_id = r.id " +
+                "WHERE u.email = ? AND u.password = ?";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
@@ -138,18 +135,38 @@ public class MainController implements Initializable{
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // Użytkownik znaleziony - sukces
-                showSuccessAlert("Witaj w systemie");
-                return true;
-            } else {
-                // Użytkownik nie znaleziony - błąd
-                showErrorAlert("Nieprawidłowy email lub hasło");
-                return false;
+                int userId = rs.getInt("id");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                String role = rs.getString("name");
+
+                // Zapisujemy dane użytkownika w klasie User
+                User.setUserId(userId);
+                User.setEmail(login);
+
+                showSuccessAlert("Witaj, " + firstName + "!");
+
+                return role;
             }
         } catch (Exception e) {
             e.printStackTrace();
             showErrorAlert("Wystąpił problem podczas logowania");
-            return false;
+        }
+        return null;
+    }
+
+    private String getViewForRole(String role) {
+        switch (role.toLowerCase()) {
+            case "admin":
+                return "/com/example/obiwankenobi/views/adminPanel.fxml";
+            case "dyrektor":
+                return "/com/example/obiwankenobi/views/directorPanel.fxml";
+            case "kierownik":
+                return "/com/example/obiwankenobi/views/managerPanel.fxml";
+            case "pracownik":
+                return "/com/example/obiwankenobi/views/mainPanel.fxml";
+            default:
+                return null;
         }
     }
 
@@ -176,9 +193,4 @@ public class MainController implements Initializable{
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
     }
-
-
-
-
-
 }

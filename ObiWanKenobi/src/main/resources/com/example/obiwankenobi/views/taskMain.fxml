@@ -6,9 +6,10 @@
 
 <AnchorPane prefHeight="40.0" prefWidth="570.0" styleClass="pane" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.TaskView">
    <children>
-      <Label layoutX="21.0" layoutY="8.0" prefHeight="28.0" prefWidth="105.0" styleClass="textSmallDark" text="Zadanie 1 " />
-      <Label layoutX="153.0" layoutY="8.0" prefHeight="28.0" styleClass="textSmallDark" text="28.03.2025" />
-      <Label layoutX="331.0" layoutY="8.0" prefHeight="28.0" styleClass="textSmallDark" text="zakończone" />
-      <Button layoutX="450.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #FFC849;" text="szczegóły" />
+      <Label layoutX="21.0" layoutY="8.0" prefHeight="28.0" prefWidth="80.0" styleClass="textSmallDark" text="Zadanie" />
+      <Label fx:id="taskDate" layoutX="153.0" layoutY="8.0" prefHeight="28.0" styleClass="textSmallDark" text="28.03.2025" />
+      <Label fx:id="taskStatus" layoutX="331.0" layoutY="8.0" prefHeight="28.0" styleClass="textSmallDark" text="zakończone" />
+      <Button layoutX="450.0" mnemonicParsing="false" onAction="#more" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #FFC849;" text="szczegóły" />
+      <Label fx:id="taskId" layoutX="101.0" layoutY="8.0" styleClass="textSmallDark" text="1" />
    </children>
 </AnchorPane>

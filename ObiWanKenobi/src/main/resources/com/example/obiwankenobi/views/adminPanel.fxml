@@ -8,24 +8,23 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-
 <AnchorPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #B3FFB3;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.views.MainController">
    <children>
       <HBox prefHeight="100.0" prefWidth="700.0" style="-fx-background-color: #0C3105;">
          <children>
-            <Label alignment="CENTER" prefHeight="53.0" prefWidth="370.0" styleClass="textBig" text="Panel admnistratora" textAlignment="CENTER">
+            <Label alignment="CENTER" prefHeight="53.0" prefWidth="350.0" styleClass="textBig" text="Panel admnistratora" textAlignment="CENTER">
                <HBox.margin>
                   <Insets left="20.0" top="20.0" />
                </HBox.margin>
             </Label>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" style="-fx-background-color: #7D0A0A;" text="wylacz">
+            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="110.0" style="-fx-background-color: #7D0A0A;" text="wyloguj">
                <HBox.margin>
-                  <Insets left="20.0" top="20.0" />
+                  <Insets left="20.0" right="20.0" top="20.0" />
                </HBox.margin>
             </Button>
             <Button alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #FFC849;" text="dodaj konto" textAlignment="CENTER">
                <HBox.margin>
-                  <Insets left="20.0" top="20.0" />
+                  <Insets right="20.0" top="20.0" />
                </HBox.margin>
             </Button>
          </children>

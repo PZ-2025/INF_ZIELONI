@@ -6,50 +6,98 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.regex.Pattern;
 
 public class ForgotPassController {
 
     @FXML
     private TextField emailField;
-
-    @FXML
-    private PasswordField newPasswordField;
-
-    @FXML
-    private Button sendButton;
-
+    
     @FXML
     private Button closeButton;
 
-    // REGEX do walidacji e-maila
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
 
     @FXML
-    private void handlePasswordReset() {
-        String email = emailField.getText();
-        String newPassword = newPasswordField.getText();
+    private void initialize() {
+        emailField.setOnAction(event -> {
+            try {
+                handlePasswordReset();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 
-        if (email.isEmpty() || newPassword.isEmpty()) {
-            showAlert("Błąd", "Proszę uzupełnić wszystkie pola!");
+    @FXML
+    private void handlePasswordReset() throws SQLException {
+        String email = emailField.getText();
+
+        if (email.isEmpty()) {
+            showAlert("Proszę uzupełnić pole e-mail!");
             return;
         }
 
         if (!Pattern.matches(EMAIL_REGEX, email)) {
-            showAlert("Błąd", "Podano niepoprawny adres e-mail!");
+            showAlert("Podano niepoprawny adres e-mail!");
             return;
         }
 
-        if (newPassword.length() < 6) {
-            showAlert("Błąd", "Hasło musi mieć co najmniej 6 znaków!");
-            return;
+        if (isEmailExists(email)) {
+            resetPassword(email);
+            showAlert("Hasło zostało zmienione dla: " + email);
+        } else {
+            showAlert("E-mail nie istnieje w systemie.");
         }
 
-        // Tutaj można dodać logikę resetowania hasła (np. zapis w bazie danych)
-        showAlert("Sukces", "Hasło zostało zmienione dla: " + email);
-
-        // Zamknięcie okna
         closeWindow();
+        closeWindow();
+    }
+
+    private boolean isEmailExists(String email) throws SQLException {
+        boolean exists = false;
+
+        String query = "SELECT 1 FROM users WHERE email = ? LIMIT 1";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                exists = rs.next();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Błąd połączenia z bazą danych.");
+        }
+
+        return exists;
+    }
+
+    private void resetPassword(String email) {
+        String query = "UPDATE users SET password = ? WHERE email = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, "zaq1@WSX");
+            stmt.setString(2, email);
+
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated == 0) {
+                showAlert("Nie udało się zmienić hasła.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Błąd połączenia z bazą danych.");
+        }
     }
 
     @FXML
@@ -62,9 +110,9 @@ public class ForgotPassController {
         stage.close();
     }
 
-    private void showAlert(String title, String message) {
+    private void showAlert( String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+        alert.setTitle("wiadomosc");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

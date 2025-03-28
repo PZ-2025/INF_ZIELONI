@@ -79,7 +79,7 @@ public class MainController implements Initializable{
                 Stage newStage = new Stage();
                 newStage.setScene(new Scene(root));
                 newStage.initStyle(StageStyle.TRANSPARENT);
-                newStage.setResizable(false); // 🚀 Zablokowanie powiększania
+                newStage.setResizable(false);
                 newStage.show();
             }else {
                 System.out.printf("nie ma takiego uzytkownika");
@@ -139,42 +139,34 @@ public class MainController implements Initializable{
 
             if (rs.next()) {
                 // Użytkownik znaleziony - sukces
-                showSuccessAlert("Zalogowano pomyślnie!", "Witaj w systemie");
+                showSuccessAlert("Witaj w systemie");
                 return true;
             } else {
                 // Użytkownik nie znaleziony - błąd
-                showErrorAlert("Błąd logowania", "Nieprawidłowy email lub hasło");
+                showErrorAlert("Nieprawidłowy email lub hasło");
                 return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            showErrorAlert("Błąd systemu", "Wystąpił problem podczas logowania");
+            showErrorAlert("Wystąpił problem podczas logowania");
             return false;
         }
     }
 
-    private void showSuccessAlert(String title, String message) {
+    private void showSuccessAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sukces");
-        alert.setHeaderText(title);
+        alert.setHeaderText(null);
         alert.setContentText(message);
-
-        // Stylizacja alertu
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.setStyle("-fx-background-color: #B3FFB3; -fx-font-family: 'Alata';");
 
         alert.showAndWait();
     }
 
-    private void showErrorAlert(String title, String message) {
+    private void showErrorAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Błąd");
-        alert.setHeaderText(title);
+        alert.setHeaderText(null);
         alert.setContentText(message);
-
-        // Stylizacja alertu
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.setStyle("-fx-background-color: #FFB3B3; -fx-font-family: 'Alata';");
 
         alert.showAndWait();
     }

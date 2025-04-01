@@ -17,7 +17,7 @@
                   <Insets left="20.0" top="20.0" />
                </HBox.margin>
             </Label>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="110.0" style="-fx-background-color: #7D0A0A;" text="wyloguj">
+            <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="110.0" style="-fx-background-color: #7D0A0A;" text="wyloguj">
                <HBox.margin>
                   <Insets left="20.0" right="20.0" top="20.0" />
                </HBox.margin>

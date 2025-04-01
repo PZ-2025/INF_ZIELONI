@@ -1,6 +1,5 @@
 package com.example.obiwankenobi;
 
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +22,19 @@ public class UserController {
     @FXML
     private GridPane taskGrid;
 
+    // Dodaj obiekt zalogowanego użytkownika
+    private static User loggedInUser;
+
+    // Metoda do ustawienia zalogowanego użytkownika
+    public static void setLoggedInUser(User user) {
+        loggedInUser = user;
+    }
+
+    // Metoda do pobrania zalogowanego użytkownika
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
+
     @FXML
     private void initialize() throws SQLException {
         loadUserInfo();
@@ -30,30 +42,36 @@ public class UserController {
     }
 
     private void loadUserInfo() {
-        int loggedInUserId = User.getUserId();
-        String loggedInUserEmail = User.getEmail();
+        // Sprawdź czy mamy zalogowanego użytkownika
+        if (loggedInUser != null) {
+            int loggedInUserId = loggedInUser.getUserId();
+            String loggedInUserEmail = loggedInUser.getEmail();
 
-        if (loggedInUserId > 0) {
-            userId.setText("ID:" + loggedInUserId);
+            if (loggedInUserId > 0) {
+                userId.setText("ID:" + loggedInUserId);
 
-            try (Connection connection = DatabaseConnection.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(
-                         "SELECT first_name, last_name FROM users WHERE id = ?")) {
+                try (Connection connection = DatabaseConnection.getConnection();
+                     PreparedStatement statement = connection.prepareStatement(
+                             "SELECT first_name, last_name FROM users WHERE id = ?")) {
 
-                statement.setInt(1, loggedInUserId);
-                ResultSet resultSet = statement.executeQuery();
+                    statement.setInt(1, loggedInUserId);
+                    ResultSet resultSet = statement.executeQuery();
 
-                if (resultSet.next()) {
-                    String firstName = resultSet.getString("first_name");
-                    String lastName = resultSet.getString("last_name");
+                    if (resultSet.next()) {
+                        String firstName = resultSet.getString("first_name");
+                        String lastName = resultSet.getString("last_name");
 
-                    String shortLastName = lastName.substring(0, 1) + ".";
+                        String shortLastName = lastName.substring(0, 1) + ".";
 
-                    userName.setText(firstName + " " + shortLastName);
+                        userName.setText(firstName + " " + shortLastName);
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    userName.setText("Nieznany użytkownik");
                 }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } else {
+                userId.setText("ID: Nieznane");
                 userName.setText("Nieznany użytkownik");
             }
         } else {
@@ -81,7 +99,12 @@ public class UserController {
     }
 
     private void loadContent() {
-        int loggedInUserId = User.getUserId();
+        // Sprawdź czy mamy zalogowanego użytkownika
+        if (loggedInUser == null) {
+            return;
+        }
+
+        int loggedInUserId = loggedInUser.getUserId();
         if (loggedInUserId <= 0) {
             return;
         }

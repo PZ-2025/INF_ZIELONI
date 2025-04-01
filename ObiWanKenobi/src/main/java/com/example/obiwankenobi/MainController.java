@@ -147,9 +147,9 @@ public class MainController implements Initializable{
                 String lastName = rs.getString("last_name");
                 String role = rs.getString("name");
 
-                // Zapisujemy dane użytkownika w klasie User
-                User.setUserId(userId);
-                User.setEmail(login);
+                // Tworzenie obiektu użytkownika i ustawienie go jako zalogowanego
+                User loggedInUser = new User(userId, firstName, lastName, login, password, role, null);
+                UserController.setLoggedInUser(loggedInUser);
 
                 showSuccessAlert("Witaj, " + firstName + "!");
 

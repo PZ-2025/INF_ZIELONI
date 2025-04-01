@@ -2,10 +2,16 @@ package com.example.obiwankenobi;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +19,7 @@ import java.sql.SQLException;
 
 
 public class AdminController {
+
 
     @FXML
     private TableView<User> tableView;
@@ -77,5 +84,23 @@ public class AdminController {
         }
 
         return users;
+    }
+
+    @FXML
+    private void logout(ActionEvent event) {
+        try {
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentStage.close();
+
+            new Launcher().start(new Stage());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("blad");
+            alert.setHeaderText(null);
+            alert.setContentText("wystapil problem");
+            alert.showAndWait();
+        }
     }
 }

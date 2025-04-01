@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #B3FFB3;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.views.MainController">
+<VBox prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #B3FFB3;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.DirectorController">
    <children>
       <!-- Menu boczne -->
       <HBox spacing="20">
@@ -27,12 +27,12 @@
                   <Insets left="5.0" right="5.0" top="10.0" />
                </VBox.margin>
             </Label>
-            <Button prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #FFC849;" text="raporty">
+            <Button fx:id="raportBtn" onAction="#raports" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #FFC849;" text="raporty">
                <VBox.margin>
                   <Insets left="20.0" right="20.0" top="20.0" />
                </VBox.margin>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #7D0A0A;" text="wyjdz">
+            <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#logout" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #7D0A0A;" text="wyjdz">
                <VBox.margin>
                   <Insets left="20.0" right="20.0" top="240.0" />
                </VBox.margin>

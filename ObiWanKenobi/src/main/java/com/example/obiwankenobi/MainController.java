@@ -29,12 +29,19 @@ public class MainController implements Initializable{
     @FXML
     private VBox vbox;
     private Parent fxml;
+
     @FXML
     private TextField loginMail;
+
     @FXML
     private PasswordField loginPassword;
+
     @FXML
     private Button closeButton;
+
+    @FXML
+    private Button addUserBtn;
+
 
 
     @Override
@@ -169,6 +176,22 @@ public class MainController implements Initializable{
                 return null;
         }
     }
+
+    @FXML
+    void addUser(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/addUser.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Dodawanie użytkownika");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void showSuccessAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

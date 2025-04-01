@@ -6,17 +6,22 @@ public class User {
     private String lastName;
     private static int userId;
     private static String email;
+    private String role;
+    private String department;
 
-    public User() {
+    public User(int id, String firstName, String lastName, String email, String password, String role, String department) {
     }
 
-    public User(String password, String firstName, String lastName, String email, int userId){
+    public User(String password, String firstName, String lastName, String email, int userId, String role, String department){
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.userId = userId;
+        this.role = role;
+        this.department = department;
     }
+
 
     public String getPassword() {
         return password;
@@ -56,5 +61,21 @@ public class User {
 
     public static void setEmail(String email) {
         User.email = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

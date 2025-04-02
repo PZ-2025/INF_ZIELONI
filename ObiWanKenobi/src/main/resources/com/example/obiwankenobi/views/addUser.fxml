@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="400.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #0C3105;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="400.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #0C3105;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.AddUser">
    <children>
       <HBox prefHeight="100.0" prefWidth="400.0" style="-fx-background-color: #0C3105;">
          <children>
@@ -36,7 +36,7 @@
                   <Insets left="20.0" top="5.0" />
                </HBox.margin>
             </Label>
-            <TextField id="newName" prefHeight="30.0" prefWidth="200.0" promptText="imie" style="-fx-background-color: white;" styleClass="input">
+            <TextField id="newName" fx:id="addName" prefHeight="30.0" prefWidth="200.0" promptText="imie" style="-fx-background-color: white;" styleClass="inputUser">
                <font>
                   <Font size="14.0" />
                </font>
@@ -59,7 +59,7 @@
                   <Insets left="20.0" top="5.0" />
                </HBox.margin>
             </Label>
-            <TextField id="newSurname" prefHeight="30.0" prefWidth="200.0" promptText="nazwisko" style="-fx-background-color: white;" styleClass="input">
+            <TextField id="newSurname" fx:id="addScndName" prefHeight="30.0" prefWidth="200.0" promptText="nazwisko" style="-fx-background-color: white;" styleClass="inputUser">
                <font>
                   <Font size="14.0" />
                </font>
@@ -82,7 +82,7 @@
                   <Insets left="20.0" top="5.0" />
                </HBox.margin>
             </Label>
-            <TextField id="newEmail" prefHeight="30.0" prefWidth="200.0" promptText="mail" style="-fx-background-color: white;" styleClass="input">
+            <TextField id="newEmail" fx:id="addEmail" prefHeight="30.0" prefWidth="200.0" promptText="mail" style="-fx-background-color: white;" styleClass="inputUser">
                <font>
                   <Font size="14.0" />
                </font>
@@ -105,7 +105,7 @@
                   <Insets left="20.0" top="5.0" />
                </HBox.margin>
             </Label>
-            <TextField id="newPassword" prefHeight="30.0" prefWidth="200.0" promptText="haslo" style="-fx-background-color: white;" styleClass="input">
+            <TextField id="newPassword" fx:id="addPass" prefHeight="30.0" prefWidth="200.0" promptText="haslo" style="-fx-background-color: white;" styleClass="inputUser">
                <font>
                   <Font size="14.0" />
                </font>
@@ -128,7 +128,7 @@
                   <Insets left="20.0" top="5.0" />
                </HBox.margin>
             </Label>
-            <ChoiceBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: white;" styleClass="input">
+            <ChoiceBox fx:id="addRole" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: white;" styleClass="inputUser">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
@@ -148,14 +148,14 @@
                   <Insets left="20.0" top="5.0" />
                </HBox.margin>
             </Label>
-            <ChoiceBox prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: white;" styleClass="input">
+            <ChoiceBox fx:id="addDep" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: white;" styleClass="inputUser">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
             </ChoiceBox>
          </children>
       </HBox>
-      <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: FFC849;" text="dodaj" textAlignment="CENTER">
+      <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#saveUser" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: FFC849;" text="dodaj" textAlignment="CENTER">
          <VBox.margin>
             <Insets left="125.0" right="125.0" top="30.0" />
          </VBox.margin>

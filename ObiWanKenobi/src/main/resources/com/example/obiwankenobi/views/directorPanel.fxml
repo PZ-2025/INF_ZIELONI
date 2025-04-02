@@ -52,11 +52,11 @@
             </Label>
 
             <!-- Tabela działań -->
-            <TableView prefHeight="400.0">
+            <TableView fx:id="tableView" prefHeight="400.0">
                <columns>
-                  <TableColumn prefWidth="190.0" text="Nazwa Działu" />
-                  <TableColumn prefWidth="215.0" text="Przedmiot" />
-                  <TableColumn prefWidth="112.0" text="Stan magazynowy" />
+                  <TableColumn fx:id="departmentName" prefWidth="190.0" text="Nazwa Działu" />
+                  <TableColumn fx:id="itemName" prefWidth="215.0" text="Przedmiot" />
+                  <TableColumn fx:id="warehouseAmount" prefWidth="112.0" text="Stan magazynowy" />
                </columns>
                <VBox.margin>
                   <Insets left="20.0" right="20.0" top="20.0" />

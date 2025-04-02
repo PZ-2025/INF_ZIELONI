@@ -57,6 +57,13 @@
     -fx-font-size: 19px;
 }
 
+.inputUser{
+    -fx-font-family: 'Alata';
+    -fx-text-fill: #0C3105;
+    -fx-font-size: 19px;
+}
+
+
 .textBigPane{
     -fx-font-family: 'Alata';
     -fx-font-size: 40px;

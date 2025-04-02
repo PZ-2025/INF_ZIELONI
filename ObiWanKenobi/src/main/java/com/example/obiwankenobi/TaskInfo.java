@@ -2,6 +2,7 @@ package com.example.obiwankenobi;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +19,7 @@ public class TaskInfo {
     @FXML
     private Label taskTitle;
 
-    public void setTaskId(int Id){
+    public void setTaskId(int Id) {
         this.Id = Id;
         loadDataFromDatabase();
     }

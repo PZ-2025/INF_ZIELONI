@@ -22,7 +22,7 @@
                   <Insets left="20.0" right="20.0" top="20.0" />
                </HBox.margin>
             </Button>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #FFC849;" text="dodaj konto" textAlignment="CENTER">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#addUser" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #FFC849;" text="dodaj konto" textAlignment="CENTER">
                <HBox.margin>
                   <Insets right="20.0" top="20.0" />
                </HBox.margin>

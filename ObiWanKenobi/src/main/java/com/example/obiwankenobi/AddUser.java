@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -34,10 +35,16 @@ public class AddUser {
     @FXML
     private TextField addScndName;
 
+    @FXML
+    private AdminController adminController;
+
 
     @FXML
     public void initialize() throws SQLException {
         fetchInfo();
+    }
+    public void setAdminController(AdminController adminController) {
+        this.adminController = adminController;
     }
 
     public void fetchInfo() throws SQLException {
@@ -94,18 +101,11 @@ public class AddUser {
             alert.setTitle("Sukces");
             alert.setHeaderText(null);
             alert.setContentText("Użytkownik został dodany.");
-
-            addEmail.clear();
-            addName.clear();
-            addPass.clear();
-            addScndName.clear();
-            addRole.setValue(null);
-            addDep.setValue(null);
-
-
-
             alert.showAndWait();
 
+            // Zamknij okno po dodaniu użytkownika
+            Stage stage = (Stage) addName.getScene().getWindow();
+            stage.close();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Błąd");
@@ -125,12 +125,16 @@ public class AddUser {
         String roleSelect = addRole.getValue();
         String depSelect = addDep.getValue();
 
-//        isInputEmpty();
-
-//
-//        if (nationSelection == null  ammoSelection == null  museumSelection == null) {
-//            return;
-//        }
+        // Sprawdź czy pola są wypełnione
+        if (name.isEmpty() || scndName.isEmpty() || email.isEmpty() || password.isEmpty() ||
+                roleSelect == null || depSelect == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Błąd");
+            alert.setHeaderText(null);
+            alert.setContentText("Wypełnij wszystkie pola");
+            alert.showAndWait();
+            return;
+        }
 
         String[] roleParts = roleSelect.split(":");
         int roleId = Integer.parseInt(roleParts[0].trim());
@@ -138,7 +142,11 @@ public class AddUser {
         String[] depParts = depSelect.split(":");
         int depId = Integer.parseInt(depParts[0].trim());
 
-        saveUserToDB(name, scndName, email, password,  depId,  roleId);
+        saveUserToDB(name, scndName, email, password, depId, roleId);
 
+        // Odśwież tabelę po dodaniu użytkownika
+        if (adminController != null) {
+            adminController.refreshTable();
+        }
     }
 }

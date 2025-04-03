@@ -7,37 +7,44 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #B3FFB3;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.AdminController">
-   <children>
-      <HBox prefHeight="100.0" prefWidth="700.0" style="-fx-background-color: #0C3105;">
-         <children>
-            <Label alignment="CENTER" prefHeight="53.0" prefWidth="350.0" styleClass="textBig" text="Panel admnistratora" textAlignment="CENTER">
-               <HBox.margin>
-                  <Insets left="20.0" top="20.0" />
-               </HBox.margin>
-            </Label>
-            <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="110.0" style="-fx-background-color: #7D0A0A;" text="wyloguj">
-               <HBox.margin>
-                  <Insets left="20.0" right="20.0" top="20.0" />
-               </HBox.margin>
-            </Button>
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#addUser" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #FFC849;" text="dodaj konto" textAlignment="CENTER">
-               <HBox.margin>
-                  <Insets right="20.0" top="20.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-      </HBox>
-      <TableView fx:id="tableView" layoutX="14.0" layoutY="109.0" prefHeight="380.0" prefWidth="650.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="110.0">
-        <columns>
-          <TableColumn fx:id="nameColumn" prefWidth="98.0" text="Imie" />
-          <TableColumn fx:id="scndNameColumn" prefWidth="101.0" text="Nazwisko" />
-            <TableColumn fx:id="emailColumn" prefWidth="100.0" text="Email" />
-            <TableColumn fx:id="passColumn" prefWidth="128.0" text="Hasło" />
-            <TableColumn fx:id="departmentColumn" prefWidth="111.0" text="Dział" />
-            <TableColumn fx:id="roleColumn" prefWidth="114.0" text="Stopień" />
-        </columns>
-      </TableView>
-   </children>
+    <children>
+        <HBox prefHeight="100.0" prefWidth="700.0" style="-fx-background-color: #0C3105; -fx-background-radius: 0 0 15 15;">
+            <children>
+                <Label alignment="CENTER" prefHeight="53.0" prefWidth="350.0" styleClass="textBig" text="Panel administratora" textAlignment="CENTER" textFill="WHITE">
+                    <HBox.margin>
+                        <Insets left="20.0" top="20.0" />
+                    </HBox.margin>
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Label>
+                <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="110.0" style="-fx-background-color: #7D0A0A; -fx-background-radius: 10; -fx-text-fill: white; -fx-font-weight: bold;" text="Wyloguj">
+                    <HBox.margin>
+                        <Insets left="20.0" right="20.0" top="20.0" />
+                    </HBox.margin>
+                </Button>
+                <Button alignment="CENTER" mnemonicParsing="false" onAction="#addUser" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #FFC849; -fx-background-radius: 10; -fx-font-weight: bold;" text="Dodaj konto" textAlignment="CENTER">
+                    <HBox.margin>
+                        <Insets right="20.0" top="20.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+        <TableView fx:id="tableView" layoutX="14.0" layoutY="109.0" prefHeight="380.0" prefWidth="650.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="110.0">
+            <columns>
+                <TableColumn fx:id="nameColumn" prefWidth="98.0" text="Imię" />
+                <TableColumn fx:id="scndNameColumn" prefWidth="101.0" text="Nazwisko" />
+                <TableColumn fx:id="emailColumn" prefWidth="100.0" text="Email" />
+                <TableColumn fx:id="passColumn" prefWidth="128.0" text="Hasło" />
+                <TableColumn fx:id="departmentColumn" prefWidth="111.0" text="Dział" />
+                <TableColumn fx:id="roleColumn" prefWidth="114.0" text="Stopień" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+    </children>
 </AnchorPane>

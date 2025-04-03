@@ -96,12 +96,17 @@ public class AdminController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/addUser.fxml"));
         Parent parent = loader.load();
 
-        AddUser addUser = loader.getController();
+        AddUser addUserController = loader.getController();
+        addUserController.setAdminController(this);  // Przekaż referencję
 
         Stage stage = new Stage();
         stage.setScene(new Scene(parent));
         stage.initStyle(StageStyle.UTILITY);
         stage.show();
+    }
+
+    public void refreshTable() {
+        loadUsers();
     }
 
     @FXML

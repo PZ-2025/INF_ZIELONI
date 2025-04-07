@@ -163,7 +163,7 @@
                       <Font name="System Bold" size="20.0" />
                   </font>
               </Button>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #FFC849;" text="Stan magazynu">
+            <Button fx:id="StatusWareHauseBtn" mnemonicParsing="false" onAction="#StatusWareHause" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #FFC849;" text="Stan magazynu">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>

@@ -17,35 +17,58 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Klasa odpowiedzialna za wyświetlanie szczegółów zadania w GUI.
+ * Wczytuje dane zadania z bazy danych oraz umożliwia przejście do pełnego widoku zadania.
+ */
 public class TaskView {
 
+    /** Etykieta wyświetlająca identyfikator zadania */
     @FXML
     private Label taskId;
+
+    /** Etykieta wyświetlająca termin zadania */
     @FXML
     private Label taskDate;
+
+    /** Etykieta wyświetlająca status zadania */
     @FXML
     private Label taskStatus;
+
+    /** Identyfikator zadania */
     private int Id;
 
-
+    /**
+     * Ustawia identyfikator zadania i wczytuje jego dane z bazy.
+     *
+     * @param Id identyfikator zadania
+     */
     public void setTaskId(int Id) {
         this.Id = Id;
         loadDataFromDatabase();
     }
 
+    /**
+     * Wczytuje dane zadania z bazy danych na podstawie jego identyfikatora.
+     * Ustawia odpowiednie etykiety w GUI.
+     */
     private void loadDataFromDatabase() {
         try {
             Connection connection = DatabaseConnection.getConnection();
+
+            // Zapytanie do bazy danych, aby pobrać szczegóły zadania
             String query = "SELECT id, deadline, title, status FROM tasks WHERE id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, Id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            // Jeśli dane zadania zostały znalezione, ustawiamy je w etykietach
             if (resultSet.next()) {
                 taskId.setText(String.valueOf(resultSet.getInt("id")));
 
                 Date deadline = resultSet.getDate("deadline");
 
+                // Jeśli termin nie jest null, formatowanie i wyświetlanie
                 if (deadline != null) {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                     String formattedDate = dateFormat.format(deadline);
@@ -57,6 +80,7 @@ public class TaskView {
                 taskStatus.setText(resultSet.getString("status"));
             }
 
+            // Zamknięcie połączenia i wyników
             resultSet.close();
             preparedStatement.close();
             connection.close();
@@ -66,12 +90,17 @@ public class TaskView {
         }
     }
 
+    /**
+     * Otwiera okno z pełnymi szczegółami zadania.
+     * Ładuje widok zadania i ustawia odpowiednie dane.
+     */
     @FXML
     private void more() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/task.fxml"));
             Parent parent = loader.load();
 
+            // Ustawienie identyfikatora zadania w nowym kontrolerze
             TaskInfo taskInfoController = loader.getController();
             taskInfoController.setTaskId(Id);
 

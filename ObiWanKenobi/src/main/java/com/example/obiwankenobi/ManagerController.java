@@ -7,6 +7,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+/**
+ * Kontroler panelu kierownika (Managera).
+ * Obsługuje akcje związane z dodawaniem zadań oraz wylogowaniem.
+ */
 public class ManagerController {
 
     @FXML
@@ -15,11 +19,23 @@ public class ManagerController {
     @FXML
     private Button logoutBtn;
 
+    /**
+     * Obsługuje akcję dodawania nowego zadania.
+     * (Aktualnie metoda niezaimplementowana.)
+     *
+     * @param event kliknięcie przycisku "Dodaj zadanie"
+     */
     @FXML
     void addTask(ActionEvent event) {
-
+        // TODO: implementacja dodawania zadania
     }
 
+    /**
+     * Obsługuje proces wylogowania użytkownika.
+     * Zamyka bieżące okno i uruchamia ekran startowy.
+     *
+     * @param event kliknięcie przycisku "Wyloguj się"
+     */
     @FXML
     private void logout(ActionEvent event) {
         try {
@@ -31,9 +47,9 @@ public class ManagerController {
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("blad");
+            alert.setTitle("Błąd");
             alert.setHeaderText(null);
-            alert.setContentText("wystapil problem");
+            alert.setContentText("Wystąpił problem podczas wylogowywania.");
             alert.showAndWait();
         }
     }

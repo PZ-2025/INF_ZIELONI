@@ -14,8 +14,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -24,10 +22,15 @@ import javafx.util.Duration;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 
-public class MainController implements Initializable{
+/**
+ * Kontroler głównego panelu logowania i ekranu startowego.
+ * Obsługuje przełączanie widoków oraz logowanie użytkowników z rozróżnieniem ról.
+ */
+public class MainController implements Initializable {
 
     @FXML
     private VBox vbox;
+
     private Parent fxml;
 
     @FXML
@@ -42,8 +45,12 @@ public class MainController implements Initializable{
     @FXML
     private Button addUserBtn;
 
-
-
+    /**
+     * Inicjalizacja kontrolera – ładuje widok startowy do kontenera VBox.
+     *
+     * @param url URL lokalizacji zasobu
+     * @param rb  zasoby lokalizacyjne
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if (vbox.getChildren().isEmpty()) {
@@ -55,9 +62,14 @@ public class MainController implements Initializable{
                 ex.printStackTrace();
             }
         }
-
     }
 
+    /**
+     * Obsługuje logowanie użytkownika na podstawie e-maila i hasła.
+     * Po poprawnej autoryzacji ładowany jest odpowiedni panel.
+     *
+     * @param event zdarzenie kliknięcia przycisku logowania
+     */
     @FXML
     private void login(ActionEvent event) {
         try {
@@ -93,8 +105,13 @@ public class MainController implements Initializable{
         }
     }
 
+    /**
+     * Przełącza widok na panel logowania.
+     *
+     * @param event kliknięcie przycisku logowania
+     */
     @FXML
-    private void openLogin(ActionEvent event){
+    private void openLogin(ActionEvent event) {
         TranslateTransition t = new TranslateTransition(Duration.seconds(1), vbox);
         t.setToX(-450);
         t.play();
@@ -103,13 +120,17 @@ public class MainController implements Initializable{
                 fxml = FXMLLoader.load(getClass().getResource("/com/example/obiwankenobi/views/login.fxml"));
                 vbox.getChildren().clear();
                 vbox.getChildren().setAll(fxml);
-
-            } catch(IOException ex) {
-
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         });
     }
 
+    /**
+     * Otwiera okno do resetowania hasła użytkownika.
+     *
+     * @param event kliknięcie napisu "zapomniałeś hasła?"
+     */
     @FXML
     private void forgotPass(MouseEvent event) {
         try {
@@ -129,6 +150,13 @@ public class MainController implements Initializable{
         }
     }
 
+    /**
+     * Autoryzuje użytkownika na podstawie danych logowania.
+     *
+     * @param login    adres e-mail
+     * @param password hasło
+     * @return rola użytkownika (jeśli logowanie się powiodło), w przeciwnym razie null
+     */
     private String authenticateUser(String login, String password) {
         String query = "SELECT u.id, u.first_name, u.last_name, r.name FROM users u " +
                 "JOIN roles r ON u.role_id = r.id " +
@@ -147,12 +175,10 @@ public class MainController implements Initializable{
                 String lastName = rs.getString("last_name");
                 String role = rs.getString("name");
 
-                // Tworzenie obiektu użytkownika i ustawienie go jako zalogowanego
                 User loggedInUser = new User(userId, firstName, lastName, login, password, role, null);
                 UserController.setLoggedInUser(loggedInUser);
 
                 showSuccessAlert("Witaj, " + firstName + "!");
-
                 return role;
             }
         } catch (Exception e) {
@@ -162,6 +188,12 @@ public class MainController implements Initializable{
         return null;
     }
 
+    /**
+     * Zwraca ścieżkę do widoku odpowiadającego danej roli użytkownika.
+     *
+     * @param role rola użytkownika (np. admin, dyrektor)
+     * @return ścieżka do pliku FXML danego panelu
+     */
     private String getViewForRole(String role) {
         switch (role.toLowerCase()) {
             case "admin":
@@ -177,6 +209,11 @@ public class MainController implements Initializable{
         }
     }
 
+    /**
+     * Otwiera okno dodawania nowego użytkownika.
+     *
+     * @param event kliknięcie przycisku "Dodaj użytkownika"
+     */
     @FXML
     void addUser(ActionEvent event) {
         try {
@@ -192,25 +229,35 @@ public class MainController implements Initializable{
         }
     }
 
-
+    /**
+     * Pokazuje okno z informacją o sukcesie.
+     *
+     * @param message komunikat do wyświetlenia
+     */
     private void showSuccessAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sukces");
         alert.setHeaderText(null);
         alert.setContentText(message);
-
         alert.showAndWait();
     }
 
+    /**
+     * Pokazuje okno z informacją o błędzie.
+     *
+     * @param message komunikat błędu
+     */
     private void showErrorAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Błąd");
         alert.setHeaderText(null);
         alert.setContentText(message);
-
         alert.showAndWait();
     }
 
+    /**
+     * Obsługuje zamknięcie aplikacji.
+     */
     @FXML
     private void handleClose() {
         Stage stage = (Stage) closeButton.getScene().getWindow();

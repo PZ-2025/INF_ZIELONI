@@ -17,6 +17,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Kontroler odpowiedzialny za interakcję dyrektora z GUI.
+ * Wyświetla dane magazynowe przypisane do działów.
+ */
 public class DirectorController {
 
     @FXML
@@ -37,9 +41,11 @@ public class DirectorController {
     @FXML
     private TableColumn<Warehouse, Integer> warehouseAmount;
 
+    /**
+     * Inicjalizacja kontrolera – mapuje kolumny na pola modelu oraz ładuje dane do tabeli.
+     */
     @FXML
     public void initialize() {
-        // Mapowanie kolumn na pola klasy User
         departmentName.setCellValueFactory(new PropertyValueFactory<>("depName"));
         itemName.setCellValueFactory(new PropertyValueFactory<>("itemName"));
         warehouseAmount.setCellValueFactory(new PropertyValueFactory<>("itemAmount"));
@@ -47,6 +53,11 @@ public class DirectorController {
         loadData();
     }
 
+    /**
+     * Pobiera dane z bazy danych i zwraca listę elementów magazynowych.
+     *
+     * @return lista danych magazynowych jako ObservableList
+     */
     public static ObservableList<Warehouse> getItems() {
         ObservableList<Warehouse> items = FXCollections.observableArrayList();
         String query = "SELECT " +
@@ -54,12 +65,9 @@ public class DirectorController {
                 " w.name AS warehouse_name," +
                 " i.name AS item_name," +
                 " i.quantity " +
-                "FROM" +
-                " warehouses w " +
-                "JOIN" +
-                " departments d ON w.department_id = d.id " +
-                "JOIN" +
-                " items i ON w.id = i.warehouse_id;";
+                "FROM warehouses w " +
+                "JOIN departments d ON w.department_id = d.id " +
+                "JOIN items i ON w.id = i.warehouse_id;";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
@@ -71,21 +79,27 @@ public class DirectorController {
                         rs.getString("item_name"),
                         rs.getInt("quantity")
                 ));
-
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Możesz to później zastąpić loggerem
         }
 
         return items;
     }
 
+    /**
+     * Ładuje dane do tabeli z bazy danych.
+     */
     private void loadData() {
         ObservableList<Warehouse> items = getItems();
-        tableView.setItems(items    );
+        tableView.setItems(items);
     }
 
-
+    /**
+     * Obsługuje wylogowanie użytkownika i powrót do ekranu startowego.
+     *
+     * @param event zdarzenie kliknięcia przycisku
+     */
     @FXML
     private void logout(ActionEvent event) {
         try {
@@ -97,16 +111,20 @@ public class DirectorController {
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("blad");
+            alert.setTitle("Błąd");
             alert.setHeaderText(null);
-            alert.setContentText("wystapil problem");
+            alert.setContentText("Wystąpił problem");
             alert.showAndWait();
         }
     }
 
+    /**
+     * Obsługuje kliknięcie przycisku raportów – obecnie niezaimplementowane.
+     *
+     * @param event zdarzenie kliknięcia przycisku
+     */
     @FXML
     void raports(ActionEvent event) {
-
+        // TODO: Implementacja generowania raportów
     }
-
 }

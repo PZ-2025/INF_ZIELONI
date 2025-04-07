@@ -2,18 +2,44 @@ package com.example.obiwankenobi;
 
 import java.sql.Timestamp;
 
+/**
+ * Model reprezentujący zadanie w systemie.
+ * Zawiera informacje takie jak tytuł, opis, status, termin realizacji oraz datę utworzenia.
+ */
 public class Task {
+
+    /** Identyfikator zadania */
     private int id;
+
+    /** Tytuł zadania */
     private String title;
+
+    /** Opis zadania */
     private String description;
+
+    /** Status zadania (np. "Nowe", "W trakcie", "Zakończone") */
     private String status;
+
+    /** Termin realizacji zadania */
     private Timestamp deadline;
+
+    /** Data utworzenia zadania */
     private Timestamp createdAt;
 
-
+    /** Konstruktor domyślny */
     public Task() {
     }
 
+    /**
+     * Konstruktor zadania z wszystkimi polami.
+     *
+     * @param id identyfikator zadania
+     * @param title tytuł zadania
+     * @param description opis zadania
+     * @param status status zadania
+     * @param deadline termin realizacji
+     * @param createdAt data utworzenia
+     */
     public Task(int id, String title, String description, String status, Timestamp deadline, Timestamp createdAt) {
         this.id = id;
         this.title = title;

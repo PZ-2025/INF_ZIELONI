@@ -94,7 +94,7 @@
             </DatePicker>
          </children>
       </HBox>
-      <Button fx:id="addTaskButton" layoutX="94.0" layoutY="513.0" mnemonicParsing="false" onAction="#handleAddTask" prefHeight="50.0" prefWidth="120.0" style="-fx-background-color: FFC849;" text="dodaj" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="520.0">
+      <Button fx:id="addTaskButton" layoutX="94.0" layoutY="513.0" mnemonicParsing="false" onAction="#saveTask" prefHeight="50.0" prefWidth="120.0" style="-fx-background-color: FFC849;" text="dodaj" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="520.0">
          <font>
             <Font size="18.0" />
          </font>

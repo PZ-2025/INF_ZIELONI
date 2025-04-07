@@ -157,7 +157,7 @@ public class MainController implements Initializable {
      * @param password hasło
      * @return rola użytkownika (jeśli logowanie się powiodło), w przeciwnym razie null
      */
-    private String authenticateUser(String login, String password) {
+    public String authenticateUser(String login, String password) {
         String query = "SELECT u.id, u.first_name, u.last_name, r.name FROM users u " +
                 "JOIN roles r ON u.role_id = r.id " +
                 "WHERE u.email = ? AND u.password = ?";

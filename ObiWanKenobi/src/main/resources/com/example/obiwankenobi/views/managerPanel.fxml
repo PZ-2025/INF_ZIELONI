@@ -157,7 +157,7 @@
             <Insets left="20.0" />
          </VBox.margin>
          <children>
-      
+
               <Button fx:id="addTaskBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addTask" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #0C5A18;" text="Dodaj Zadanie" textFill="WHITE">
                   <font>
                       <Font name="System Bold" size="20.0" />
@@ -170,7 +170,7 @@
             </Button>
          </children>
       </HBox>
-        
+
         <Button fx:id="logoutBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #7D0A0A;" text="Wyloguj" textFill="WHITE">
             <font>
                 <Font name="System Bold" size="20.0" />

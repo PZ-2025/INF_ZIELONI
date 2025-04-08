@@ -76,6 +76,59 @@ public class ManagerController {
         // TODO: Zaimplementować odświeżanie listy zadań
         // Można tu dodać kod do pobrania zaktualizowanych danych z bazy
         // i odświeżenia tabeli/listy w interfejsie
+        /*
+    taskListContainer.getChildren().clear();
+
+    String query = "SELECT title, date, status FROM tasks";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
+
+        while (rs.next()) {
+            String title = rs.getString("title");
+            Date date = rs.getDate("date");
+            String status = rs.getString("status");
+
+            HBox taskBox = new HBox();
+            taskBox.setSpacing(10);
+            taskBox.setStyle("-fx-background-color: #91ee91;");
+            taskBox.setPrefHeight(78.0);
+            taskBox.setPrefWidth(619.0);
+
+            VBox textBox = new VBox();
+            textBox.setPrefHeight(78.0);
+            textBox.setPrefWidth(298.0);
+
+            Label titleLabel = new Label(title + "  " + date.toString());
+            titleLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #0C3105;");
+            Label statusLabel = new Label(status);
+            statusLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #0C3105;");
+
+            textBox.getChildren().addAll(titleLabel, statusLabel);
+
+            Button editBtn = new Button("Edytuj");
+            editBtn.setStyle("-fx-background-color: #FFC849;");
+            editBtn.setPrefSize(86, 44);
+
+            Button confirmBtn = new Button("Zatwierdź");
+            confirmBtn.setStyle("-fx-background-color: #0C5A18;");
+            confirmBtn.setPrefSize(120, 44);
+
+            Button deleteBtn = new Button("Usuń");
+            deleteBtn.setStyle("-fx-background-color: #7D0A0A;");
+            deleteBtn.setPrefSize(77, 44);
+
+            taskBox.getChildren().addAll(textBox, editBtn, confirmBtn, deleteBtn);
+            taskListContainer.getChildren().add(taskBox);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        showErrorAlert("Nie udało się załadować listy zadań.");
+    }
+}
+         */
     }
 
     /**
@@ -87,6 +140,32 @@ public class ManagerController {
     @FXML
     void StatusWareHause(ActionEvent event) {
         // TODO: implementacja wyświetlania stanu magazynu
+        /*
+    StringBuilder message = new StringBuilder();
+    String query = "SELECT item_name, quantity FROM warehouse";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
+
+        while (rs.next()) {
+            String item = rs.getString("item_name");
+            int qty = rs.getInt("quantity");
+            message.append(item).append(": ").append(qty).append(" szt.\n");
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Stan Magazynu");
+        alert.setHeaderText("Aktualny stan magazynowy:");
+        alert.setContentText(message.toString());
+        alert.showAndWait();
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        showErrorAlert("Nie udało się pobrać stanu magazynu.");
+    }
+}
+         */
     }
 
     /**

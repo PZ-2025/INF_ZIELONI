@@ -3,7 +3,6 @@ package com.example.obiwankenobi;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.sql.Date;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -56,19 +54,16 @@ public class TaskView {
         try {
             Connection connection = DatabaseConnection.getConnection();
 
-            // Zapytanie do bazy danych, aby pobrać szczegóły zadania
             String query = "SELECT id, deadline, title, status FROM tasks WHERE id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, Id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Jeśli dane zadania zostały znalezione, ustawiamy je w etykietach
             if (resultSet.next()) {
                 taskId.setText(String.valueOf(resultSet.getInt("id")));
 
                 Date deadline = resultSet.getDate("deadline");
 
-                // Jeśli termin nie jest null, formatowanie i wyświetlanie
                 if (deadline != null) {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                     String formattedDate = dateFormat.format(deadline);
@@ -80,7 +75,6 @@ public class TaskView {
                 taskStatus.setText(resultSet.getString("status"));
             }
 
-            // Zamknięcie połączenia i wyników
             resultSet.close();
             preparedStatement.close();
             connection.close();
@@ -100,7 +94,6 @@ public class TaskView {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/task.fxml"));
             Parent parent = loader.load();
 
-            // Ustawienie identyfikatora zadania w nowym kontrolerze
             TaskInfo taskInfoController = loader.getController();
             taskInfoController.setTaskId(Id);
 

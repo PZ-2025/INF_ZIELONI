@@ -78,7 +78,7 @@
     -fx-text-fill: #B3FFB3;
     -fx-underline: true;
 }
-/* Updated table styles for better readability */
+
 .table-view {
     -fx-background-color: #F0FFF0;
     -fx-background-radius: 10;
@@ -88,7 +88,6 @@
     -fx-padding: 0;
 }
 
-/* Style for column headers */
 .table-view .column-header,
 .table-view .column-header-background .filler {
     -fx-background-color: #0C3105;
@@ -104,7 +103,6 @@
     -fx-alignment: CENTER;
 }
 
-/* Alternating row colors for better readability */
 .table-view .table-row-cell:odd {
     -fx-background-color: #E6FFE6;
 }
@@ -113,16 +111,15 @@
     -fx-background-color: #F0FFF0;
 }
 
-/* Selected row styling */
 .table-view .table-row-cell:selected {
-    -fx-background-color: #4CAF50;
+    -fx-background-color: #B3FFB3;
 }
 
-.table-view .table-row-cell:selected .table-cell {
-    -fx-text-fill: white;
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: #0C3105;
 }
 
-/* Cell styling */
+
 .table-view .table-cell {
     -fx-font-family: 'Alata';
     -fx-font-size: 14px;
@@ -132,12 +129,10 @@
     -fx-border-width: 0 1 0 0;
 }
 
-/* Table view row height */
 .table-row-cell {
     -fx-cell-size: 40px;
 }
 
-/* Scrollbar styling */
 .table-view .scroll-bar:vertical,
 .table-view .scroll-bar:horizontal {
     -fx-background-color: #F0FFF0;
@@ -149,12 +144,10 @@
     -fx-background-radius: 5em;
 }
 
-/* Hover effects */
 .table-view .table-row-cell:hover {
-    -fx-background-color: #CCFFCC;
+    -fx-background-color: #B3FFB3;
 }
 
-/* Empty table styling */
 .table-view .placeholder .label {
     -fx-text-fill: #0C3105;
     -fx-font-family: 'Alata';

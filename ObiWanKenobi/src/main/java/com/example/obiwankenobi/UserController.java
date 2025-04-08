@@ -68,14 +68,12 @@ public class UserController {
      * Sprawdza, czy użytkownik jest zalogowany i wyświetla odpowiednie dane w widoku.
      */
     private void loadUserInfo() {
-        // Sprawdź czy mamy zalogowanego użytkownika
         if (loggedInUser != null) {
             int loggedInUserId = loggedInUser.getUserId();
 
             if (loggedInUserId > 0) {
-                userId.setText("ID:" + loggedInUserId);
+                userId.setText("" + loggedInUserId);
 
-                // Ładowanie imienia i nazwiska użytkownika z bazy danych
                 try (Connection connection = DatabaseConnection.getConnection();
                      PreparedStatement statement = connection.prepareStatement(
                              "SELECT first_name, last_name FROM users WHERE id = ?")) {
@@ -130,12 +128,16 @@ public class UserController {
         }
     }
 
+    @FXML
+    private void refreshTasks(ActionEvent event) {
+        loadContent();
+    }
+
     /**
      * Ładuje zadania przypisane do zalogowanego użytkownika i wyświetla je w widoku.
      * Dla każdego zadania ładowany jest osobny widok.
      */
     private void loadContent() {
-        // Sprawdź czy mamy zalogowanego użytkownika
         if (loggedInUser == null) {
             return;
         }
@@ -149,7 +151,6 @@ public class UserController {
         try {
             taskGrid.getChildren().clear();
 
-            // Ładowanie zadań przypisanych do użytkownika
             Connection connection = DatabaseConnection.getConnection();
             String sql = "SELECT * FROM tasks WHERE user_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -157,7 +158,6 @@ public class UserController {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Dla każdego zadania tworzymy nowy widok
             while (resultSet.next()) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(getClass().getResource("/com/example/obiwankenobi/views/taskMain.fxml"));

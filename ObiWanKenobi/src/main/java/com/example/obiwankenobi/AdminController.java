@@ -9,12 +9,14 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,6 +31,9 @@ public class AdminController {
     /** Tabela wyświetlająca użytkowników */
     @FXML
     private TableView<User> tableView;
+
+    @FXML
+    private TableColumn<User, Void> actionColumn;
 
     /** Kolumna z nazwą działu */
     @FXML
@@ -53,13 +58,29 @@ public class AdminController {
     /** Kolumna z nazwiskiem */
     @FXML
     private TableColumn<User, String> scndNameColumn;
+    ObservableList<User> usersList = FXCollections.observableArrayList();
+
+    private ObservableList<String> roles = FXCollections.observableArrayList();
+    private ObservableList<String> departments = FXCollections.observableArrayList();
+
 
     /**
      * Metoda inicjalizacyjna FXML. Ustawia mapowanie kolumn i ładuje użytkowników.
      */
     @FXML
     public void initialize() {
-        // Mapowanie kolumn na pola klasy User
+        loadRolesAndDepartments();
+        loadUsers();
+        enableEditing();
+        addDeleteButtonToTable();
+    }
+
+    /**
+     * Ładuje użytkowników z bazy danych i ustawia je w tabeli.
+     */
+    private void loadUsers() {
+        usersList.clear();
+
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         scndNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
@@ -67,38 +88,19 @@ public class AdminController {
         departmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
 
-        loadUsers();
-    }
-
-    /**
-     * Ładuje użytkowników z bazy danych i ustawia je w tabeli.
-     */
-    private void loadUsers() {
-        ObservableList<User> users = getUsers();
-        tableView.setItems(users);
-    }
-
-    /**
-     * Pobiera listę użytkowników z bazy danych.
-     *
-     * @return lista użytkowników jako ObservableList
-     */
-    public static ObservableList<User> getUsers() {
-        ObservableList<User> users = FXCollections.observableArrayList();
-
         String query = "SELECT users.id, users.first_name, users.last_name, users.email, users.password, " +
                 "roles.name AS role, departments.name AS department " +
                 "FROM users " +
                 "LEFT JOIN roles ON users.role_id = roles.id " +
                 "LEFT JOIN departments ON users.department_id = departments.id " +
-                "WHERE users.id > 1"; // Pomija użytkownika z ID 1 (np. superadmina)
+                "WHERE users.id > 1";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                users.add(new User(
+                usersList.add(new User(
                         rs.getInt("id"),
                         rs.getString("first_name"),
                         rs.getString("last_name"),
@@ -112,7 +114,233 @@ public class AdminController {
             e.printStackTrace();
         }
 
-        return users;
+        tableView.setItems(usersList);
+    }
+
+    private void enableEditing(){
+        tableView.setEditable(true);
+
+        nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        scndNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        emailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        passColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        departmentColumn.setCellFactory(ComboBoxTableCell.forTableColumn(departments));
+        roleColumn.setCellFactory(ComboBoxTableCell.forTableColumn(roles));
+
+        nameColumn.setOnEditCommit(event -> updateUserField(event, "first_name", event.getNewValue()));
+        scndNameColumn.setOnEditCommit(event -> updateUserField(event, "last_name", event.getNewValue()));
+        emailColumn.setOnEditCommit(event -> updateUserField(event, "email", event.getNewValue()));
+        passColumn.setOnEditCommit(event -> updateUserField(event, "password", event.getNewValue()));
+        departmentColumn.setOnEditCommit(event -> updateUserDepartment(event.getRowValue(), event.getNewValue()));
+        roleColumn.setOnEditCommit(event -> updateUserRole(event.getRowValue(), event.getNewValue()));
+    }
+
+    private void updateUserField(TableColumn.CellEditEvent<User, ?> event, String fieldName, Object newValue) {
+        User user = event.getRowValue();
+        String query = "UPDATE users SET " + fieldName + " = ? WHERE id = ?";
+
+        if (fieldName.equals("email") && isValueExistsInColumn(fieldName, newValue)) {
+            showAlert(Alert.AlertType.ERROR, "Błąd", "Email '" + newValue + "' już istnieje.");
+            return;
+        }
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setObject(1, newValue);
+            stmt.setInt(2, user.getUserId());
+
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                switch (fieldName) {
+                    case "first_name":
+                        user.setFirstName((String) newValue);
+                        break;
+                    case "last_name":
+                        user.setLastName((String) newValue);
+                        break;
+                    case "email":
+                        user.setEmail((String) newValue);
+                        break;
+                }
+                tableView.refresh();
+                showAlert(Alert.AlertType.INFORMATION, "Sukces", "Dane zostały zaktualizowane.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Błąd", "Błąd podczas aktualizacji danych.");
+        }
+    }
+
+    private void addDeleteButtonToTable() {
+        actionColumn.setCellFactory(param -> new javafx.scene.control.TableCell<>() {
+            private final Button deleteButton = new Button("Usuń");
+
+            {
+                deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-size: 15px;");
+                deleteButton.setOnAction(event -> {
+                    User user = getTableView().getItems().get(getIndex());
+                    deleteUser(user);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                }
+            }
+        });
+    }
+
+    private void deleteUser(User user) {
+        String query = "DELETE FROM users WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, user.getUserId());
+            int rowsDeleted = stmt.executeUpdate();
+
+            if (rowsDeleted > 0) {
+                usersList.remove(user);
+                showAlert(Alert.AlertType.INFORMATION, "Sukces", "Użytkownik został usunięty.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Błąd", "Nie udało się usunąć użytkownika.");
+        }
+    }
+
+
+
+    private void loadRolesAndDepartments() {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String roleQuery = "SELECT name FROM roles where id > 1";
+            try (PreparedStatement stmt = conn.prepareStatement(roleQuery);
+                 ResultSet rs = stmt.executeQuery()) {
+                roles.clear();
+                while (rs.next()) {
+                    roles.add(rs.getString("name"));
+                }
+            }
+
+            String deptQuery = "SELECT name FROM departments";
+            try (PreparedStatement stmt = conn.prepareStatement(deptQuery);
+                 ResultSet rs = stmt.executeQuery()) {
+                departments.clear();
+                while (rs.next()) {
+                    departments.add(rs.getString("name"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void updateUserRole(User user, String newRoleName) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            int roleId = getRoleIdByName(newRoleName, conn);
+
+            String query = "UPDATE users SET role_id = ? WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, roleId);
+                stmt.setInt(2, user.getUserId());
+                int rowsUpdated = stmt.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    user.setRole(newRoleName);
+
+                    if ("Dyrektor".equalsIgnoreCase(newRoleName)) {
+                        clearUserDepartment(user, conn);
+                    }
+
+                    tableView.refresh();
+                    showAlert(Alert.AlertType.INFORMATION, "Sukces", "Rola została zaktualizowana.");
+                }
+            }
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Błąd", "Nie udało się zaktualizować roli: " + e.getMessage());
+        }
+    }
+
+    private void clearUserDepartment(User user, Connection conn) throws SQLException {
+        String query = "UPDATE users SET department_id = NULL WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, user.getUserId());
+            stmt.executeUpdate();
+            user.setDepartment(null);
+        }
+    }
+
+    private void updateUserDepartment(User user, String newDepartmentName) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            int departmentId = getDepartmentIdByName(newDepartmentName, conn);
+
+            String query = "UPDATE users SET department_id = ? WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, departmentId);
+                stmt.setInt(2, user.getUserId());
+
+                int rowsUpdated = stmt.executeUpdate();
+                if (rowsUpdated > 0) {
+                    user.setDepartment(newDepartmentName);
+                    tableView.refresh();
+                    showAlert(Alert.AlertType.INFORMATION, "Sukces", "Dział został zaktualizowany.");
+                }
+            }
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Błąd", "Nie udało się zaktualizować działu: " + e.getMessage());
+        }
+    }
+
+    private int getRoleIdByName(String roleName, Connection conn) throws SQLException {
+        String query = "SELECT id FROM roles WHERE name = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, roleName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                } else {
+                    throw new SQLException("Nie znaleziono roli: " + roleName);
+                }
+            }
+        }
+    }
+
+    private int getDepartmentIdByName(String deptName, Connection conn) throws SQLException {
+        String query = "SELECT id FROM departments WHERE name = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, deptName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                } else {
+                    throw new SQLException("Nie znaleziono działu: " + deptName);
+                }
+            }
+        }
+    }
+
+    private boolean isValueExistsInColumn(String column, Object value) {
+        String query = "SELECT COUNT(*) FROM users WHERE " + column + " = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setObject(1, value);
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -135,6 +363,22 @@ public class AdminController {
         stage.initStyle(StageStyle.UTILITY);
         stage.show();
     }
+
+    private int getRoleIdByName(String roleName) throws SQLException {
+        String query = "SELECT id FROM roles WHERE name = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, roleName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                } else {
+                    throw new SQLException("Rola nie znaleziona: " + roleName);
+                }
+            }
+        }
+    }
+
 
     /**
      * Odświeża dane w tabeli użytkowników.
@@ -164,5 +408,13 @@ public class AdminController {
             alert.setContentText("Wystąpił problem podczas wylogowywania.");
             alert.showAndWait();
         }
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

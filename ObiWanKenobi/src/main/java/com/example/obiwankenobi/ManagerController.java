@@ -3,17 +3,24 @@ package com.example.obiwankenobi;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.sql.*;
 
 /**
  * Kontroler panelu kierownika (Managera).
@@ -29,6 +36,14 @@ public class ManagerController {
 
     @FXML
     private Button logoutBtn;
+
+    @FXML
+    private VBox taskListContainer;
+
+    @FXML
+    public void initialize() {
+        refreshTaskList();
+    }
 
     /**
      * Obsługuje akcję dodawania nowego zadania.
@@ -73,62 +88,109 @@ public class ManagerController {
      * aby zaktualizować widok z aktualną listą zadań.
      */
     private void refreshTaskList() {
-        // TODO: Zaimplementować odświeżanie listy zadań
-        // Można tu dodać kod do pobrania zaktualizowanych danych z bazy
-        // i odświeżenia tabeli/listy w interfejsie
-        /*
-    taskListContainer.getChildren().clear();
+        taskListContainer.getChildren().clear();
 
-    String query = "SELECT title, date, status FROM tasks";
+        String query = "SELECT t.id, t.title, t.description, t.status, t.deadline, t.created_at\n" +
+                "FROM tasks t\n" +
+                "JOIN users u ON t.user_id = u.id\n" +
+                "JOIN departments d ON u.department_id = d.id\n" +
+                "WHERE d.manager_id = ?\n";
 
-    try (Connection conn = DatabaseConnection.getConnection();
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(query)) {
+        // Pobranie ID zalogowanego użytkownika
+        int loggedInUserId = ManagerController.getLoggedInUserId();
 
-        while (rs.next()) {
-            String title = rs.getString("title");
-            Date date = rs.getDate("date");
-            String status = rs.getString("status");
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            HBox taskBox = new HBox();
-            taskBox.setSpacing(10);
-            taskBox.setStyle("-fx-background-color: #91ee91;");
-            taskBox.setPrefHeight(78.0);
-            taskBox.setPrefWidth(619.0);
+            stmt.setInt(1, loggedInUserId);
+            ResultSet rs = stmt.executeQuery();
 
-            VBox textBox = new VBox();
-            textBox.setPrefHeight(78.0);
-            textBox.setPrefWidth(298.0);
+            int taskNumber = 1;
 
-            Label titleLabel = new Label(title + "  " + date.toString());
-            titleLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #0C3105;");
-            Label statusLabel = new Label(status);
-            statusLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #0C3105;");
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String status = rs.getString("status");
+                Timestamp deadline = rs.getTimestamp("deadline");
 
-            textBox.getChildren().addAll(titleLabel, statusLabel);
+                HBox taskBox = new HBox();
+                taskBox.setSpacing(10);
+                taskBox.setStyle("-fx-background-color: #91ee91; -fx-padding: 10;");
+                taskBox.setPrefHeight(78.0);
+                taskBox.setPrefWidth(619.0);
+                taskBox.setAlignment(Pos.CENTER_LEFT);
 
-            Button editBtn = new Button("Edytuj");
-            editBtn.setStyle("-fx-background-color: #FFC849;");
-            editBtn.setPrefSize(86, 44);
+                VBox textBox = new VBox(5);  // Ustawienie odstępu między etykietami
+                textBox.setPrefHeight(78.0);
+                textBox.setPrefWidth(298.0);
 
-            Button confirmBtn = new Button("Zatwierdź");
-            confirmBtn.setStyle("-fx-background-color: #0C5A18;");
-            confirmBtn.setPrefSize(120, 44);
+                Label taskNumberLabel = new Label("Zadanie " + taskNumber++);
+                taskNumberLabel.getStyleClass().add("textSmallDark");
+                taskNumberLabel.setStyle("-fx-font-weight: bold;");
 
-            Button deleteBtn = new Button("Usuń");
-            deleteBtn.setStyle("-fx-background-color: #7D0A0A;");
-            deleteBtn.setPrefSize(77, 44);
+                // Tytuł zadania
+                Label titleLabel = new Label(title);
+                titleLabel.getStyleClass().add("textSmallDark");
+                titleLabel.setPrefSize(254, 38);
+                titleLabel.setWrapText(true);
+                titleLabel.setMaxWidth(250);
 
-            taskBox.getChildren().addAll(textBox, editBtn, confirmBtn, deleteBtn);
-            taskListContainer.getChildren().add(taskBox);
+                // Data deadline
+                String deadlineText = (deadline != null ? deadline.toLocalDateTime().toLocalDate().toString() : "Brak terminu");
+                Label deadlineLabel = new Label(deadlineText);
+                deadlineLabel.getStyleClass().add("textSmallDark");
+                deadlineLabel.setPrefSize(254, 38);
+                deadlineLabel.setWrapText(true);
+                deadlineLabel.setMaxWidth(250);
+
+                textBox.getChildren().addAll(taskNumberLabel, titleLabel, deadlineLabel);
+
+                // Status zadania
+                Label statusLabel = new Label(status);
+                statusLabel.getStyleClass().add("textSmallDark");
+                statusLabel.setPrefHeight(38);
+                statusLabel.setMaxWidth(150);
+
+                // Przyciski
+                Button editBtn = new Button("Edytuj");
+                editBtn.setStyle("-fx-background-color: #FFC849; -fx-font-size: 12px;");
+                editBtn.setPrefSize(60, 30);
+
+                Button confirmBtn = new Button("Zatwierdź");
+                confirmBtn.setStyle("-fx-background-color: #0C5A18; -fx-font-size: 12px;");
+                confirmBtn.setPrefSize(80, 30);
+                if ("Zakończone".equalsIgnoreCase(status)) {
+                    confirmBtn.setDisable(true);
+                }
+
+                Button deleteBtn = new Button("Usuń");
+                deleteBtn.setStyle("-fx-background-color: #7D0A0A; -fx-font-size: 12px;");
+                deleteBtn.setPrefSize(60, 30);
+
+                // Opakowanie przycisków w VBox i ustawienie na prawo
+                VBox buttonBox = new VBox(5);
+                buttonBox.setAlignment(Pos.CENTER_RIGHT);
+                buttonBox.getChildren().addAll(editBtn, confirmBtn, deleteBtn);
+
+                Region spacer = new Region(); // by wypchnąć buttony na prawo
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                // Dodanie do głównego kontenera
+                taskBox.getChildren().addAll(textBox, statusLabel, spacer, buttonBox);
+                taskListContainer.getChildren().add(taskBox);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Nie udało się załadować listy zadań.");
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        showErrorAlert("Nie udało się załadować listy zadań.");
     }
-}
-         */
+
+    /**
+     * Zwraca ID zalogowanego użytkownika.
+     */
+    public static int getLoggedInUserId() {
+        // Zwróć ID zalogowanego użytkownika
+        return UserController.getLoggedInUser().getUserId(); // Dostęp do kontrolera użytkownika.
     }
 
     /**
@@ -140,32 +202,7 @@ public class ManagerController {
     @FXML
     void StatusWareHause(ActionEvent event) {
         // TODO: implementacja wyświetlania stanu magazynu
-        /*
-    StringBuilder message = new StringBuilder();
-    String query = "SELECT item_name, quantity FROM warehouse";
 
-    try (Connection conn = DatabaseConnection.getConnection();
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(query)) {
-
-        while (rs.next()) {
-            String item = rs.getString("item_name");
-            int qty = rs.getInt("quantity");
-            message.append(item).append(": ").append(qty).append(" szt.\n");
-        }
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Stan Magazynu");
-        alert.setHeaderText("Aktualny stan magazynowy:");
-        alert.setContentText(message.toString());
-        alert.showAndWait();
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        showErrorAlert("Nie udało się pobrać stanu magazynu.");
-    }
-}
-         */
     }
 
     /**

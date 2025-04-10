@@ -82,6 +82,7 @@ public class ManagerController {
         }
     }
 
+
     /**
      * Odświeża listę zadań po dodaniu nowego zadania.
      * Ta metoda powinna być wywołana po dodaniu nowego zadania,
@@ -90,7 +91,7 @@ public class ManagerController {
     private void refreshTaskList() {
         taskListContainer.getChildren().clear();
 
-        String query = "SELECT t.id, t.title, t.description, t.status, t.deadline, t.created_at\n" +
+        String query = "SELECT t.id, t.title, t.description, t.status, t.deadline, t.user_id, t.created_at\n" +
                 "FROM tasks t\n" +
                 "JOIN users u ON t.user_id = u.id\n" +
                 "JOIN departments d ON u.department_id = d.id\n" +
@@ -111,6 +112,9 @@ public class ManagerController {
                 String title = rs.getString("title");
                 String status = rs.getString("status");
                 Timestamp deadline = rs.getTimestamp("deadline");
+                int id = rs.getInt("id");
+                String description = rs.getString("description");
+                int user_id = rs.getInt("user_id");
 
                 HBox taskBox = new HBox();
                 taskBox.setSpacing(10);
@@ -155,6 +159,41 @@ public class ManagerController {
                 editBtn.setStyle("-fx-background-color: #FFC849; -fx-font-size: 12px;");
                 editBtn.setPrefSize(60, 30);
 
+                // edycja zadania
+                editBtn.setOnAction(e -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/editTask.fxml"));
+                        Parent root = loader.load();
+
+                        //kontroler edycji
+                        EditTaskController controller = loader.getController();
+                        controller.setTaskData(
+                                id,
+                                title,
+                                description,
+                                deadline.toLocalDateTime().toLocalDate(),
+                                user_id,
+                                getUserNameById(user_id)
+                        );
+
+                        Stage editStage = new Stage();
+                        editStage.setTitle("Edytuj zadanie");
+                        editStage.initModality(Modality.WINDOW_MODAL);
+                        editStage.initOwner(((Node) e.getSource()).getScene().getWindow());
+                        Scene scene = new Scene(root);
+                        scene.setFill(Color.TRANSPARENT);
+                        editStage.setScene(scene);
+                        editStage.showAndWait();
+
+                        refreshTaskList();
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        showErrorAlert("Nie udało się otworzyć formularza edycji zadania.");
+                    }
+                });
+
+
                 Button confirmBtn = new Button("Zatwierdź");
                 confirmBtn.setStyle("-fx-background-color: #0C5A18; -fx-font-size: 12px;");
                 confirmBtn.setPrefSize(80, 30);
@@ -184,6 +223,23 @@ public class ManagerController {
             showErrorAlert("Nie udało się załadować listy zadań.");
         }
     }
+
+
+
+    private String getUserNameById(int userId) {
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement stmt = con.prepareStatement("SELECT first_name, last_name FROM users WHERE id = ?")) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("first_name") + " " + rs.getString("last_name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 
     /**
      * Zwraca ID zalogowanego użytkownika.

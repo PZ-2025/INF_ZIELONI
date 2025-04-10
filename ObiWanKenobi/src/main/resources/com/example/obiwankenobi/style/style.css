@@ -152,3 +152,7 @@
     -fx-text-fill: #0C3105;
     -fx-font-family: 'Alata';
 }
+
+.text-field, .password-field {
+    -fx-text-fill: black;
+}

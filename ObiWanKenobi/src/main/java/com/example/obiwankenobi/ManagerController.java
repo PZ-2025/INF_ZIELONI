@@ -82,7 +82,6 @@ public class ManagerController {
         }
     }
 
-
     /**
      * Odświeża listę zadań po dodaniu nowego zadania.
      * Ta metoda powinna być wywołana po dodaniu nowego zadania,
@@ -224,8 +223,6 @@ public class ManagerController {
         }
     }
 
-
-
     private String getUserNameById(int userId) {
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement stmt = con.prepareStatement("SELECT first_name, last_name FROM users WHERE id = ?")) {
@@ -240,7 +237,6 @@ public class ManagerController {
         return "";
     }
 
-
     /**
      * Zwraca ID zalogowanego użytkownika.
      */
@@ -251,14 +247,93 @@ public class ManagerController {
 
     /**
      * Wyświetla stan magazynu.
-     * (Aktualnie metoda niezaimplementowana.)
-     *
      * @param event kliknięcie przycisku "Stan magazynu"
      */
     @FXML
     void StatusWareHause(ActionEvent event) {
-        // TODO: implementacja wyświetlania stanu magazynu
+        taskListContainer.getChildren().clear();
 
+        // Ukrycie przycisków
+        addTaskBtn.setVisible(false);
+        StatusWareHauseBtn.setVisible(false);
+
+        try {
+            // Tabela
+            javafx.scene.control.TableView<Warehouse> tableView = new javafx.scene.control.TableView<>();
+
+            // Kolumny
+            javafx.scene.control.TableColumn<Warehouse, String> depCol = new javafx.scene.control.TableColumn<>("Dział");
+            depCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("depName"));
+            depCol.setPrefWidth(200);
+
+            javafx.scene.control.TableColumn<Warehouse, String> itemCol = new javafx.scene.control.TableColumn<>("Przedmiot");
+            itemCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemName"));
+            itemCol.setPrefWidth(300);
+
+            javafx.scene.control.TableColumn<Warehouse, Integer> amountCol = new javafx.scene.control.TableColumn<>("Ilość");
+            amountCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemAmount"));
+            amountCol.setPrefWidth(100);
+
+            tableView.getColumns().addAll(depCol, itemCol, amountCol);
+            tableView.setItems(fetchWarehouseData());
+
+            tableView.setPrefHeight(400);
+            tableView.setPrefWidth(600);
+            tableView.setStyle("-fx-background-color: white;");
+
+            taskListContainer.getChildren().add(tableView);
+
+            Button backBtn = new Button("Pokaż zadania");
+            backBtn.setStyle("-fx-background-color: #FFC849; -fx-text-fill: white;");
+            backBtn.setOnAction(e -> {
+                addTaskBtn.setVisible(true);
+                StatusWareHauseBtn.setVisible(true);
+                refreshTaskList();
+            });
+
+            taskListContainer.getChildren().add(0, backBtn);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorAlert("Nie udało się załadować stanu magazynu.");
+        }
+    }
+
+    private javafx.collections.ObservableList<Warehouse> fetchWarehouseData() {
+        javafx.collections.ObservableList<Warehouse> list = javafx.collections.FXCollections.observableArrayList();
+
+        String query = "SELECT w.id, d.name AS department_name, i.name AS item_name, i.quantity " +
+                "FROM warehouses w " +
+                "JOIN departments d ON w.department_id = d.id " +
+                "JOIN items i ON w.id = i.warehouse_id " +
+                "WHERE d.manager_id = ?";
+
+        int loggedInUserId = getLoggedInUserId();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, loggedInUserId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int warehouseId = rs.getInt("id");
+                String dep = rs.getString("department_name");
+                String item = rs.getString("item_name");
+                int quantity = rs.getInt("quantity");
+
+                Warehouse warehouse = new Warehouse(dep, item, quantity);
+                warehouse.setId(warehouseId);
+
+                list.add(warehouse);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorAlert("Błąd podczas pobierania danych magazynu.");
+        }
+
+        return list;
     }
 
     /**

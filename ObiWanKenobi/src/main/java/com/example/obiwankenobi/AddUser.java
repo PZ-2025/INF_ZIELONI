@@ -148,7 +148,6 @@ public class AddUser {
             alert.setContentText("Użytkownik został dodany.");
             alert.showAndWait();
 
-            // Zamknij okno po dodaniu użytkownika
             Stage stage = (Stage) addName.getScene().getWindow();
             stage.close();
         } else {
@@ -179,20 +178,13 @@ public class AddUser {
         String roleSelect = addRole.getValue();
         String depSelect = addDep.getValue();
 
+        boolean nameValid = validateNameAndSurname();
         boolean emailValid = isEmailValid();
         boolean emailExists = isEmailExists(email);
         boolean passValid = validatePassword();
+        boolean selectionsValid = validateSelections(roleSelect, depSelect);
 
-        if (!emailValid || emailExists || !passValid) {
-            return;
-        }
-
-        if (name.isEmpty() || scndName.isEmpty() || email.isEmpty() || password.isEmpty() ||
-                roleSelect == null || depSelect == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("wszystko zle do domu");
-            alert.setContentText("Nie udalo sie utworzyc nowego");
-            alert.showAndWait();
+        if (!emailValid || emailExists || !passValid || !nameValid || !selectionsValid) {
             return;
         }
 
@@ -252,8 +244,56 @@ public class AddUser {
             return false;
         }
 
-        addPass.setStyle("-fx-border-color: green ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
+        addPass.setStyle(null);
         return true;
+    }
+
+    private boolean validateNameAndSurname() {
+        String name = addName.getText().trim();
+        String scndName = addScndName.getText().trim();
+
+        boolean valid = true;
+
+        if (name.isEmpty()) {
+            addName.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
+            new animatefx.animation.Shake(addName).play();
+            valid = false;
+        } else {
+            addName.setStyle(null);
+        }
+
+        if (scndName.isEmpty()) {
+            addScndName.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
+            new animatefx.animation.Shake(addScndName).play();
+            valid = false;
+        } else {
+            addScndName.setStyle(null);
+        }
+
+        return valid;
+    }
+
+    private boolean validateSelections(String roleSelect, String depSelect) {
+        boolean valid = true;
+
+        if (roleSelect == null) {
+            addRole.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
+            new animatefx.animation.Shake(addRole).play();
+            valid = false;
+        } else {
+            addRole.setStyle(null);
+        }
+
+        if (depSelect == null) {
+            addDep.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
+            new animatefx.animation.Shake(addDep).play();
+            valid = false;
+        } else {
+            addDep.setStyle(null);
+        }
+
+
+        return valid;
     }
 
 }

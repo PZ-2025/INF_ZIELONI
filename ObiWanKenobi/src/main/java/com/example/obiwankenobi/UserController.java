@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
+
 import javafx.scene.control.Label;
 
 /**
@@ -166,6 +168,11 @@ public class UserController {
                 TaskView taskViewController = fxmlLoader.getController();
                 int taskId = resultSet.getInt("id");
                 taskViewController.setTaskId(taskId);
+
+                Date taskDueDate = resultSet.getDate("deadline");
+                if (taskDueDate != null && taskDueDate.before(Date.valueOf(LocalDate.now()))) {
+                    taskMain.setStyle("-fx-background-color: #ff6189;");
+                }
 
                 taskGrid.add(taskMain, 0, row++);
                 GridPane.setMargin(taskMain, new Insets(5));

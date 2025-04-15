@@ -139,9 +139,14 @@ public class AdminController {
         User user = event.getRowValue();
         String query = "UPDATE users SET " + fieldName + " = ? WHERE id = ?";
 
+        if (newValue == null || newValue.toString().trim().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Błąd", "Pole nie może być puste!");
+            return;
+        }
+
         // Walidacja e-maila
         if (fieldName.equals("email")) {
-            String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+            String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
             if (!((String) newValue).matches(emailRegex)) {
                 showAlert(Alert.AlertType.ERROR, "Niepoprawny e-mail", "Podaj poprawny adres e-mail.");
                 return;
@@ -156,7 +161,7 @@ public class AdminController {
         // Walidacja hasła
         if (fieldName.equals("password")) {
             String password = (String) newValue;
-            String passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+            String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
             if (!password.matches(passwordRegex)) {
                 showAlert(Alert.AlertType.ERROR, "Niepoprawne hasło",
                         "Hasło musi mieć min. 8 znaków, zawierać literę i cyfrę.");
@@ -271,13 +276,46 @@ public class AdminController {
         try (Connection conn = DatabaseConnection.getConnection()) {
             int roleId = getRoleIdByName(newRoleName, conn);
 
-            String query = "UPDATE users SET role_id = ? WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            if ("Kierownik".equalsIgnoreCase(newRoleName)) {
+                String query = "SELECT COUNT(*) FROM users WHERE role_id = ? AND department_id = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                    stmt.setInt(1, roleId);
+                    stmt.setInt(2, getDepartmentIdByName(user.getDepartment(), conn));
+
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        rs.next();
+                        int count = rs.getInt(1);
+
+                        if (count > 0) {
+                            showAlert(Alert.AlertType.ERROR, "Błąd", "Ten dział ma już przydzielonego Kierownika!");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            String updateQuery = "UPDATE users SET role_id = ? WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
                 stmt.setInt(1, roleId);
                 stmt.setInt(2, user.getUserId());
                 int rowsUpdated = stmt.executeUpdate();
 
                 if (rowsUpdated > 0) {
+                    if ("Kierownik".equalsIgnoreCase(newRoleName)) {
+                        String updateDeptQuery = "UPDATE departments SET manager_id = ? WHERE id = ?";
+                        try (PreparedStatement deptStmt = conn.prepareStatement(updateDeptQuery)) {
+                            deptStmt.setInt(1, user.getUserId());
+                            deptStmt.setInt(2, getDepartmentIdByName(user.getDepartment(), conn));
+                            deptStmt.executeUpdate();
+                        }
+                    } else {
+                        String clearManagerQuery = "UPDATE departments SET manager_id = NULL WHERE manager_id = ?";
+                        try (PreparedStatement clearStmt = conn.prepareStatement(clearManagerQuery)) {
+                            clearStmt.setInt(1, user.getUserId());
+                            clearStmt.executeUpdate();
+                        }
+                    }
+
                     user.setRole(newRoleName);
 
                     if ("Dyrektor".equalsIgnoreCase(newRoleName)) {
@@ -292,6 +330,7 @@ public class AdminController {
             showAlert(Alert.AlertType.ERROR, "Błąd", "Nie udało się zaktualizować roli: " + e.getMessage());
         }
     }
+
 
     private void clearUserDepartment(User user, Connection conn) throws SQLException {
         String query = "UPDATE users SET department_id = NULL WHERE id = ?";

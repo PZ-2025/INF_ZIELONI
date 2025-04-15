@@ -139,9 +139,30 @@ public class AdminController {
         User user = event.getRowValue();
         String query = "UPDATE users SET " + fieldName + " = ? WHERE id = ?";
 
-        if (fieldName.equals("email") && isValueExistsInColumn(fieldName, newValue)) {
-            showAlert(Alert.AlertType.ERROR, "Błąd", "Email '" + newValue + "' już istnieje.");
-            return;
+        // Walidacja e-maila
+        if (fieldName.equals("email")) {
+            String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+            if (!((String) newValue).matches(emailRegex)) {
+                showAlert(Alert.AlertType.ERROR, "Niepoprawny e-mail", "Podaj poprawny adres e-mail.");
+                return;
+            }
+
+            if (isValueExistsInColumn(fieldName, newValue)) {
+                showAlert(Alert.AlertType.ERROR, "Błąd", "Email '" + newValue + "' już istnieje.");
+                return;
+            }
+        }
+
+        // Walidacja hasła
+        if (fieldName.equals("password")) {
+            String password = (String) newValue;
+            String passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+            if (!password.matches(passwordRegex)) {
+                showAlert(Alert.AlertType.ERROR, "Niepoprawne hasło",
+                        "Hasło musi mieć min. 8 znaków, zawierać literę i cyfrę.");
+                return;
+            }
+            newValue = password;
         }
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -161,6 +182,9 @@ public class AdminController {
                         break;
                     case "email":
                         user.setEmail((String) newValue);
+                        break;
+                    case "password":
+                       user.setPassword((String) newValue);
                         break;
                 }
                 tableView.refresh();

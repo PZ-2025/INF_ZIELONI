@@ -1,10 +1,14 @@
 package com.example.obiwankenobi;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.sql.*;
@@ -26,6 +30,10 @@ public class EditTaskController implements Initializable {
     @FXML private TextArea taskDescriptionField;
     @FXML private TextField taskTitleField;
 
+    // Style CSS dla elementów z błędem
+    private final String errorStyle = "-fx-border-color: red; -fx-border-width: 2px;";
+    private final String normalStyle = "";
+
     // ID edytowanego zadania
     private int taskId;
 
@@ -39,10 +47,32 @@ public class EditTaskController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            fetchInfo(); // lista pracowników
+            fetchInfo();
+            // Ustawienie bieżącej daty jako domyślnej dla pola deadline
+            taskDeadlineField.setValue(LocalDate.now());
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            showAlert(Alert.AlertType.ERROR, "Błąd połączenia", "Nie udało się nawiązać połączenia z bazą danych: " + e.getMessage());
         }
+
+        // Resetowanie stanu błędów przy zmianie wartości pól
+        taskTitleField.textProperty().addListener((observable, oldValue, newValue) -> {
+            resetFieldStyle(taskTitleField);
+        });
+
+        taskDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+            resetFieldStyle(taskDescriptionField);
+        });
+
+        employeeChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            resetFieldStyle(employeeChoiceBox);
+        });
+
+        taskDeadlineField.valueProperty().addListener((observable, oldValue, newValue) -> {
+            resetFieldStyle(taskDeadlineField);
+        });
+    }
+    private void resetFieldStyle(javafx.scene.Node field) {
+        field.setStyle(normalStyle);
     }
 
     /**
@@ -93,6 +123,11 @@ public class EditTaskController implements Initializable {
      */
     @FXML
     private void saveTask() throws SQLException {
+
+        if (!validateInputData()) {
+            return;
+        }
+
         String title = taskTitleField.getText();
         String description = taskDescriptionField.getText();
         LocalDate deadline = taskDeadlineField.getValue();
@@ -161,5 +196,69 @@ public class EditTaskController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private boolean validateInputData() {
+        boolean isValid = true;
+        StringBuilder errorMessage = new StringBuilder();
+
+        // Resetowanie stylów wszystkich pól
+        resetFieldStyle(taskDeadlineField);
+        resetFieldStyle(taskDescriptionField);
+        resetFieldStyle(taskTitleField);
+        resetFieldStyle(taskDeadlineField);
+
+        // Sprawdzenie czy tytuł zadania został wprowadzony
+        if (taskTitleField.getText() == null || taskTitleField.getText().trim().isEmpty()) {
+            errorMessage.append("Tytuł zadania nie może być pusty!\n");
+            animateFieldError(taskTitleField);
+            isValid = false;
+        }
+
+        // Sprawdzenie czy opis zadania został wprowadzony
+        if (taskDescriptionField.getText() == null || taskDescriptionField.getText().trim().isEmpty()) {
+            errorMessage.append("Opis zadania nie może być pusty!\n");
+            animateFieldError(taskDescriptionField);
+            isValid = false;
+        }
+
+
+        // Sprawdzenie czy wybrano datę
+        if (taskDeadlineField.getValue() == null) {
+            errorMessage.append("Należy wybrać termin realizacji zadania!\n");
+            animateFieldError(taskDeadlineField);
+            isValid = false;
+        } else if (taskDeadlineField.getValue().isBefore(LocalDate.now())) {
+            errorMessage.append("Termin realizacji nie może być wcześniejszy niż dzisiejsza data!\n");
+            animateFieldError(taskDeadlineField);
+            isValid = false;
+        }
+
+        // Jeśli wystąpiły błędy, wyświetl komunikat
+        if (!isValid) {
+            showAlert(Alert.AlertType.ERROR, "Błędne dane", errorMessage.toString());
+        }
+
+        return isValid;
+    }
+
+    private void animateFieldError(javafx.scene.Node field) {
+        // Zapisujemy oryginalny styl
+        String originalStyle = field.getStyle();
+
+        // Tworzymy timeline dla animacji migania
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(field.styleProperty(), errorStyle)),
+                new KeyFrame(Duration.millis(200), new KeyValue(field.styleProperty(), normalStyle)),
+                new KeyFrame(Duration.millis(400), new KeyValue(field.styleProperty(), errorStyle)),
+                new KeyFrame(Duration.millis(600), new KeyValue(field.styleProperty(), normalStyle)),
+                new KeyFrame(Duration.millis(800), new KeyValue(field.styleProperty(), errorStyle))
+        );
+
+        // Po zakończeniu animacji ustawiamy styl błędu
+        timeline.setOnFinished(event -> field.setStyle(errorStyle));
+
+        // Odtwarzamy animację
+        timeline.play();
     }
 }

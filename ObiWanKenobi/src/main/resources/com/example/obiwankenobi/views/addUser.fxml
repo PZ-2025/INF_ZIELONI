@@ -82,7 +82,7 @@
                   <Insets left="20.0" top="5.0" />
                </HBox.margin>
             </Label>
-            <TextField id="newEmail" fx:id="addEmail" prefHeight="30.0" prefWidth="200.0" promptText="mail" style="-fx-background-color: white;" styleClass="inputUser">
+            <TextField id="newEmail" fx:id="addEmail" prefHeight="30.0" prefWidth="200.0" promptText="nazwa@domena.com" style="-fx-background-color: white;" styleClass="inputUser">
                <font>
                   <Font size="14.0" />
                </font>

@@ -20,31 +20,46 @@ import java.sql.SQLException;
  */
 public class AddUser {
 
-    /** Pole wyboru działu */
+    /**
+     * Pole wyboru działu
+     */
     @FXML
     private ChoiceBox<String> addDep;
 
-    /** Pole wyboru roli */
+    /**
+     * Pole wyboru roli
+     */
     @FXML
     private ChoiceBox<String> addRole;
 
-    /** Pole tekstowe na adres e-mail */
+    /**
+     * Pole tekstowe na adres e-mail
+     */
     @FXML
     private TextField addEmail;
 
-    /** Pole tekstowe na imię */
+    /**
+     * Pole tekstowe na imię
+     */
     @FXML
     private TextField addName;
 
-    /** Pole tekstowe na hasło */
+    /**
+     * Pole tekstowe na hasło
+     */
     @FXML
     private TextField addPass;
 
-    /** Pole tekstowe na nazwisko */
+    /**
+     * Pole tekstowe na nazwisko
+     */
     @FXML
     private TextField addScndName;
 
-    /** Referencja do kontrolera administratora w celu odświeżenia danych */
+
+    /**
+     * Referencja do kontrolera administratora w celu odświeżenia danych
+     */
     @FXML
     private AdminController adminController;
 
@@ -153,6 +168,7 @@ public class AddUser {
      * @throws SQLException jeśli wystąpi błąd SQL
      * @throws IOException  jeśli wystąpi błąd wejścia/wyjścia
      */
+
     @FXML
     public void saveUser(ActionEvent event) throws SQLException, IOException {
         String name = addName.getText();
@@ -163,13 +179,19 @@ public class AddUser {
         String roleSelect = addRole.getValue();
         String depSelect = addDep.getValue();
 
-        // Walidacja pól
+        boolean emailValid = isEmailValid();
+        boolean emailExists = isEmailExists(email);
+        boolean passValid = validatePassword();
+
+        if (!emailValid || emailExists || !passValid) {
+            return;
+        }
+
         if (name.isEmpty() || scndName.isEmpty() || email.isEmpty() || password.isEmpty() ||
                 roleSelect == null || depSelect == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Błąd");
-            alert.setHeaderText(null);
-            alert.setContentText("Wypełnij wszystkie pola");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("wszystko zle do domu");
+            alert.setContentText("Nie udalo sie utworzyc nowego");
             alert.showAndWait();
             return;
         }
@@ -179,9 +201,59 @@ public class AddUser {
 
         saveUserToDB(name, scndName, email, password, depId, roleId);
 
-        // Odśwież tabelę użytkowników po dodaniu nowego
         if (adminController != null) {
             adminController.refreshTable();
         }
     }
+
+    private boolean isEmailExists(String email) throws SQLException {
+        String query = "SELECT COUNT(*) FROM users WHERE email = ?";
+        PreparedStatement statement = DatabaseConnection.getConnection().prepareStatement(query);
+        statement.setString(1, email);
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        if (resultSet.getInt(1) > 0) {
+            addEmail.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
+            new animatefx.animation.Shake(addEmail).play();
+            return true;
+        }
+        return false;
+    }
+
+    @FXML
+    private boolean isEmailValid() {
+        String email = addEmail.getText();
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+
+        if (!email.matches(emailRegex)) {
+            addEmail.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
+            new animatefx.animation.Shake(addEmail).play();
+            return false;
+        } else {
+            addEmail.setStyle(null);
+            return true;
+        }
+    }
+
+    private boolean isPasswordSecure(String password) {
+        String pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
+        return password.matches(pattern);
+    }
+
+    @FXML
+    private boolean validatePassword() {
+        String password = addPass.getText();
+        addPass.setStyle(null);
+
+        if (!isPasswordSecure(password)) {
+            addPass.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
+            new animatefx.animation.Shake(addPass).play();
+            return false;
+        }
+
+        addPass.setStyle("-fx-border-color: green ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
+        return true;
+    }
+
 }

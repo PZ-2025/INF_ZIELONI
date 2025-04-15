@@ -5,10 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -16,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 /**
  * Kontroler odpowiedzialny za interakcję dyrektora z GUI.
@@ -41,6 +39,21 @@ public class DirectorController {
     @FXML
     private TableColumn<Warehouse, Integer> warehouseAmount;
 
+    @FXML
+    private Label helloName;
+
+
+    //    public static void setLoggedInUser(User user) {
+//        loggedInUser = user;
+//    }
+    public static int getLoggedInUserId() {
+        // Zwróć ID zalogowanego użytkownika
+        return UserController.getLoggedInUser().getUserId(); // Dostęp do kontrolera użytkownika.
+    }
+
+    private static User loggedInUser;
+
+
     /**
      * Inicjalizacja kontrolera – mapuje kolumny na pola modelu oraz ładuje dane do tabeli.
      */
@@ -49,6 +62,7 @@ public class DirectorController {
         departmentName.setCellValueFactory(new PropertyValueFactory<>("depName"));
         itemName.setCellValueFactory(new PropertyValueFactory<>("itemName"));
         warehouseAmount.setCellValueFactory(new PropertyValueFactory<>("itemAmount"));
+        loadUserInfo();
 
         loadData();
     }
@@ -127,4 +141,25 @@ public class DirectorController {
     void raports(ActionEvent event) {
         // TODO: Implementacja generowania raportów
     }
+
+    private void loadUserInfo() {
+        int loggedInUserId = DirectorController.getLoggedInUserId();
+        String query = "SELECT first_name FROM users WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, loggedInUserId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String firstName = rs.getString("first_name");
+                helloName.setText(firstName);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
+
+

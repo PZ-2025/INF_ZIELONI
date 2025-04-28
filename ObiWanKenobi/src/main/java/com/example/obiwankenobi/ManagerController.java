@@ -83,9 +83,10 @@ public class ManagerController {
     }
 
     /**
-     * Odświeża listę zadań po dodaniu nowego zadania.
-     * Ta metoda powinna być wywołana po dodaniu nowego zadania,
+     * Odświeża listę zadań po dodaniu, edycji, usunięciu i zatwierdzeniu zadania.
+     * Ta metoda powinna być wywołana po dodaniu, edycji, usunięciu i zatwierdzeniu zadania,
      * aby zaktualizować widok z aktualną listą zadań.
+     * Zawiera również metody obsługi przycisków dodawania, edycji, usuwania i zatwierdzania zadania.
      */
     private void refreshTaskList() {
         taskListContainer.getChildren().clear();
@@ -153,7 +154,7 @@ public class ManagerController {
                 statusLabel.setPrefHeight(38);
                 statusLabel.setMaxWidth(150);
 
-                // Przyciski
+                // Przycisk edycji zadania
                 Button editBtn = new Button("Edytuj");
                 editBtn.setStyle("-fx-background-color: #FFC849; -fx-font-size: 12px;");
                 editBtn.setPrefSize(60, 30);
@@ -192,17 +193,61 @@ public class ManagerController {
                     }
                 });
 
-
+                // Przycisk zatwierdzania zadania
                 Button confirmBtn = new Button("Zatwierdź");
                 confirmBtn.setStyle("-fx-background-color: #0C5A18; -fx-font-size: 12px;");
                 confirmBtn.setPrefSize(80, 30);
-                if ("Zakończone".equalsIgnoreCase(status)) {
+
+                if ("zakończone".equalsIgnoreCase(status)) {
                     confirmBtn.setDisable(true);
+                    editBtn.setDisable(true);
                 }
 
+                confirmBtn.setOnAction(e -> {
+                    try (Connection conn1 = DatabaseConnection.getConnection();
+                         PreparedStatement stmt1 = conn1.prepareStatement("UPDATE tasks SET status = ? WHERE id = ?")) {
+
+                        stmt1.setString(1, "zakończone");
+                        stmt1.setInt(2, id);
+                        int rowsAffected = stmt1.executeUpdate();
+
+                        if (rowsAffected > 0) {
+                            showInfoAlert("Zadanie zostało zatwierdzone.");
+                            refreshTaskList();
+                        } else {
+                            showErrorAlert("Nie udało się zatwierdzić zadania.");
+                        }
+
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                        showErrorAlert("Błąd podczas zatwierdzania zadania.");
+                    }
+                });
+
+                // Przycisk usuwania zadania
                 Button deleteBtn = new Button("Usuń");
                 deleteBtn.setStyle("-fx-background-color: #7D0A0A; -fx-font-size: 12px;");
                 deleteBtn.setPrefSize(60, 30);
+
+                deleteBtn.setOnAction(e -> {
+                    try (Connection conn2 = DatabaseConnection.getConnection();
+                         PreparedStatement stmt2 = conn2.prepareStatement("DELETE FROM tasks WHERE id = ?")) {
+
+                        stmt2.setInt(1, id);
+                        int rowsAffected = stmt2.executeUpdate();
+
+                        if (rowsAffected > 0) {
+                            showInfoAlert("Zadanie zostało usunięte.");
+                            refreshTaskList();
+                        } else {
+                            showErrorAlert("Nie udało się usunąć zadania.");
+                        }
+
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                        showErrorAlert("Błąd podczas usuwania zadania.");
+                    }
+                });
 
                 // Opakowanie przycisków w VBox i ustawienie na prawo
                 VBox buttonBox = new VBox(5);
@@ -223,6 +268,10 @@ public class ManagerController {
         }
     }
 
+    /**
+     * Pobiera imię i nazwisko użytkownika po id.
+     * @param userId id użytkownika
+     */
     private String getUserNameById(int userId) {
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement stmt = con.prepareStatement("SELECT first_name, last_name FROM users WHERE id = ?")) {
@@ -368,4 +417,18 @@ public class ManagerController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    /**
+     * Wyświetla alert z komunikatem o informacji.
+     *
+     * @param message treść komunikatu o informacji
+     */
+    private void showInfoAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Informacja");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 }

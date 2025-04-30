@@ -9,13 +9,26 @@ import java.sql.*;
 public class DatabaseConnection {
 
     /** URL połączenia z bazą danych MySQL */
-    private static final String URL = "jdbc:mysql://localhost:3306/obiwanshop";
+    private static String URL = "jdbc:mysql://localhost:3306/obiwanshop";
 
     /** Nazwa użytkownika bazy danych */
-    private static final String USER = "root";
+    private static String USER = "root";
 
     /** Hasło użytkownika bazy danych */
-    private static final String PASSWORD = "";
+    private static String PASSWORD = "";
+
+    /**
+     * Ustawia niestandardowe dane połączenia – używane np. w testach.
+     *
+     * @param dbUrl  URL bazy danych
+     * @param dbUser nazwa użytkownika
+     * @param dbPass hasło
+     */
+    public static void setConfig(String dbUrl, String dbUser, String dbPass) {
+        URL = dbUrl;
+        USER = dbUser;
+        PASSWORD = dbPass;
+    }
 
     /**
      * Tworzy i zwraca połączenie z bazą danych.

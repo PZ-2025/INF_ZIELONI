@@ -9,15 +9,39 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DatabaseConnectionTest {
 
     @Test
-    void testConnectionNotNull() {
+    void testSuccessfulConnection() {
+        DatabaseConnection.setConfig(
+                "jdbc:mysql://localhost:3306/obiwanshop", "root", ""
+        );
+
         Connection conn = DatabaseConnection.getConnection();
-        assertNotNull(conn, "Połączenie z bazą danych powinno zostać nawiązane");
+        assertNotNull(conn, "Połączenie powinno zostać nawiązane");
+
         try {
-            if (conn != null && !conn.isClosed()) {
-                conn.close();
-            }
+            assertFalse(conn.isClosed(), "Połączenie nie powinno być zamknięte");
+            System.out.println("Test nawiązania połączenia zakończony sukcesem!");
         } catch (Exception e) {
-            fail("Błąd przy zamykaniu połączenia: " + e.getMessage());
+            fail("Błąd podczas sprawdzania połączenia: " + e.getMessage());
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (Exception ignored) {}
         }
+    }
+
+    @Test
+    void testFailedConnectionWithWrongCredentials() {
+        DatabaseConnection.setConfig(
+                "jdbc:mysql://localhost:3306/obiwanshop", "wrongUser", "wrongPassword"
+        );
+
+        Connection conn = DatabaseConnection.getConnection();
+        if (conn == null) {
+            System.out.println("Połączenie nie powiodło się zgodnie z oczekiwaniami.");
+        }
+
+        assertNull(conn, "Połączenie powinno się nie powieść i zwrócić null!");
     }
 }

@@ -154,7 +154,7 @@ public class UserController {
             taskGrid.getChildren().clear();
 
             Connection connection = DatabaseConnection.getConnection();
-            String sql = "SELECT * FROM tasks WHERE user_id = ?";
+            String sql = "SELECT * FROM tasks WHERE user_id = ? AND status != 'zakończone'";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, loggedInUserId);
 

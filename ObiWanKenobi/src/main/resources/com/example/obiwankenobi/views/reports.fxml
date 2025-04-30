@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="500.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #B3FFB3;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="500.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #B3FFB3;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.ReportController">
    <children>
       <HBox prefHeight="100.0" prefWidth="400.0" style="-fx-background-color: #0C3105;">
          <children>
@@ -97,7 +97,7 @@
             <Insets top="10.0" />
          </padding>
       </HBox>
-      <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #7D0A0A;" text="powrót" textAlignment="CENTER" textFill="WHITE">
+      <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#reportsClose" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #7D0A0A;" text="powrót" textAlignment="CENTER" textFill="WHITE">
          <VBox.margin>
             <Insets left="175.0" right="175.0" top="5.0" />
          </VBox.margin>

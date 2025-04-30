@@ -4,11 +4,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,9 +50,6 @@ public class DirectorController {
     private Label helloName;
 
 
-    //    public static void setLoggedInUser(User user) {
-//        loggedInUser = user;
-//    }
     public static int getLoggedInUserId() {
         // Zwróć ID zalogowanego użytkownika
         return UserController.getLoggedInUser().getUserId(); // Dostęp do kontrolera użytkownika.
@@ -138,8 +142,21 @@ public class DirectorController {
      * @param event zdarzenie kliknięcia przycisku
      */
     @FXML
-    void raports(ActionEvent event) {
-        // TODO: Implementacja generowania raportów
+    void raports(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/reports.fxml"));
+        Parent root = loader.load();
+
+        Stage reports = new Stage();
+        reports.setTitle("raporty");
+        reports.initModality(Modality.WINDOW_MODAL);
+        reports.initOwner(((Node) event.getSource()).getScene().getWindow());
+
+        reports.initStyle(StageStyle.TRANSPARENT);
+
+        Scene scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);
+        reports.setScene(scene);
+        reports.showAndWait();
     }
 
     private void loadUserInfo() {

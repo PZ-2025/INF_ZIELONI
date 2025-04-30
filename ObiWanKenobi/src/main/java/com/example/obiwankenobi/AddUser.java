@@ -24,37 +24,37 @@ public class AddUser {
      * Pole wyboru działu
      */
     @FXML
-    private ChoiceBox<String> addDep;
+    protected ChoiceBox<String> addDep;
 
     /**
      * Pole wyboru roli
      */
     @FXML
-    private ChoiceBox<String> addRole;
+    protected ChoiceBox<String> addRole;
 
     /**
      * Pole tekstowe na adres e-mail
      */
     @FXML
-    private TextField addEmail;
+    protected TextField addEmail;
 
     /**
      * Pole tekstowe na imię
      */
     @FXML
-    private TextField addName;
+    protected TextField addName;
 
     /**
      * Pole tekstowe na hasło
      */
     @FXML
-    private TextField addPass;
+    protected TextField addPass;
 
     /**
      * Pole tekstowe na nazwisko
      */
     @FXML
-    private TextField addScndName;
+    protected TextField addScndName;
 
 
     /**
@@ -213,7 +213,7 @@ public class AddUser {
     }
 
     @FXML
-    private boolean isEmailValid() {
+    boolean isEmailValid() {
         String email = addEmail.getText();
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
@@ -234,7 +234,7 @@ public class AddUser {
     }
 
     @FXML
-    private boolean validatePassword() {
+    boolean validatePassword() {
         String password = addPass.getText();
         addPass.setStyle(null);
 
@@ -248,7 +248,7 @@ public class AddUser {
         return true;
     }
 
-    private boolean validateNameAndSurname() {
+    boolean validateNameAndSurname() {
         String name = addName.getText().trim();
         String scndName = addScndName.getText().trim();
 

@@ -9,6 +9,8 @@ module com.example.obiwankenobi {
     requires jakarta.persistence;
     requires AnimateFX;
     requires java.desktop;
+    requires kernel;
+    requires layout;
 
     opens com.example.obiwankenobi to javafx.fxml;
     exports com.example.obiwankenobi;

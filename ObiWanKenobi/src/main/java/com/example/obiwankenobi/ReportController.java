@@ -42,7 +42,92 @@ public class ReportController {
 
     @FXML
     void tasksInProgressReport(ActionEvent event) {
+        String outputPath = "tasksInProgressReport.pdf";
 
+        try (Connection connection = DatabaseConnection.getConnection();
+             PdfWriter writer = new PdfWriter(outputPath)) {
+
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf, PageSize.A4);
+            document.setMargins(50, 30, 50, 30);
+
+            document.add(new Paragraph("Raport: Zadania w trakcie realizacji").setBold().setFontSize(18));
+            document.add(new Paragraph("\n"));
+
+            String sql = """
+            SELECT 
+                t.id,
+                t.title,
+                t.description,
+                t.deadline,
+                u.first_name,
+                u.last_name
+            FROM tasks t
+            LEFT JOIN users u ON t.user_id = u.id
+            WHERE t.status = 'w trakcie'
+            ORDER BY t.deadline ASC
+        """;
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            Table table = new Table(UnitValue.createPercentArray(new float[]{1, 3, 4, 2, 2}));
+            table.setWidth(UnitValue.createPercentValue(100));
+
+            table.addHeaderCell(new Cell().add(new Paragraph("ID")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+            table.addHeaderCell(new Cell().add(new Paragraph("Tytuł")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+            table.addHeaderCell(new Cell().add(new Paragraph("Opis")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+            table.addHeaderCell(new Cell().add(new Paragraph("Termin")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+            table.addHeaderCell(new Cell().add(new Paragraph("Przydzielono")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+
+            while (rs.next()) {
+                table.addCell(String.valueOf(rs.getInt("id")));
+                table.addCell(rs.getString("title"));
+                table.addCell(rs.getString("description"));
+                table.addCell(rs.getString("deadline") != null ? rs.getString("deadline") : "Brak");
+                String assignee = (rs.getString("first_name") != null && rs.getString("last_name") != null)
+                        ? rs.getString("first_name") + " " + rs.getString("last_name")
+                        : "Brak";
+                table.addCell(assignee);
+            }
+
+            document.add(table);
+            document.add(new Paragraph("\n\n"));
+
+            Table signatureTable = new Table(UnitValue.createPercentArray(new float[]{2, 1, 2}));
+            signatureTable.setWidth(UnitValue.createPercentValue(100));
+
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            String formattedDate = now.format(formatter);
+
+            Cell footer = new Cell()
+                    .add(new Paragraph("Raport został wygenerowany automatycznie dnia: " + formattedDate))
+                    .setBold()
+                    .setMarginTop(30)
+                    .setTextAlignment(TextAlignment.LEFT)
+                    .setBorder(Border.NO_BORDER);
+
+            Cell empty = new Cell().setBorder(Border.NO_BORDER);
+
+            Cell signature = new Cell()
+                    .add(new Paragraph("________________________________"))
+                    .add(new Paragraph("podpis osoby odbierającej"))
+                    .setBorder(Border.NO_BORDER)
+                    .setTextAlignment(TextAlignment.CENTER);
+
+            signatureTable.addCell(footer);
+            signatureTable.addCell(empty);
+            signatureTable.addCell(signature);
+
+            document.add(signatureTable);
+            document.close();
+
+            System.out.println("Raport zadań w trakcie realizacji został wygenerowany.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

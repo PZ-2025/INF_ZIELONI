@@ -13,20 +13,63 @@ import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.net.URL;
+import java.sql.*;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
-public class ReportController {
+public class ReportController implements Initializable {
 
     private static final DeviceRgb HEADER_BACKGROUND = new DeviceRgb(200, 200, 200);
+
+    @FXML
+    private DatePicker startDate;
+
+    @FXML
+    private DatePicker endDate;
+
+    @FXML
+    private ChoiceBox<String> departmentChoiceBox;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        loadDeps();
+    }
+
+
+    private void loadDeps() {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String sql = "SELECT name FROM departments ORDER BY name";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            departmentChoiceBox.getItems().add("wszystkie");
+
+            while (rs.next()) {
+                String departmentName = rs.getString("name");
+                departmentChoiceBox.getItems().add(departmentName);
+            }
+
+            departmentChoiceBox.setValue("wszystkie");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
     @FXML
@@ -37,8 +80,181 @@ public class ReportController {
 
     @FXML
     void tasksDoneReport(ActionEvent event) {
+        String outputPath = "tasksDone.pdf";
 
+        LocalDate startDateVal = startDate.getValue();
+        LocalDate endDateVal = endDate.getValue();
+        String selectedDepartment = departmentChoiceBox.getValue();
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PdfWriter writer = new PdfWriter(outputPath)) {
+
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf, PageSize.A4);
+            document.setMargins(50, 30, 50, 30);
+
+            document.add(new Paragraph("Raport wykonanych zadan").setBold().setFontSize(18));
+            document.add(new Paragraph("\n"));
+
+            StringBuilder sql = new StringBuilder("""
+            SELECT 
+                d.name AS department_name,
+                t.id AS task_id,
+                t.title,
+                t.description,
+                t.deadline,
+                u.first_name AS user_first_name,
+                u.last_name AS user_last_name,
+                mgr.first_name AS mgr_first_name,
+                mgr.last_name AS mgr_last_name
+            FROM tasks t
+            LEFT JOIN users u ON t.user_id = u.id
+            LEFT JOIN departments d ON u.department_id = d.id
+            LEFT JOIN users mgr ON d.manager_id = mgr.id
+            WHERE t.status = 'zakończone'
+        """);
+
+            List<Object> params = new ArrayList<>();
+
+            if (startDateVal != null) {
+                sql.append(" AND t.deadline >= ? ");
+                params.add(Date.valueOf(startDateVal));
+            }
+
+            if (endDateVal != null) {
+                sql.append(" AND t.deadline <= ? ");
+                params.add(Date.valueOf(endDateVal));
+            }
+
+            if (selectedDepartment != null && !selectedDepartment.isBlank() && !selectedDepartment.equals("wszystkie")) {
+                sql.append(" AND d.name = ? ");
+                params.add(selectedDepartment);
+            }
+
+            sql.append(" ORDER BY d.name, t.deadline ASC");
+
+            PreparedStatement stmt = connection.prepareStatement(sql.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = stmt.executeQuery();
+
+            String currentDepartment = "";
+            int taskCount = 0;
+            String managerFullName = "";
+
+            Table table = null;
+
+            while (rs.next()) {
+                String departmentName = rs.getString("department_name") != null ? rs.getString("department_name") : "Brak dzialu";
+
+                if (!departmentName.equals(currentDepartment)) {
+                    if (!currentDepartment.equals("")) {
+                        document.add(table);
+
+                        Table summaryTable = new Table(UnitValue.createPercentArray(new float[]{1, 1}));
+                        summaryTable.setWidth(UnitValue.createPercentValue(100));
+                        summaryTable.addCell(new Cell()
+                                .add(new Paragraph("Laczna liczba zadan: " + taskCount))
+                                .setTextAlignment(TextAlignment.LEFT)
+                                .setBorder(Border.NO_BORDER))
+                                .setBold();
+                        summaryTable.addCell(new Cell()
+                                .add(new Paragraph("Kierownik dzialu: " + managerFullName))
+                                .setTextAlignment(TextAlignment.RIGHT)
+                                .setBorder(Border.NO_BORDER)
+                                .setBold());
+                        document.add(summaryTable);
+                        document.add(new Paragraph("\n"));
+                    }
+
+                    currentDepartment = departmentName;
+                    taskCount = 0;
+                    managerFullName = (rs.getString("mgr_first_name") != null && rs.getString("mgr_last_name") != null)
+                            ? rs.getString("mgr_first_name") + " " + rs.getString("mgr_last_name")
+                            : "Brak";
+
+                    document.add(new Paragraph("Dzial: " + currentDepartment).setBold().setFontSize(14));
+
+                    table = new Table(UnitValue.createPercentArray(new float[]{1, 3, 4, 2, 2}));
+                    table.setWidth(UnitValue.createPercentValue(100));
+                    table.addHeaderCell(new Cell().add(new Paragraph("ID")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+                    table.addHeaderCell(new Cell().add(new Paragraph("Tytul")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+                    table.addHeaderCell(new Cell().add(new Paragraph("Opis")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+                    table.addHeaderCell(new Cell().add(new Paragraph("Termin")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+                    table.addHeaderCell(new Cell().add(new Paragraph("Przydzielono")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+                }
+
+                table.addCell(String.valueOf(rs.getInt("task_id")));
+                table.addCell(rs.getString("title"));
+                table.addCell(rs.getString("description"));
+                table.addCell(rs.getString("deadline") != null ? rs.getString("deadline") : "Brak");
+                String assignee = (rs.getString("user_first_name") != null && rs.getString("user_last_name") != null)
+                        ? rs.getString("user_first_name") + " " + rs.getString("user_last_name")
+                        : "Brak";
+                table.addCell(assignee);
+
+                taskCount++;
+            }
+
+            if (table != null) {
+                document.add(table);
+
+                Table summaryTable = new Table(UnitValue.createPercentArray(new float[]{1, 1}));
+                summaryTable.setWidth(UnitValue.createPercentValue(100));
+                summaryTable.addCell(new Cell()
+                        .add(new Paragraph("Laczna liczba zadan: " + taskCount))
+                        .setTextAlignment(TextAlignment.LEFT)
+                        .setBorder(Border.NO_BORDER))
+                        .setBold();
+                summaryTable.addCell(new Cell()
+                        .add(new Paragraph("Kierownik dzialu: " + managerFullName))
+                        .setTextAlignment(TextAlignment.RIGHT)
+                        .setBorder(Border.NO_BORDER))
+                        .setBold();
+                document.add(summaryTable);
+            }
+
+            document.add(new Paragraph("\n\n"));
+
+            Table signatureTable = new Table(UnitValue.createPercentArray(new float[]{2, 1, 2}));
+            signatureTable.setWidth(UnitValue.createPercentValue(100));
+
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            String formattedDate = now.format(formatter);
+
+            Cell footer = new Cell()
+                    .add(new Paragraph("Raport zostal wygenerowany automatycznie dnia: " + formattedDate))
+                    .setBold()
+                    .setMarginTop(30)
+                    .setTextAlignment(TextAlignment.LEFT)
+                    .setBorder(Border.NO_BORDER);
+
+            Cell empty = new Cell().setBorder(Border.NO_BORDER);
+
+            Cell signature = new Cell()
+                    .add(new Paragraph("________________________________"))
+                    .add(new Paragraph("podpis osoby odbierajacej"))
+                    .setBorder(Border.NO_BORDER)
+                    .setTextAlignment(TextAlignment.CENTER);
+
+            signatureTable.addCell(footer);
+            signatureTable.addCell(empty);
+            signatureTable.addCell(signature);
+
+            document.add(signatureTable);
+            document.close();
+
+            System.out.println("Raport wykonanych zadan zostal wygenerowany.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     @FXML
     void tasksInProgressReport(ActionEvent event) {
@@ -51,7 +267,7 @@ public class ReportController {
             Document document = new Document(pdf, PageSize.A4);
             document.setMargins(50, 30, 50, 30);
 
-            document.add(new Paragraph("Raport: Zadania w trakcie realizacji").setBold().setFontSize(18));
+            document.add(new Paragraph("Raport zadan w trakcie realizacji").setBold().setFontSize(18));
             document.add(new Paragraph("\n"));
 
             String sql = """
@@ -64,7 +280,8 @@ public class ReportController {
                 u.last_name
             FROM tasks t
             LEFT JOIN users u ON t.user_id = u.id
-            WHERE t.status = 'w trakcie'
+            WHERE t.status = 'w trakcie' 
+            OR t.status = 'oczekujące'
             ORDER BY t.deadline ASC
         """;
 
@@ -75,7 +292,7 @@ public class ReportController {
             table.setWidth(UnitValue.createPercentValue(100));
 
             table.addHeaderCell(new Cell().add(new Paragraph("ID")).setBold().setBackgroundColor(HEADER_BACKGROUND));
-            table.addHeaderCell(new Cell().add(new Paragraph("Tytuł")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+            table.addHeaderCell(new Cell().add(new Paragraph("Tytul")).setBold().setBackgroundColor(HEADER_BACKGROUND));
             table.addHeaderCell(new Cell().add(new Paragraph("Opis")).setBold().setBackgroundColor(HEADER_BACKGROUND));
             table.addHeaderCell(new Cell().add(new Paragraph("Termin")).setBold().setBackgroundColor(HEADER_BACKGROUND));
             table.addHeaderCell(new Cell().add(new Paragraph("Przydzielono")).setBold().setBackgroundColor(HEADER_BACKGROUND));
@@ -102,7 +319,7 @@ public class ReportController {
             String formattedDate = now.format(formatter);
 
             Cell footer = new Cell()
-                    .add(new Paragraph("Raport został wygenerowany automatycznie dnia: " + formattedDate))
+                    .add(new Paragraph("Raport zostal wygenerowany automatycznie dnia: " + formattedDate))
                     .setBold()
                     .setMarginTop(30)
                     .setTextAlignment(TextAlignment.LEFT)
@@ -112,7 +329,7 @@ public class ReportController {
 
             Cell signature = new Cell()
                     .add(new Paragraph("________________________________"))
-                    .add(new Paragraph("podpis osoby odbierającej"))
+                    .add(new Paragraph("podpis osoby odbierajacej"))
                     .setBorder(Border.NO_BORDER)
                     .setTextAlignment(TextAlignment.CENTER);
 
@@ -123,7 +340,7 @@ public class ReportController {
             document.add(signatureTable);
             document.close();
 
-            System.out.println("Raport zadań w trakcie realizacji został wygenerowany.");
+            System.out.println("Raport zadan w trakcie realizacji zostal wygenerowany.");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,6 +350,7 @@ public class ReportController {
     @FXML
     void userReport(ActionEvent event) throws FileNotFoundException {
         String outputPath = "usersReport.pdf";
+        String selectedDepartment = departmentChoiceBox.getValue();
 
         try (Connection connection = DatabaseConnection.getConnection();
              PdfWriter writer = new PdfWriter(outputPath)) {
@@ -141,7 +359,7 @@ public class ReportController {
             Document document = new Document(pdf, PageSize.A4);
             document.setMargins(50, 30, 50, 30);
 
-            document.add(new Paragraph("Raport użytkowników").setBold().setFontSize(18));
+            document.add(new Paragraph("Raport uzytkownikow").setBold().setFontSize(18));
             document.add(new Paragraph("\n"));
 
             Table table = new Table(UnitValue.createPercentArray(new float[]{1, 2, 2, 4, 3}));
@@ -180,8 +398,17 @@ public class ReportController {
 
             String sql = "SELECT u.id, u.first_name, u.last_name, u.email, d.name FROM users u LEFT JOIN departments d on u.department_id = d.id";
 
+            if (selectedDepartment != null && !selectedDepartment.isEmpty() && !selectedDepartment.equals("wszystkie")) {
+                sql += " WHERE d.name = ?";
+            }
+
             PreparedStatement stmt = connection.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery(sql);
+
+            if (selectedDepartment != null && !selectedDepartment.isEmpty() && !selectedDepartment.equals("wszystkie")) {
+                stmt.setString(1, selectedDepartment);
+            }
+
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 table.addCell(String.valueOf(rs.getInt("id")));
@@ -235,6 +462,7 @@ public class ReportController {
     @FXML
     void warehouseReport(ActionEvent event) {
         String outputPath = "warehouseReport.pdf";
+        String selectedDepartment = departmentChoiceBox.getValue();
 
         try (Connection connection = DatabaseConnection.getConnection();
              PdfWriter writer = new PdfWriter(outputPath)) {
@@ -243,7 +471,7 @@ public class ReportController {
             Document document = new Document(pdf, PageSize.A4);
             document.setMargins(50, 30, 50, 30);
 
-            document.add(new Paragraph("Stan magazynowy kazdego dzialu").setBold().setFontSize(18));
+            document.add(new Paragraph("Stany magazynowy").setBold().setFontSize(18));
             document.add(new Paragraph("\n"));
 
             String sql = """
@@ -258,10 +486,18 @@ public class ReportController {
                 JOIN warehouses w ON i.warehouse_id = w.id
                 JOIN departments d ON w.department_id = d.id
                 LEFT JOIN users u ON d.manager_id = u.id
-                ORDER BY w.id
             """;
 
+            if (selectedDepartment != null && !selectedDepartment.isEmpty() && !selectedDepartment.equals("wszystkie")) {
+                sql += " WHERE d.name = ?";
+            }
+
             PreparedStatement stmt = connection.prepareStatement(sql);
+
+            if (selectedDepartment != null && !selectedDepartment.isEmpty() && !selectedDepartment.equals("wszystkie")) {
+                stmt.setString(1, selectedDepartment);
+            }
+
             ResultSet rs = stmt.executeQuery();
 
             int currentWarehouseId = -1;

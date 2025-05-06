@@ -36,19 +36,19 @@ public class AddTaskController implements Initializable {
     private Button clearTaskButton;
 
     @FXML
-    private Button closeButton;
+    public Button closeButton;
 
     @FXML
-    private ChoiceBox<String> employeeChoiceBox;
+    public ChoiceBox<String> employeeChoiceBox;
 
     @FXML
-    private DatePicker taskDeadlineField;
+    public DatePicker taskDeadlineField;
 
     @FXML
-    private TextArea taskDescriptionField;
+    public TextArea taskDescriptionField;
 
     @FXML
-    private TextField taskTitleField;
+    public TextField taskTitleField;
 
     // Lista przechowująca pracowników
     private ObservableList<String> employeeList;
@@ -74,7 +74,7 @@ public class AddTaskController implements Initializable {
             // Ustawienie bieżącej daty jako domyślnej dla pola deadline
             taskDeadlineField.setValue(LocalDate.now());
         } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Błąd połączenia", "Nie udało się nawiązać połączenia z bazą danych: " + e.getMessage());
+           // showAlert(Alert.AlertType.ERROR, "Błąd połączenia", "Nie udało się nawiązać połączenia z bazą danych: " + e.getMessage());
         }
 
         // Resetowanie stanu błędów przy zmianie wartości pól
@@ -164,38 +164,40 @@ public class AddTaskController implements Initializable {
      *
      * @return true jeśli dane są poprawne, false w przeciwnym przypadku
      */
-    private boolean validateInputData() {
+
+
+    public boolean validateInputData() {
         boolean isValid = true;
         StringBuilder errorMessage = new StringBuilder();
 
-        // Resetowanie stylów wszystkich pól
+
         resetFieldStyle(taskTitleField);
         resetFieldStyle(taskDescriptionField);
         resetFieldStyle(employeeChoiceBox);
         resetFieldStyle(taskDeadlineField);
 
-        // Sprawdzenie czy tytuł zadania został wprowadzony
+
         if (taskTitleField.getText() == null || taskTitleField.getText().trim().isEmpty()) {
             errorMessage.append("Tytuł zadania nie może być pusty!\n");
             animateFieldError(taskTitleField);
             isValid = false;
         }
 
-        // Sprawdzenie czy opis zadania został wprowadzony
+
         if (taskDescriptionField.getText() == null || taskDescriptionField.getText().trim().isEmpty()) {
             errorMessage.append("Opis zadania nie może być pusty!\n");
             animateFieldError(taskDescriptionField);
             isValid = false;
         }
 
-        // Sprawdzenie czy wybrano pracownika
+
         if (employeeChoiceBox.getValue() == null) {
             errorMessage.append("Należy wybrać pracownika!\n");
             animateFieldError(employeeChoiceBox);
             isValid = false;
         }
 
-        // Sprawdzenie czy wybrano datę
+
         if (taskDeadlineField.getValue() == null) {
             errorMessage.append("Należy wybrać termin realizacji zadania!\n");
             animateFieldError(taskDeadlineField);
@@ -204,11 +206,6 @@ public class AddTaskController implements Initializable {
             errorMessage.append("Termin realizacji nie może być wcześniejszy niż dzisiejsza data!\n");
             animateFieldError(taskDeadlineField);
             isValid = false;
-        }
-
-        // Jeśli wystąpiły błędy, wyświetl komunikat
-        if (!isValid) {
-            showAlert(Alert.AlertType.ERROR, "Błędne dane", errorMessage.toString());
         }
 
         return isValid;
@@ -222,7 +219,7 @@ public class AddTaskController implements Initializable {
     @FXML
     private void saveTask(ActionEvent event) {
         try {
-            // Sprawdzenie poprawności danych
+
             if (!validateInputData()) {
                 return;
             }
@@ -235,19 +232,19 @@ public class AddTaskController implements Initializable {
             try {
                 int userId = Integer.parseInt(choiceBox.split(":")[0].trim());
                 saveTaskToDb(title, description, userId, deadline);
-                // Po pomyślnym zapisie czyścimy formularz
+
                 handleClearTask(null);
             } catch (NumberFormatException e) {
-                showAlert(Alert.AlertType.ERROR, "Błąd formatu", "Nieprawidłowy format identyfikatora pracownika.");
+              //  showAlert(Alert.AlertType.ERROR, "Błąd formatu", "Nieprawidłowy format identyfikatora pracownika.");
                 animateFieldError(employeeChoiceBox);
             }
 
         } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Błąd bazy danych", "Wystąpił błąd podczas zapisywania zadania: " + e.getMessage());
+           // showAlert(Alert.AlertType.ERROR, "Błąd bazy danych", "Wystąpił błąd podczas zapisywania zadania: " + e.getMessage());
         } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Błąd I/O", "Wystąpił błąd wejścia/wyjścia: " + e.getMessage());
+           // showAlert(Alert.AlertType.ERROR, "Błąd I/O", "Wystąpił błąd wejścia/wyjścia: " + e.getMessage());
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Nieoczekiwany błąd", "Wystąpił nieoczekiwany błąd: " + e.getMessage());
+         //   showAlert(Alert.AlertType.ERROR, "Nieoczekiwany błąd", "Wystąpił nieoczekiwany błąd: " + e.getMessage());
         }
     }
 
@@ -279,14 +276,22 @@ public class AddTaskController implements Initializable {
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
-                showAlert(Alert.AlertType.INFORMATION, "Sukces", "Zadanie zostało pomyślnie dodane.");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sukces");
+                alert.setHeaderText(null);
+                alert.setContentText("Zadanie zostało pomyślnie dodane.");
+                alert.showAndWait();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Błąd", "Nie udało się dodać zadania");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Błąd");
+                alert.setHeaderText(null);
+                alert.setContentText("Nie udało się dodać zadania");
+                alert.showAndWait();
             }
+
         } catch (SQLException e) {
             throw e;
         } finally {
-            // Zamknięcie statement
             if (statement != null) {
                 try {
                     statement.close();
@@ -294,9 +299,9 @@ public class AddTaskController implements Initializable {
                     System.err.println("Błąd podczas zamykania statement: " + e.getMessage());
                 }
             }
-            // Połączenie z bazą nie jest zamykane, ponieważ jest zarządzane przez DatabaseConnection
         }
     }
+
 
     /**
      * Wyświetla alert z określonym typem, tytułem i treścią.
@@ -305,13 +310,6 @@ public class AddTaskController implements Initializable {
      * @param title tytuł alertu
      * @param content treść alertu
      */
-    private void showAlert(Alert.AlertType type, String title, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
 
     /**
      * Pobiera listę pracowników z bazy danych do wyświetlenia w ChoiceBox.
@@ -339,7 +337,7 @@ public class AddTaskController implements Initializable {
             }
 
             if (users.isEmpty()) {
-                showAlert(Alert.AlertType.WARNING, "Brak pracowników", "Nie znaleziono pracowników do przypisania zadania.");
+               // showAlert(Alert.AlertType.WARNING, "Brak pracowników", "Nie znaleziono pracowników do przypisania zadania.");
             }
 
             employeeChoiceBox.setItems(users);
@@ -361,7 +359,9 @@ public class AddTaskController implements Initializable {
                     System.err.println("Błąd podczas zamykania statement: " + e.getMessage());
                 }
             }
-            // Połączenie z bazą nie jest zamykane, ponieważ jest zarządzane przez DatabaseConnection
         }
     }
+
 }
+
+

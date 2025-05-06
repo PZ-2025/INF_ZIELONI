@@ -21,13 +21,13 @@ import java.util.ResourceBundle;
  */
 public class EditTaskController implements Initializable {
 
-    @FXML private Button addTaskButton;
-    @FXML private Button clearTaskButton;
-    @FXML private Button closeButton;
-    @FXML private ChoiceBox<String> employeeChoiceBox;
-    @FXML private DatePicker taskDeadlineField;
-    @FXML private TextArea taskDescriptionField;
-    @FXML private TextField taskTitleField;
+    @FXML public Button addTaskButton;
+    @FXML public Button clearTaskButton;
+    @FXML public Button closeButton;
+    @FXML public ChoiceBox<String> employeeChoiceBox;
+    @FXML public DatePicker taskDeadlineField;
+    @FXML public TextArea taskDescriptionField;
+    @FXML public TextField taskTitleField;
 
     // Style CSS dla elementów z błędem
     private final String errorStyle = "-fx-border-color: red; -fx-border-width: 2px;";
@@ -50,7 +50,7 @@ public class EditTaskController implements Initializable {
             // Ustawienie bieżącej daty jako domyślnej dla pola deadline
             taskDeadlineField.setValue(LocalDate.now());
         } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Błąd połączenia", "Nie udało się nawiązać połączenia z bazą danych: " + e.getMessage());
+            //showAlert(Alert.AlertType.ERROR, "Błąd połączenia", "Nie udało się nawiązać połączenia z bazą danych: " + e.getMessage());
         }
 
         // Resetowanie stanu błędów przy zmianie wartości pól
@@ -127,8 +127,7 @@ public class EditTaskController implements Initializable {
      * @throws SQLException jeśli wystąpi błąd podczas zapisu do bazy danych
      */
     @FXML
-    private void saveTask() throws SQLException {
-
+    private void saveTask() {
         if (!validateInputData()) {
             return;
         }
@@ -139,31 +138,64 @@ public class EditTaskController implements Initializable {
         String selectedUser = employeeChoiceBox.getValue();
 
         if (selectedUser == null) {
-            showAlert(Alert.AlertType.WARNING, "Brak pracownika", "Wybierz pracownika.");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Brak pracownika");
+            alert.setHeaderText(null);
+            alert.setContentText("Wybierz pracownika.");
+            alert.showAndWait();
             return;
         }
 
         int userId = Integer.parseInt(selectedUser.split(":")[0].trim());
 
-        Connection con = DatabaseConnection.getConnection();
-        String sql = "UPDATE tasks SET title = ?, description = ?, user_id = ?, deadline = ? WHERE id = ?";
-        PreparedStatement stmt = con.prepareStatement(sql);
+        Connection con = null;
+        PreparedStatement stmt = null;
 
-        stmt.setString(1, title);
-        stmt.setString(2, description);
-        stmt.setInt(3, userId);
-        stmt.setDate(4, Date.valueOf(deadline));
-        stmt.setInt(5, taskId);
+        try {
+            con = DatabaseConnection.getConnection();
+            String sql = "UPDATE tasks SET title = ?, description = ?, user_id = ?, deadline = ? WHERE id = ?";
+            stmt = con.prepareStatement(sql);
 
-        int updated = stmt.executeUpdate();
+            stmt.setString(1, title);
+            stmt.setString(2, description);
+            stmt.setInt(3, userId);
+            stmt.setDate(4, Date.valueOf(deadline));
+            stmt.setInt(5, taskId);
 
-        if (updated > 0) {
-            showAlert(Alert.AlertType.INFORMATION, "Sukces", "Zadanie zostało zaktualizowane.");
-            handleClose();
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Błąd", "Nie udało się zaktualizować zadania.");
+            int updated = stmt.executeUpdate();
+
+            if (updated > 0) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sukces");
+                alert.setHeaderText(null);
+                alert.setContentText("Zadanie zostało zaktualizowane.");
+                alert.showAndWait();
+                handleClose();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Błąd");
+                alert.setHeaderText(null);
+                alert.setContentText("Nie udało się zaktualizować zadania.");
+                alert.showAndWait();
+            }
+
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Błąd bazy danych");
+            alert.setHeaderText(null);
+            alert.setContentText("Wystąpił problem podczas aktualizacji zadania:\n" + e.getMessage());
+            alert.showAndWait();
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    System.err.println("Błąd podczas zamykania statement: " + e.getMessage());
+                }
+            }
         }
     }
+
 
 
     /**
@@ -195,6 +227,7 @@ public class EditTaskController implements Initializable {
      * @param title tytuł alertu
      * @param content treść alertu
      */
+    /*
     private void showAlert(Alert.AlertType type, String title, String content) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
@@ -202,13 +235,14 @@ public class EditTaskController implements Initializable {
         alert.setContentText(content);
         alert.showAndWait();
     }
+    */
 
     /**
      * Sprawdza poprawność danych wprowadzonych do formularza.
      *
      * @return true jeśli dane są poprawne, false w przeciwnym razie
      */
-    private boolean validateInputData() {
+    public boolean validateInputData() {
         boolean isValid = true;
         StringBuilder errorMessage = new StringBuilder();
 
@@ -246,7 +280,7 @@ public class EditTaskController implements Initializable {
 
         // Jeśli wystąpiły błędy, wyświetl komunikat
         if (!isValid) {
-            showAlert(Alert.AlertType.ERROR, "Błędne dane", errorMessage.toString());
+          //  showAlert(Alert.AlertType.ERROR, "Błędne dane", errorMessage.toString());
         }
 
         return isValid;

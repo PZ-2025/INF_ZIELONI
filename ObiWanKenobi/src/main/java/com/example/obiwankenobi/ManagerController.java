@@ -198,7 +198,7 @@ public class ManagerController {
                 confirmBtn.setStyle("-fx-background-color: #0C5A18; -fx-font-size: 12px;");
                 confirmBtn.setPrefSize(80, 30);
 
-                if ("zakończone".equalsIgnoreCase(status)) {
+                if ("Zakończone".equalsIgnoreCase(status)) {
                     confirmBtn.setDisable(true);
                     editBtn.setDisable(true);
                 }
@@ -207,7 +207,7 @@ public class ManagerController {
                     try (Connection conn1 = DatabaseConnection.getConnection();
                          PreparedStatement stmt1 = conn1.prepareStatement("UPDATE tasks SET status = ? WHERE id = ?")) {
 
-                        stmt1.setString(1, "zakończone");
+                        stmt1.setString(1, "Zakończone");
                         stmt1.setInt(2, id);
                         int rowsAffected = stmt1.executeUpdate();
 

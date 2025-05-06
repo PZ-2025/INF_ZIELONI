@@ -24,7 +24,8 @@ import java.sql.*;
 
 /**
  * Kontroler panelu kierownika (Managera).
- * Obsługuje akcje związane z dodawaniem zadań oraz wylogowaniem.
+ * Obsługuje akcje związane z dodawaniem, edycją, usuwaniem, zatwierdzaniem zadań,
+ * wylogowaniem, wyświetlaniem zadań oraz stanem magazynu.
  */
 public class ManagerController {
 
@@ -348,6 +349,11 @@ public class ManagerController {
         }
     }
 
+    /**
+     * Pobiera dane magazynu z bazy danych.
+     *
+     * @return lista magazynów z przedmiotami i ilościami
+     */
     private javafx.collections.ObservableList<Warehouse> fetchWarehouseData() {
         javafx.collections.ObservableList<Warehouse> list = javafx.collections.FXCollections.observableArrayList();
 

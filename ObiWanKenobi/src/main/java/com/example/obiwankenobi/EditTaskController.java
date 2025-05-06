@@ -17,9 +17,8 @@ import java.util.ResourceBundle;
 
 /**
  * Kontroler okna edytowania zadania.
- * Obsługuje formularze i interakcje związane z edycją zadań.
+ * Obsługuje formularz edycji zadań, weryfikację danych i aktualizację w bazie.
  */
-
 public class EditTaskController implements Initializable {
 
     @FXML private Button addTaskButton;
@@ -71,6 +70,12 @@ public class EditTaskController implements Initializable {
             resetFieldStyle(taskDeadlineField);
         });
     }
+
+    /**
+     * Resetuje styl wskazanego pola do stylu domyślnego.
+     *
+     * @param field pole formularza
+     */
     private void resetFieldStyle(javafx.scene.Node field) {
         field.setStyle(normalStyle);
     }
@@ -198,6 +203,11 @@ public class EditTaskController implements Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * Sprawdza poprawność danych wprowadzonych do formularza.
+     *
+     * @return true jeśli dane są poprawne, false w przeciwnym razie
+     */
     private boolean validateInputData() {
         boolean isValid = true;
         StringBuilder errorMessage = new StringBuilder();
@@ -242,6 +252,11 @@ public class EditTaskController implements Initializable {
         return isValid;
     }
 
+    /**
+     * Animuje pole formularza w przypadku błędu.
+     *
+     * @param field pole do wyróżnienia
+     */
     private void animateFieldError(javafx.scene.Node field) {
         // Zapisujemy oryginalny styl
         String originalStyle = field.getStyle();

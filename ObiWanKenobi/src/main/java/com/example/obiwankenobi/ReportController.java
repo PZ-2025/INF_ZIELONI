@@ -30,6 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Kontroler odpowiedzialny za generowanie raportów w formacie PDF w aplikacji.
+ * Obsługuje generowanie raportów na podstawie danych zadania, użytkowników i działów.
+ */
 public class ReportController implements Initializable {
 
     private static final DeviceRgb HEADER_BACKGROUND = new DeviceRgb(200, 200, 200);
@@ -43,12 +47,21 @@ public class ReportController implements Initializable {
     @FXML
     private ChoiceBox<String> departmentChoiceBox;
 
+    /**
+     * Inicjalizuje kontroler. Wczytuje listę działów do rozwijanej listy (ChoiceBox).
+     *
+     * @param location Adres URL kontrolera
+     * @param resources Zasoby kontrolera
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadDeps();
     }
 
-
+    /**
+     * Wczytuje listę działów z bazy danych i dodaje je do rozwijanej listy (ChoiceBox).
+     * Domyślnie dodaje również opcję "wszystkie".
+     */
     private void loadDeps() {
         try (Connection connection = DatabaseConnection.getConnection()) {
             String sql = "SELECT name FROM departments ORDER BY name";
@@ -69,15 +82,23 @@ public class ReportController implements Initializable {
         }
     }
 
-
-
-
+    /**
+     * Zamknięcie okna raportów.
+     *
+     * @param event Zdarzenie wywołujące zamknięcie okna
+     */
     @FXML
     void reportsClose(ActionEvent event) {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
     }
 
+    /**
+     * Generuje raport o wykonanych zadaniach, zapisując go do pliku PDF.
+     * Raport uwzględnia filtry daty oraz działu.
+     *
+     * @param event Zdarzenie wywołujące generowanie raportu
+     */
     @FXML
     void tasksDoneReport(ActionEvent event) {
         String outputPath = "tasksDone.pdf";
@@ -255,7 +276,11 @@ public class ReportController implements Initializable {
         }
     }
 
-
+    /**
+     * Generuje raport zadań w trakcie realizacji w formacie PDF.
+     *
+     * @param event Zdarzenie wywołujące generowanie raportu
+     */
     @FXML
     void tasksInProgressReport(ActionEvent event) {
         String outputPath = "tasksInProgressReport.pdf";
@@ -347,6 +372,14 @@ public class ReportController implements Initializable {
         }
     }
 
+    /**
+     * Generuje raport użytkowników w formacie PDF.
+     * Raport zawiera dane użytkowników, takie jak ID, imię, nazwisko, email oraz przypisany dział.
+     * W zależności od wybranego działu, raport może być filtrowany.
+     *
+     * @param event Zdarzenie wywołujące generowanie raportu
+     * @throws FileNotFoundException Jeśli nie uda się zapisać pliku PDF
+     */
     @FXML
     void userReport(ActionEvent event) throws FileNotFoundException {
         String outputPath = "usersReport.pdf";
@@ -459,6 +492,14 @@ public class ReportController implements Initializable {
         }
     }
 
+    /**
+     * Generuje raport magazynowy w formacie PDF.
+     * Raport zawiera dane dotyczące magazynów, takie jak ID magazynu, nazwa magazynu, przedmioty w magazynie oraz ich ilości.
+     * Dodatkowo uwzględnia dane o kierowniku działu przypisanego do magazynu.
+     * W zależności od wybranego działu, raport może być filtrowany.
+     *
+     * @param event Zdarzenie wywołujące generowanie raportu
+     */
     @FXML
     void warehouseReport(ActionEvent event) {
         String outputPath = "warehouseReport.pdf";

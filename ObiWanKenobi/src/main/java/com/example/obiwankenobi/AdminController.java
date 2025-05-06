@@ -24,7 +24,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Kontroler dla panelu administratora. Obsługuje wyświetlanie, dodawanie i wylogowywanie użytkowników.
+ * Kontroler widoku panelu administratora.
+ * Zarządza wyświetlaniem i edytowaniem listy użytkowników oraz ich danymi (rola, dział, hasło, email).
+ * Umożliwia także dodawanie oraz usuwanie użytkowników.
  */
 public class AdminController {
 
@@ -117,6 +119,9 @@ public class AdminController {
         tableView.setItems(usersList);
     }
 
+    /**
+     * Ustawia kolumny jako edytowalne i definiuje sposób obsługi zdarzeń edycji.
+     */
     private void enableEditing(){
         tableView.setEditable(true);
 
@@ -135,6 +140,13 @@ public class AdminController {
         roleColumn.setOnEditCommit(event -> updateUserRole(event.getRowValue(), event.getNewValue()));
     }
 
+    /**
+     * Aktualizuje wybrane pole użytkownika w bazie danych.
+     *
+     * @param event      zdarzenie edycji komórki
+     * @param fieldName  nazwa pola w bazie danych
+     * @param newValue   nowa wartość wpisana przez użytkownika
+     */
     private void updateUserField(TableColumn.CellEditEvent<User, ?> event, String fieldName, Object newValue) {
         User user = event.getRowValue();
         String query = "UPDATE users SET " + fieldName + " = ? WHERE id = ?";
@@ -201,6 +213,10 @@ public class AdminController {
         }
     }
 
+    /**
+     * Dodaje kolumnę z przyciskiem "Usuń" do tabeli użytkowników.
+     * Kliknięcie usuwa danego użytkownika z bazy danych.
+     */
     private void addDeleteButtonToTable() {
         actionColumn.setCellFactory(param -> new javafx.scene.control.TableCell<>() {
             private final Button deleteButton = new Button("Usuń");
@@ -225,6 +241,11 @@ public class AdminController {
         });
     }
 
+    /**
+     * Usuwa użytkownika z bazy danych oraz z listy wyświetlanej w tabeli.
+     *
+     * @param user użytkownik do usunięcia
+     */
     private void deleteUser(User user) {
         String query = "DELETE FROM users WHERE id = ?";
 
@@ -245,8 +266,10 @@ public class AdminController {
         }
     }
 
-
-
+    /**
+     * Wczytuje dostępne role i działy z bazy danych i zapisuje je do list.
+     * Role są pobierane z tabeli `roles`, działy z tabeli `departments`.
+     */
     private void loadRolesAndDepartments() {
         try (Connection conn = DatabaseConnection.getConnection()) {
             String roleQuery = "SELECT name FROM roles where id > 1";
@@ -271,7 +294,14 @@ public class AdminController {
         }
     }
 
-
+    /**
+     * Aktualizuje rolę użytkownika w bazie danych.
+     * Dodatkowo przypisuje lub usuwa kierownika w danym dziale.
+     * Jeśli rola to "Dyrektor", usuwa przypisanie do działu.
+     *
+     * @param user        użytkownik do zaktualizowania
+     * @param newRoleName nowa nazwa roli
+     */
     private void updateUserRole(User user, String newRoleName) {
         try (Connection conn = DatabaseConnection.getConnection()) {
             int roleId = getRoleIdByName(newRoleName, conn);
@@ -331,7 +361,14 @@ public class AdminController {
         }
     }
 
-
+    /**
+     * Czyści przypisanie użytkownika do działu (ustawia `department_id` na NULL).
+     * Używane, gdy użytkownik staje się "Dyrektorem".
+     *
+     * @param user użytkownik
+     * @param conn aktywne połączenie z bazą danych
+     * @throws SQLException w przypadku błędu SQL
+     */
     private void clearUserDepartment(User user, Connection conn) throws SQLException {
         String query = "UPDATE users SET department_id = NULL WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -341,6 +378,12 @@ public class AdminController {
         }
     }
 
+    /**
+     * Aktualizuje dział użytkownika w bazie danych.
+     *
+     * @param user              użytkownik do zaktualizowania
+     * @param newDepartmentName nowy dział
+     */
     private void updateUserDepartment(User user, String newDepartmentName) {
         try (Connection conn = DatabaseConnection.getConnection()) {
             int departmentId = getDepartmentIdByName(newDepartmentName, conn);
@@ -362,6 +405,14 @@ public class AdminController {
         }
     }
 
+    /**
+     * Zwraca identyfikator roli na podstawie jej nazwy.
+     *
+     * @param roleName nazwa roli
+     * @param conn     aktywne połączenie
+     * @return identyfikator roli
+     * @throws SQLException jeśli rola nie została znaleziona
+     */
     private int getRoleIdByName(String roleName, Connection conn) throws SQLException {
         String query = "SELECT id FROM roles WHERE name = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -376,6 +427,14 @@ public class AdminController {
         }
     }
 
+    /**
+     * Zwraca identyfikator działu na podstawie jego nazwy.
+     *
+     * @param deptName nazwa działu
+     * @param conn     aktywne połączenie
+     * @return identyfikator działu
+     * @throws SQLException jeśli dział nie został znaleziony
+     */
     private int getDepartmentIdByName(String deptName, Connection conn) throws SQLException {
         String query = "SELECT id FROM departments WHERE name = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -390,6 +449,13 @@ public class AdminController {
         }
     }
 
+    /**
+     * Sprawdza, czy wartość już istnieje w danej kolumnie tabeli `users`.
+     *
+     * @param column nazwa kolumny
+     * @param value  wartość do sprawdzenia
+     * @return true, jeśli wartość istnieje, false w przeciwnym razie
+     */
     private boolean isValueExistsInColumn(String column, Object value) {
         String query = "SELECT COUNT(*) FROM users WHERE " + column + " = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -442,7 +508,6 @@ public class AdminController {
         }
     }
 
-
     /**
      * Odświeża dane w tabeli użytkowników.
      */
@@ -473,6 +538,13 @@ public class AdminController {
         }
     }
 
+    /**
+     * Wyświetla alert (komunikat) dla użytkownika.
+     *
+     * @param alertType typ alertu (np. ERROR, INFORMATION)
+     * @param title     tytuł okna alertu
+     * @param content   treść komunikatu
+     */
     private void showAlert(Alert.AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

@@ -167,7 +167,6 @@ public class AddUser {
      * @throws SQLException jeśli wystąpi błąd SQL
      * @throws IOException  jeśli wystąpi błąd wejścia/wyjścia
      */
-
     @FXML
     public void saveUser(ActionEvent event) throws SQLException, IOException {
         String name = addName.getText();
@@ -198,6 +197,13 @@ public class AddUser {
         }
     }
 
+    /**
+     * Sprawdza, czy podany adres e-mail istnieje już w bazie danych.
+     *
+     * @param email adres e-mail do sprawdzenia
+     * @return true jeśli e-mail już istnieje, false w przeciwnym wypadku
+     * @throws SQLException w przypadku błędów zapytania
+     */
     private boolean isEmailExists(String email) throws SQLException {
         String query = "SELECT COUNT(*) FROM users WHERE email = ?";
         PreparedStatement statement = DatabaseConnection.getConnection().prepareStatement(query);
@@ -212,6 +218,11 @@ public class AddUser {
         return false;
     }
 
+    /**
+     * Sprawdza poprawność formatu adresu e-mail.
+     *
+     * @return true jeśli e-mail jest poprawny, false w przeciwnym wypadku
+     */
     @FXML
     boolean isEmailValid() {
         String email = addEmail.getText();
@@ -228,11 +239,23 @@ public class AddUser {
         }
     }
 
+    /**
+     * Sprawdza bezpieczeństwo hasła użytkownika.
+     *
+     * @param password hasło do sprawdzenia
+     * @return true jeśli hasło spełnia wymagania bezpieczeństwa
+     */
     private boolean isPasswordSecure(String password) {
         String pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
         return password.matches(pattern);
     }
 
+    /**
+     * Sprawdza poprawność hasła wpisanego przez użytkownika,
+     * wykorzystując wzorzec bezpieczeństwa.
+     *
+     * @return true jeśli hasło jest poprawne, false w przeciwnym wypadku
+     */
     @FXML
     boolean validatePassword() {
         String password = addPass.getText();
@@ -248,6 +271,12 @@ public class AddUser {
         return true;
     }
 
+    /**
+     * Sprawdza, czy pola imienia i nazwiska są wypełnione.
+     * Jeśli nie, ustawia czerwony obrys i uruchamia animację Shake.
+     *
+     * @return true jeśli oba pola są wypełnione, false w przeciwnym razie
+     */
     boolean validateNameAndSurname() {
         String name = addName.getText().trim();
         String scndName = addScndName.getText().trim();
@@ -273,6 +302,14 @@ public class AddUser {
         return valid;
     }
 
+    /**
+     * Sprawdza, czy użytkownik wybrał dział i rolę z list wyboru.
+     * Jeśli nie, oznacza odpowiednie pola jako niepoprawne.
+     *
+     * @param roleSelect wartość wybrana z listy ról
+     * @param depSelect  wartość wybrana z listy działów
+     * @return true jeśli oba wybory zostały dokonane, false w przeciwnym wypadku
+     */
     private boolean validateSelections(String roleSelect, String depSelect) {
         boolean valid = true;
 

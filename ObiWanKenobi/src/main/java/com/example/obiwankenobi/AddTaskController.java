@@ -214,6 +214,11 @@ public class AddTaskController implements Initializable {
         return isValid;
     }
 
+    /**
+     * Obsługuje akcję zapisu zadania do bazy danych.
+     *
+     * @param event zdarzenie kliknięcia przycisku
+     */
     @FXML
     private void saveTask(ActionEvent event) {
         try {
@@ -246,6 +251,16 @@ public class AddTaskController implements Initializable {
         }
     }
 
+    /**
+     * Zapisuje zadanie do bazy danych.
+     *
+     * @param title       tytuł zadania
+     * @param description opis zadania
+     * @param user_id     ID przypisanego pracownika
+     * @param deadline    termin realizacji
+     * @throws SQLException w przypadku błędów SQL
+     * @throws IOException  w przypadku błędów I/O
+     */
     private void saveTaskToDb(String title, String description, int user_id, LocalDate deadline)
             throws SQLException, IOException {
         Connection con = null;
@@ -298,6 +313,11 @@ public class AddTaskController implements Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * Pobiera listę pracowników z bazy danych do wyświetlenia w ChoiceBox.
+     *
+     * @throws SQLException w przypadku błędów zapytania SQL
+     */
     public void fetchInfo() throws SQLException {
         Connection con = null;
         PreparedStatement statement = null;

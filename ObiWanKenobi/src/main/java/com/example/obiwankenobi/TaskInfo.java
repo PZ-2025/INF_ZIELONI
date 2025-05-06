@@ -13,8 +13,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Klasa odpowiedzialna za wyświetlanie informacji o zadaniu w GUI.
- * Wczytuje dane zadania z bazy danych i wyświetla je na odpowiednich etykietach.
+ * Klasa odpowiedzialna za wyświetlanie szczegółów zadania w GUI
+ * oraz umożliwiająca aktualizację statusu zadania.
+ * Wczytuje dane zadania z bazy danych, wyświetla je na odpowiednich etykietach
+ * oraz pozwala na zmianę jego statusu.
  */
 public class TaskInfo {
 
@@ -41,6 +43,11 @@ public class TaskInfo {
     private ChoiceBox<String> taskStatusChoiceBox;
     private UserController userController;
 
+    /**
+     * Ustawia kontroler użytkownika.
+     *
+     * @param userController kontroler użytkownika
+     */
     public void setUserController(UserController userController) {
         this.userController = userController;
     }
@@ -90,6 +97,12 @@ public class TaskInfo {
         }
     }
 
+    /**
+     * Obsługuje zapis zmienionego statusu zadania.
+     * Aktualizuje status zadania w bazie danych i zamyka okno.
+     *
+     * @param event kliknięcie przycisku zapisu statusu
+     */
     @FXML
     private void saveTaskStatus(ActionEvent event) {
 

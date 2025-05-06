@@ -24,7 +24,8 @@ import java.sql.SQLException;
 
 /**
  * Kontroler odpowiedzialny za interakcję dyrektora z GUI.
- * Wyświetla dane magazynowe przypisane do działów.
+ * Wyświetla dane magazynowe przypisane do działów oraz umożliwia wylogowanie
+ * i przejście do widoku raportów.
  */
 public class DirectorController {
 
@@ -49,7 +50,11 @@ public class DirectorController {
     @FXML
     private Label helloName;
 
-
+    /**
+     * Zwraca identyfikator aktualnie zalogowanego użytkownika.
+     *
+     * @return identyfikator użytkownika
+     */
     public static int getLoggedInUserId() {
         // Zwróć ID zalogowanego użytkownika
         return UserController.getLoggedInUser().getUserId(); // Dostęp do kontrolera użytkownika.
@@ -59,7 +64,9 @@ public class DirectorController {
 
 
     /**
-     * Inicjalizacja kontrolera – mapuje kolumny na pola modelu oraz ładuje dane do tabeli.
+     * Inicjalizuje kontroler.
+     * Mapuje kolumny tabeli na odpowiednie pola modelu oraz ładuje dane
+     * z bazy danych i informacje o użytkowniku.
      */
     @FXML
     public void initialize() {
@@ -72,9 +79,9 @@ public class DirectorController {
     }
 
     /**
-     * Pobiera dane z bazy danych i zwraca listę elementów magazynowych.
+     * Pobiera dane z bazy danych i zwraca listę obiektów Warehouse.
      *
-     * @return lista danych magazynowych jako ObservableList
+     * @return lista elementów magazynowych
      */
     public static ObservableList<Warehouse> getItems() {
         ObservableList<Warehouse> items = FXCollections.observableArrayList();
@@ -106,7 +113,7 @@ public class DirectorController {
     }
 
     /**
-     * Ładuje dane do tabeli z bazy danych.
+     * Ładuje dane do widoku tabeli z bazy danych.
      */
     private void loadData() {
         ObservableList<Warehouse> items = getItems();
@@ -114,7 +121,8 @@ public class DirectorController {
     }
 
     /**
-     * Obsługuje wylogowanie użytkownika i powrót do ekranu startowego.
+     * Obsługuje akcję wylogowania użytkownika.
+     * Zamyka bieżące okno i uruchamia ekran startowy.
      *
      * @param event zdarzenie kliknięcia przycisku
      */
@@ -137,9 +145,11 @@ public class DirectorController {
     }
 
     /**
-     * Obsługuje kliknięcie przycisku raportów – obecnie niezaimplementowane.
+     * Obsługuje przejście do widoku raportów.
+     * Otwiera nowe okno z widokiem raportów (reports.fxml).
      *
      * @param event zdarzenie kliknięcia przycisku
+     * @throws IOException jeśli wystąpi problem z załadowaniem pliku FXML
      */
     @FXML
     void raports(ActionEvent event) throws IOException {
@@ -159,6 +169,9 @@ public class DirectorController {
         reports.showAndWait();
     }
 
+    /**
+     * Wczytuje imię aktualnie zalogowanego użytkownika i wyświetla je w etykiecie powitalnej.
+     */
     private void loadUserInfo() {
         int loggedInUserId = DirectorController.getLoggedInUserId();
         String query = "SELECT first_name FROM users WHERE id = ?";

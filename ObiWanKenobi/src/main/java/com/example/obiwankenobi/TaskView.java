@@ -98,8 +98,8 @@ public class TaskView {
             taskInfoController.setTaskId(Id);
 
             Stage stage = new Stage();
+            stage.initStyle(StageStyle.TRANSPARENT);
             stage.setScene(new Scene(parent));
-            stage.initStyle(StageStyle.UTILITY);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

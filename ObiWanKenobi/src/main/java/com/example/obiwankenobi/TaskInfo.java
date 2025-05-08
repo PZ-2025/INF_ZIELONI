@@ -2,6 +2,7 @@ package com.example.obiwankenobi;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ChoiceBox;
 import javafx.event.ActionEvent;
@@ -42,6 +43,7 @@ public class TaskInfo {
     @FXML
     private ChoiceBox<String> taskStatusChoiceBox;
     private UserController userController;
+    @FXML public Button closeButton;
 
     /**
      * Ustawia kontroler użytkownika.
@@ -136,4 +138,9 @@ public class TaskInfo {
         }
     }
 
+    @FXML
+    private void handleClose() {
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+        stage.close();
+    }
 }

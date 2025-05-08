@@ -30,7 +30,7 @@ public class EditTaskController implements Initializable {
     @FXML public TextField taskTitleField;
 
     // Style CSS dla elementów z błędem
-    private final String errorStyle = "-fx-border-color: red; -fx-border-width: 2px;";
+    private final String errorStyle = "-fx-border-color: red; -fx-border-width: 2px; -fx-border-radius: 6; -fx-background-radius: 6";
     private final String normalStyle = "";
 
     // ID edytowanego zadania

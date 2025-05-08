@@ -182,7 +182,7 @@ public class ManagerController {
                         editStage.initModality(Modality.WINDOW_MODAL);
                         editStage.initOwner(((Node) e.getSource()).getScene().getWindow());
                         Scene scene = new Scene(root);
-                        scene.setFill(Color.TRANSPARENT);
+                        editStage.initStyle(StageStyle.TRANSPARENT);
                         editStage.setScene(scene);
                         editStage.showAndWait();
 

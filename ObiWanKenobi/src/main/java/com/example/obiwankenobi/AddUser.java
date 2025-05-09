@@ -56,7 +56,8 @@ public class AddUser {
     @FXML
     protected TextField addScndName;
 
-
+    @FXML
+    protected TextField addCity;
     /**
      * Referencja do kontrolera administratora w celu odświeżenia danych
      */
@@ -126,19 +127,20 @@ public class AddUser {
      * @throws SQLException jeśli wystąpi błąd SQL
      * @throws IOException  jeśli wystąpi błąd wejścia/wyjścia
      */
-    private void saveUserToDB(String name, String scndName, String email, String password, int depId, int roleId)
+    private void saveUserToDB(String name, String scndName, String email, String password, String city, int depId, int roleId)
             throws SQLException, IOException {
         Connection con = DatabaseConnection.getConnection();
 
-        String query = "INSERT INTO users (email, password, first_name, last_name, department_id, role_id) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO users (email, password, first_name, last_name, city, department_id, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = con.prepareStatement(query);
 
         statement.setString(1, email);
         statement.setString(2, password);
         statement.setString(3, name);
         statement.setString(4, scndName);
-        statement.setInt(5, depId);
-        statement.setInt(6, roleId);
+        statement.setString(5, city);
+        statement.setInt(6, depId);
+        statement.setInt(7, roleId);
 
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
@@ -173,6 +175,7 @@ public class AddUser {
         String scndName = addScndName.getText();
         String email = addEmail.getText();
         String password = addPass.getText();
+        String city = addCity.getText();
 
         String roleSelect = addRole.getValue();
         String depSelect = addDep.getValue();
@@ -190,7 +193,7 @@ public class AddUser {
         int roleId = Integer.parseInt(roleSelect.split(":")[0].trim());
         int depId = Integer.parseInt(depSelect.split(":")[0].trim());
 
-        saveUserToDB(name, scndName, email, password, depId, roleId);
+        saveUserToDB(name, scndName, email, password, city, depId, roleId);
 
         if (adminController != null) {
             adminController.refreshTable();

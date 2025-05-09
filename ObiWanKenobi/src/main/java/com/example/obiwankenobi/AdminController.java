@@ -49,6 +49,9 @@ public class AdminController {
     @FXML
     private TableColumn<User, String> nameColumn;
 
+    @FXML
+    private TableColumn<User, String> cityColumn;
+
     /** Kolumna z hasłem */
     @FXML
     private TableColumn<User, String> passColumn;
@@ -87,10 +90,11 @@ public class AdminController {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         scndNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         passColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
+        cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
         departmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
 
-        String query = "SELECT users.id, users.first_name, users.last_name, users.email, users.password, " +
+        String query = "SELECT users.id, users.first_name, users.last_name, users.city, users.email, users.password, " +
                 "roles.name AS role, departments.name AS department " +
                 "FROM users " +
                 "LEFT JOIN roles ON users.role_id = roles.id " +
@@ -108,6 +112,7 @@ public class AdminController {
                         rs.getString("last_name"),
                         rs.getString("email"),
                         rs.getString("password"),
+                        rs.getString("city"),
                         rs.getString("role"),
                         rs.getString("department")
                 ));
@@ -128,6 +133,7 @@ public class AdminController {
         nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         scndNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         emailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        cityColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         passColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         departmentColumn.setCellFactory(ComboBoxTableCell.forTableColumn(departments));
         roleColumn.setCellFactory(ComboBoxTableCell.forTableColumn(roles));
@@ -135,6 +141,7 @@ public class AdminController {
         nameColumn.setOnEditCommit(event -> updateUserField(event, "first_name", event.getNewValue()));
         scndNameColumn.setOnEditCommit(event -> updateUserField(event, "last_name", event.getNewValue()));
         emailColumn.setOnEditCommit(event -> updateUserField(event, "email", event.getNewValue()));
+        cityColumn.setOnEditCommit(event -> updateUserField(event, "city", event.getNewValue()));
         passColumn.setOnEditCommit(event -> updateUserField(event, "password", event.getNewValue()));
         departmentColumn.setOnEditCommit(event -> updateUserDepartment(event.getRowValue(), event.getNewValue()));
         roleColumn.setOnEditCommit(event -> updateUserRole(event.getRowValue(), event.getNewValue()));
@@ -199,6 +206,9 @@ public class AdminController {
                         break;
                     case "email":
                         user.setEmail((String) newValue);
+                        break;
+                    case "city":
+                        user.setCity((String) newValue);
                         break;
                     case "password":
                        user.setPassword((String) newValue);

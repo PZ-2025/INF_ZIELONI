@@ -289,7 +289,7 @@ public class MainController implements Initializable {
      * @return rola użytkownika (jeśli logowanie się powiodło), w przeciwnym razie null
      */
     public String authenticateUser(String login, String password) {
-        String query = "SELECT u.id, u.first_name, u.last_name, r.name FROM users u " +
+        String query = "SELECT u.id, u.first_name, u.last_name, r.name, u.city FROM users u " +
                 "JOIN roles r ON u.role_id = r.id " +
                 "WHERE u.email = ? AND u.password = ?";
 
@@ -305,8 +305,9 @@ public class MainController implements Initializable {
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
                 String role = rs.getString("name");
+                String city = rs.getString("city");
 
-                User loggedInUser = new User(userId, firstName, lastName, login, password, role, null);
+                User loggedInUser = new User(userId, firstName, lastName, login, password, city, role, null);
                 UserController.setLoggedInUser(loggedInUser);
 
                 showSuccessAlert("Witaj, " + firstName + "!");

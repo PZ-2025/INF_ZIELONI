@@ -23,6 +23,8 @@ public class Task {
     /** Termin realizacji zadania */
     private Timestamp deadline;
 
+    private String priority;
+
     /** Data utworzenia zadania */
     private Timestamp createdAt;
 
@@ -40,13 +42,22 @@ public class Task {
      * @param deadline termin realizacji
      * @param createdAt data utworzenia
      */
-    public Task(int id, String title, String description, String status, Timestamp deadline, Timestamp createdAt) {
+    public Task(int id, String title, String description, String status, String priority, Timestamp deadline, Timestamp createdAt) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
+        this.priority = priority;
         this.deadline = deadline;
         this.createdAt = createdAt;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 
     public int getId() {

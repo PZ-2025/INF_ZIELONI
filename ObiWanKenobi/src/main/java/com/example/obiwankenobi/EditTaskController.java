@@ -26,6 +26,7 @@ public class EditTaskController implements Initializable {
     @FXML public Button closeButton;
     @FXML public ChoiceBox<String> employeeChoiceBox;
     @FXML public DatePicker taskDeadlineField;
+    @FXML public TextField taskPriorityField;
     @FXML public TextArea taskDescriptionField;
     @FXML public TextField taskTitleField;
 
@@ -62,6 +63,10 @@ public class EditTaskController implements Initializable {
             resetFieldStyle(taskDescriptionField);
         });
 
+        taskPriorityField.textProperty().addListener((observable, oldValue, newValue) -> {
+            resetFieldStyle(taskPriorityField);
+        });
+
         employeeChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             resetFieldStyle(employeeChoiceBox);
         });
@@ -90,10 +95,11 @@ public class EditTaskController implements Initializable {
      * @param userId ID przypisanego pracownika
      * @param userName Imię i nazwisko przypisanego pracownika
      */
-    public void setTaskData(int taskId, String title, String description, LocalDate deadline, int userId, String userName) {
+    public void setTaskData(int taskId, String title, String description, String priority, LocalDate deadline, int userId, String userName) {
         this.taskId = taskId;
         taskTitleField.setText(title);
         taskDescriptionField.setText(description);
+        taskPriorityField.setText(priority);
         taskDeadlineField.setValue(deadline);
         employeeChoiceBox.setValue(userId + ": " + userName);
     }
@@ -115,6 +121,7 @@ public class EditTaskController implements Initializable {
     private void handleClearTask() {
         taskTitleField.clear();
         taskDescriptionField.clear();
+        taskPriorityField.clear();
         taskDeadlineField.setValue(LocalDate.now());
         employeeChoiceBox.setValue(null);
     }
@@ -135,6 +142,7 @@ public class EditTaskController implements Initializable {
         String title = taskTitleField.getText();
         String description = taskDescriptionField.getText();
         LocalDate deadline = taskDeadlineField.getValue();
+        String priority = taskPriorityField.getText();
         String selectedUser = employeeChoiceBox.getValue();
 
         if (selectedUser == null) {
@@ -153,14 +161,15 @@ public class EditTaskController implements Initializable {
 
         try {
             con = DatabaseConnection.getConnection();
-            String sql = "UPDATE tasks SET title = ?, description = ?, user_id = ?, deadline = ? WHERE id = ?";
+            String sql = "UPDATE tasks SET title = ?, description = ?, user_id = ?, deadline = ?, priority = ? WHERE id = ?";
             stmt = con.prepareStatement(sql);
 
             stmt.setString(1, title);
             stmt.setString(2, description);
             stmt.setInt(3, userId);
             stmt.setDate(4, Date.valueOf(deadline));
-            stmt.setInt(5, taskId);
+            stmt.setString(5, priority);
+            stmt.setInt(6, taskId);
 
             int updated = stmt.executeUpdate();
 
@@ -250,6 +259,7 @@ public class EditTaskController implements Initializable {
         resetFieldStyle(taskDeadlineField);
         resetFieldStyle(taskDescriptionField);
         resetFieldStyle(taskTitleField);
+        resetFieldStyle(taskPriorityField);
         resetFieldStyle(taskDeadlineField);
 
         // Sprawdzenie czy tytuł zadania został wprowadzony
@@ -263,6 +273,12 @@ public class EditTaskController implements Initializable {
         if (taskDescriptionField.getText() == null || taskDescriptionField.getText().trim().isEmpty()) {
             errorMessage.append("Opis zadania nie może być pusty!\n");
             animateFieldError(taskDescriptionField);
+            isValid = false;
+        }
+
+        if (taskPriorityField.getText() == null || taskPriorityField.getText().trim().isEmpty()) {
+            errorMessage.append("priorytet nie może być pusty!\n");
+            animateFieldError(taskPriorityField);
             isValid = false;
         }
 

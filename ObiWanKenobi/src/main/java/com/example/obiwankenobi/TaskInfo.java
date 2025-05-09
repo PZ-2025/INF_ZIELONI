@@ -36,6 +36,9 @@ public class TaskInfo {
     @FXML
     private Label taskStatus;
 
+    @FXML
+    private Label taskPiority;
+
     /** Etykieta wyświetlająca tytuł zadania */
     @FXML
     private Label taskTitle;
@@ -72,7 +75,7 @@ public class TaskInfo {
         try {
             Connection connection = DatabaseConnection.getConnection();
 
-            String query = "SELECT id, title, deadline, status, description FROM tasks WHERE id = ?";
+            String query = "SELECT id, title, deadline, status, priority, description FROM tasks WHERE id = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, Id);
@@ -82,11 +85,13 @@ public class TaskInfo {
                 String title = resultSet.getString("title");
                 String deadline = resultSet.getString("deadline");
                 String status = resultSet.getString("status");
+                String priority = resultSet.getString("priority");
                 String description = resultSet.getString("description");
 
                 taskTitle.setText(title);
                 taskDeadline.setText(deadline != null ? deadline : "Brak terminu");
                 taskStatusChoiceBox.setValue(status);
+                taskPiority.setText(priority);
                 taskDescription.setText(description != null ? description : "Brak opisu");
             }
 

@@ -24,6 +24,8 @@ public class User {
     /** Rola użytkownika w systemie */
     private String role;
 
+    private String city;
+
     /** Dział, do którego należy użytkownik */
     private String department;
 
@@ -38,11 +40,12 @@ public class User {
      * @param role rola użytkownika
      * @param department dział, do którego należy użytkownik
      */
-    public User(int id, String firstName, String lastName, String email, String password, String role, String department) {
+    public User(int id, String firstName, String lastName, String email, String password, String city, String role, String department) {
         this.userId = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.city = city;
         this.password = password;
         this.role = role;
         this.department = department;
@@ -59,11 +62,12 @@ public class User {
      * @param role rola użytkownika
      * @param department dział, do którego należy użytkownik
      */
-    public User(String password, String firstName, String lastName, String email, int userId, String role, String department){
+    public User(String password, String firstName, String lastName, String email, String city, int userId, String role, String department){
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.city = city;
         this.userId = userId;
         this.role = role;
         this.department = department;
@@ -193,5 +197,13 @@ public class User {
      */
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

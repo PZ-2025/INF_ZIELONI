@@ -92,7 +92,7 @@ public class ManagerController {
     private void refreshTaskList() {
         taskListContainer.getChildren().clear();
 
-        String query = "SELECT t.id, t.title, t.description, t.status, t.deadline, t.user_id, t.created_at\n" +
+        String query = "SELECT t.id, t.title, t.description, t.status, t.deadline, t.priority, t.user_id, t.created_at\n" +
                 "FROM tasks t\n" +
                 "JOIN users u ON t.user_id = u.id\n" +
                 "JOIN departments d ON u.department_id = d.id\n" +
@@ -113,6 +113,7 @@ public class ManagerController {
                 String title = rs.getString("title");
                 String status = rs.getString("status");
                 Timestamp deadline = rs.getTimestamp("deadline");
+                String priority = rs.getString("priority");
                 int id = rs.getInt("id");
                 String description = rs.getString("description");
                 int user_id = rs.getInt("user_id");
@@ -172,6 +173,7 @@ public class ManagerController {
                                 id,
                                 title,
                                 description,
+                                priority,
                                 deadline.toLocalDateTime().toLocalDate(),
                                 user_id,
                                 getUserNameById(user_id)

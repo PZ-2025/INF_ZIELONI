@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="400.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #0C3105;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.AddUser">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #0C3105;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.AddUser">
    <children>
       <HBox prefHeight="100.0" prefWidth="400.0" style="-fx-background-color: #0C3105;">
          <children>
@@ -116,6 +116,29 @@
          </children>
       </HBox>
       <HBox>
+         <children>
+            <Label prefWidth="100.0" styleClass="textSmallDark" text="Miasto">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="20.0" top="5.0" />
+               </HBox.margin>
+            </Label>
+            <TextField id="newCity" fx:id="addCity" prefHeight="30.0" prefWidth="200.0" promptText="miasto" style="-fx-background-color: white;" styleClass="inputUser">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+         <VBox.margin>
+            <Insets left="10.0" top="20.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox>
          <VBox.margin>
             <Insets left="10.0" top="20.0" />
          </VBox.margin>
@@ -157,7 +180,7 @@
       </HBox>
       <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#saveUser" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: FFC849;" text="dodaj" textAlignment="CENTER">
          <VBox.margin>
-            <Insets left="125.0" right="125.0" top="30.0" />
+            <Insets left="125.0" right="125.0" top="15.0" />
          </VBox.margin>
          <font>
             <Font name="System Bold" size="20.0" />

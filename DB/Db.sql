@@ -8,6 +8,7 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL,
   first_name VARCHAR(255) NOT NULL,
   last_name VARCHAR(255) NOT NULL,
+  city VARCHAR(255) NOT NULL,
   department_id INT,
   role_id INT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -35,6 +36,7 @@ CREATE TABLE tasks (
   user_id INT,
   status VARCHAR(255),
   deadline TIMESTAMP NULL,
+  priority VARCHAR(20),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

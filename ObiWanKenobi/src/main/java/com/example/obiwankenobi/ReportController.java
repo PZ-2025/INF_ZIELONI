@@ -13,13 +13,20 @@ import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.text.DecimalFormat;
@@ -68,18 +75,69 @@ public class ReportController implements Initializable {
             PreparedStatement stmt = connection.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
-            departmentChoiceBox.getItems().add("wszystkie");
+           /* departmentChoiceBox.getItems().add("wszystkie");
 
             while (rs.next()) {
                 String departmentName = rs.getString("name");
-                departmentChoiceBox.getItems().add(departmentName);
+                departmentChoiceBox.getItems().add(departmentName);          //powoduje błąd przy zmianie gui - nie w nim już filtrów
             }
 
             departmentChoiceBox.setValue("wszystkie");
+            */
+
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    void userReportShow(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/report1.fxml"));
+        Parent root = loader.load();
+
+        Stage reports = new Stage();
+        reports.initModality(Modality.WINDOW_MODAL);
+        reports.initOwner(((Node) event.getSource()).getScene().getWindow());
+
+        reports.initStyle(StageStyle.TRANSPARENT);
+
+        Scene scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);
+        reports.setScene(scene);
+        reports.showAndWait();
+    }
+    @FXML
+    void taskReportShow(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/report2.fxml"));
+        Parent root = loader.load();
+
+        Stage reports = new Stage();
+        reports.initModality(Modality.WINDOW_MODAL);
+        reports.initOwner(((Node) event.getSource()).getScene().getWindow());
+
+        reports.initStyle(StageStyle.TRANSPARENT);
+
+        Scene scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);
+        reports.setScene(scene);
+        reports.showAndWait();
+    }
+    @FXML
+    void warehouseReportShow(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/obiwankenobi/views/report3.fxml"));
+        Parent root = loader.load();
+
+        Stage reports = new Stage();
+        reports.initModality(Modality.WINDOW_MODAL);
+        reports.initOwner(((Node) event.getSource()).getScene().getWindow());
+
+        reports.initStyle(StageStyle.TRANSPARENT);
+
+        Scene scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);
+        reports.setScene(scene);
+        reports.showAndWait();
     }
 
     /**
@@ -371,6 +429,8 @@ public class ReportController implements Initializable {
             e.printStackTrace();
         }
     }
+
+
 
     /**
      * Generuje raport użytkowników w formacie PDF.

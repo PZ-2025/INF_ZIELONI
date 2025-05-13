@@ -157,7 +157,6 @@ public class DirectorController {
         Parent root = loader.load();
 
         Stage reports = new Stage();
-        reports.setTitle("raporty");
         reports.initModality(Modality.WINDOW_MODAL);
         reports.initOwner(((Node) event.getSource()).getScene().getWindow());
 

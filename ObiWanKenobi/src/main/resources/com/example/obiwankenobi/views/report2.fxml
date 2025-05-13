@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="570.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.TaskReportController">
+    <children>
+        <VBox spacing="20.0" style="-fx-background-color: #f9f9f9;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <padding>
+                <Insets bottom="30" left="30" right="30" top="30" />
+            </padding>
+
+            <!-- Nagłówek -->
+            <HBox>
+                <children>
+                    <Label prefHeight="45.0" prefWidth="400.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #145a32;" text="Raport zadań" />
+                    <Button onAction="#reportClose" fx:id="closeButton" mnemonicParsing="false" prefHeight="21.0" prefWidth="40.0" style="-fx-text-fill: #145a32; -fx-background-color: #f9f9f9; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 5;" text="X" />
+                </children>
+            </HBox>
+
+            <!-- Status zadania -->
+            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="460.0" spacing="10">
+                <children>
+                    <Label prefWidth="130.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Status zadania:" />
+                    <ChoiceBox fx:id="statusChoiceBox" prefWidth="300.0">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Nie rozpoczęte" />
+                                <String fx:value="W trakcie" />
+                                <String fx:value="Oczekujące" />
+                                <String fx:value="Zakończone" />
+                            </FXCollections>
+                        </items>
+                    </ChoiceBox>
+                </children>
+            </HBox>
+
+            <!-- Data od -->
+            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="460.0" spacing="10">
+                <children>
+                    <Label prefWidth="130.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Data od:" />
+                    <DatePicker fx:id="startDatePicker" prefWidth="300.0" />
+                </children>
+            </HBox>
+
+            <!-- Data do -->
+            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="460.0" spacing="10">
+                <children>
+                    <Label prefWidth="130.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Data do:" />
+                    <DatePicker fx:id="endDatePicker" prefWidth="300.0" />
+                </children>
+            </HBox>
+
+            <!-- Priorytet -->
+            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="460.0" spacing="10">
+                <children>
+                    <Label prefWidth="130.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Priorytet:" />
+                    <ChoiceBox fx:id="priorityChoiceBox" prefWidth="300.0">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Niski" />
+                                <String fx:value="Średni" />
+                                <String fx:value="Wysoki" />
+                            </FXCollections>
+                        </items>
+                    </ChoiceBox>
+                </children>
+            </HBox>
+
+            <!-- Dział -->
+            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="460.0" spacing="10">
+                <children>
+                    <Label prefWidth="130.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Dział:" />
+                    <ChoiceBox fx:id="departmentChoiceBox" prefWidth="300.0" />
+                </children>
+            </HBox>
+
+            <!-- Pracownik -->
+            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="460.0" spacing="10">
+                <children>
+                    <Label prefWidth="130.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Pracownik:" />
+                    <ChoiceBox fx:id="employeeChoiceBox" prefWidth="300.0" />
+                </children>
+            </HBox>
+
+            <!-- Przyciski -->
+            <HBox alignment="CENTER" spacing="20">
+                <children>
+                    <Button fx:id="generateButton" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;" text="Generuj" />
+                    <Button onAction="#handleClearTask" fx:id="clearButton" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;" text="Wyczyść" />
+                </children>
+            </HBox>
+        </VBox>
+    </children>
+</AnchorPane>

@@ -266,7 +266,7 @@ public class AddTaskController implements Initializable {
         try {
             con = DatabaseConnection.getConnection();
 
-            String sql = "INSERT INTO tasks (title, description, user_id, status, deadline) VALUES (?, ?, ?, 'Nie rozpoczęte', ?)";
+            String sql = "INSERT INTO tasks (title, description, user_id, status, deadline) VALUES (?, ?, ?, 'Nie rozpoczete', ?)";
             statement = con.prepareStatement(sql);
 
             statement.setString(1, title);

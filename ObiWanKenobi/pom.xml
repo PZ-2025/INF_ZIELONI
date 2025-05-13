@@ -99,11 +99,21 @@
             <version>8.0.2</version>
             <type>pom</type>
         </dependency>
+
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>bouncy-castle-adapter</artifactId>
             <version>8.0.2</version>
         </dependency>
+
+        <!-- TO JEST DO NASZEJ BIBLIOTEKI!!!! nowy projekt trzeba bylo dodac, przeniesc tam logike raportow i gra muza  -->
+        <dependency>
+            <groupId>org.ObiWanKenobi</groupId>
+            <artifactId>Reports-Lib</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

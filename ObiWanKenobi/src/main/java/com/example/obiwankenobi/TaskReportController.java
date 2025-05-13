@@ -1,43 +1,19 @@
 package com.example.obiwankenobi;
 
-import com.itextpdf.kernel.colors.DeviceRgb;
-import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.borders.Border;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.properties.TextAlignment;
-import com.itextpdf.layout.properties.UnitValue;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
+import org.example.ReportGenerator;
 
 public class TaskReportController implements Initializable{
 
@@ -58,6 +34,10 @@ public class TaskReportController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        statusChoiceBox.setValue("wszystkie");
+        priorityChoiceBox.setValue("wszystkie");
+
         loadDeps();
         loadEmps();
     }
@@ -76,8 +56,6 @@ public class TaskReportController implements Initializable{
             }
 
             departmentChoiceBox.setValue("wszystkie");
-
-
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -118,14 +96,14 @@ public class TaskReportController implements Initializable{
     void handleClearTask(ActionEvent event) {
         startDatePicker.setValue(null);
         endDatePicker.setValue(null);
-        departmentChoiceBox.setValue(null);
-        priorityChoiceBox.setValue(null);
-        employeeChoiceBox.setValue(null);
-        statusChoiceBox.setValue(null);
+        departmentChoiceBox.setValue("wszystkie");
+        priorityChoiceBox.setValue("wszystkie");
+        employeeChoiceBox.setValue("wszyscy");
+        statusChoiceBox.setValue("wszystkie");
     }
 
     @FXML
-    private void generateUserReport() throws SQLException {
+    private void generateTaskButton() throws SQLException {
 
         String taskStatus = statusChoiceBox.getValue();
         LocalDate startDate = startDatePicker.getValue();
@@ -133,11 +111,25 @@ public class TaskReportController implements Initializable{
         String priority = priorityChoiceBox.getValue();
         String department = departmentChoiceBox.getValue();
         String empChoiceBox = employeeChoiceBox.getValue();
-        int userId = Integer.parseInt(empChoiceBox.split(":")[0].trim());
+        Integer userId = null;
 
-        try (Connection connection = DatabaseConnection.getConnection()){
+        if (empChoiceBox != null && !empChoiceBox.equals("wszyscy")) {
+            try {
+                userId = Integer.parseInt(empChoiceBox.split(" ")[0].trim());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
 
-        } catch (Exception e) {
+        if ("wszystkie".equals(taskStatus)) taskStatus = null;
+        if ("wszystkie".equals(priority)) priority = null;
+        if ("wszystkie".equals(department)) department = null;
+        if ("wszyscy".equals(empChoiceBox)) userId = null;
+
+        try {
+            ReportGenerator.generateTask(taskStatus, startDate, endDate, priority, department, userId);
+        }catch (Exception e){
             e.printStackTrace();
         }
     }

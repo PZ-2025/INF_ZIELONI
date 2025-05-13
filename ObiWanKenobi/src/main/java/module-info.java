@@ -11,6 +11,7 @@ module com.example.obiwankenobi {
     requires java.desktop;
     requires kernel;
     requires layout;
+    requires Reports.Lib;
 
     opens com.example.obiwankenobi to javafx.fxml;
     exports com.example.obiwankenobi;

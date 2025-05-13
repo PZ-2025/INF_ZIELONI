@@ -201,7 +201,7 @@ public class ManagerController {
                 confirmBtn.setStyle("-fx-background-color: #0C5A18; -fx-font-size: 12px;");
                 confirmBtn.setPrefSize(80, 30);
 
-                if ("Zakończone".equalsIgnoreCase(status)) {
+                if ("Zakonczone".equalsIgnoreCase(status)) {
                     confirmBtn.setDisable(true);
                     editBtn.setDisable(true);
                 }
@@ -210,7 +210,7 @@ public class ManagerController {
                     try (Connection conn1 = DatabaseConnection.getConnection();
                          PreparedStatement stmt1 = conn1.prepareStatement("UPDATE tasks SET status = ? WHERE id = ?")) {
 
-                        stmt1.setString(1, "Zakończone");
+                        stmt1.setString(1, "Zakonczone");
                         stmt1.setInt(2, id);
                         int rowsAffected = stmt1.executeUpdate();
 
@@ -314,7 +314,7 @@ public class ManagerController {
             javafx.scene.control.TableView<Warehouse> tableView = new javafx.scene.control.TableView<>();
 
             // Kolumny
-            javafx.scene.control.TableColumn<Warehouse, String> depCol = new javafx.scene.control.TableColumn<>("Dział");
+            javafx.scene.control.TableColumn<Warehouse, String> depCol = new javafx.scene.control.TableColumn<>("Dzial");
             depCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("depName"));
             depCol.setPrefWidth(200);
 
@@ -322,7 +322,7 @@ public class ManagerController {
             itemCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemName"));
             itemCol.setPrefWidth(300);
 
-            javafx.scene.control.TableColumn<Warehouse, Integer> amountCol = new javafx.scene.control.TableColumn<>("Ilość");
+            javafx.scene.control.TableColumn<Warehouse, Integer> amountCol = new javafx.scene.control.TableColumn<>("Ilosc");
             amountCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemAmount"));
             amountCol.setPrefWidth(100);
 

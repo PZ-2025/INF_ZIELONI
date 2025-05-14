@@ -26,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.example.ReportGenerator;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,15 +45,16 @@ public class UserReportController implements Initializable{
     public Button closeButton;
     @FXML
     private TextField cityField;
-
     @FXML
     private ChoiceBox<String> departmentChoiceBox;
-
     @FXML
-    private ChoiceBox<String> salaryChoiceBox;
-
+    private TextField salaryMax;
     @FXML
-    private ChoiceBox<String> taskRangeChoiceBox;
+    private TextField salaryMin;
+    @FXML
+    private TextField tasksMax;
+    @FXML
+    private TextField tasksMin;
 
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
@@ -89,77 +91,100 @@ public class UserReportController implements Initializable{
     @FXML
     void handleClearTask(ActionEvent event) {
         cityField.clear();
-        departmentChoiceBox.setValue(null);
-        salaryChoiceBox.setValue(null);
-        taskRangeChoiceBox.setValue(null);
+        departmentChoiceBox.setValue("wszystkie");
+        tasksMin.clear();
+        tasksMax.clear();
+        salaryMax.clear();
+        salaryMin.clear();
     }
+
     @FXML
-    private void generateUserReport() throws SQLException {
+    private void generateUsersButton() throws SQLException {
 
         String selectedDepartment = departmentChoiceBox.getValue();
-        String salary = salaryChoiceBox.getValue();
-        String taskRange = taskRangeChoiceBox.getValue();
         String city = cityField.getText();
-        int salaryMin = 0;
-        int salaryMax = 0;
-        int taskMin = 0;
-        int taskMax = 0;
+        String minSalaryText = salaryMin.getText();
+        String maxSalaryText = salaryMax.getText();
+        String minTasksText = tasksMin.getText();
+        String maxTasksText = tasksMax.getText();
 
-        switch (salary) {
-            case "1 - 2000":
-                salaryMin = 1;
-                salaryMax = 2000;
-                break;
-            case "2001 - 4000":
-                salaryMin = 2001;
-                salaryMax = 4000;
-                break;
-            case "4001 - 6000":
-                salaryMin = 4001;
-                salaryMax = 6000;
-                break;
-            case "6001 - 8000":
-                salaryMin = 6001;
-                salaryMax = 8000;
-                break;
-            case "Powyżej 8001":
-                salaryMin = 8001;
-                salaryMax = Integer.MAX_VALUE;
-                break;
-            default:
-                break;
+        Integer minSalary = null;
+        Integer maxSalary = null;
+        Integer minTasks = null;
+        Integer maxTasks = null;
+
+        if ("wszystkie".equals(selectedDepartment)) {
+            selectedDepartment = null;
         }
 
-        switch (taskRange) {
-            case "0 - 10":
-                taskMin = 0;
-                taskMax = 10;
-                break;
-            case "11 - 20":
-                taskMin = 11;
-                taskMax = 20;
-                break;
-            case "21 - 50":
-                taskMin = 21;
-                taskMax = 50;
-                break;
-            case "51 - 80":
-                taskMin = 51;
-                taskMax = 80;
-                break;
-            case "Powyżej 80":
-                taskMin = 81;
-                taskMax = Integer.MAX_VALUE;
-                break;
-            default:
-                break;
+        if (minSalaryText != null && !minSalaryText.isEmpty()) {
+            try {
+                minSalary = Integer.parseInt(minSalaryText);
+                if (minSalary < 0) {
+                    System.err.println("Minimalna pensja nie może być ujemna.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Nieprawidłowa minimalna pensja.");
+                return;
+            }
         }
 
-        try (Connection connection = DatabaseConnection.getConnection()){
+        if (maxSalaryText != null && !maxSalaryText.isEmpty()) {
+            try {
+                maxSalary = Integer.parseInt(maxSalaryText);
+                if (maxSalary < 0) {
+                    System.err.println("Maksymalna pensja nie może być ujemna.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Nieprawidłowa maksymalna pensja.");
+                return;
+            }
+        }
 
-    } catch (Exception e) {
-        e.printStackTrace();
+        if (minSalary != null && maxSalary != null && maxSalary < minSalary) {
+            System.err.println("Maksymalna pensja nie może być mniejsza od minimalnej pensji.");
+            return;
+        }
+
+        if (minTasksText != null && !minTasksText.isEmpty()) {
+            try {
+                minTasks = Integer.parseInt(minTasksText);
+                if (minTasks < 0) {
+                    System.err.println("Minimalna liczba zadań nie może być ujemna.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Nieprawidłowa minimalna liczba zadań.");
+                return;
+            }
+        }
+
+        if (maxTasksText != null && !maxTasksText.isEmpty()) {
+            try {
+                maxTasks = Integer.parseInt(maxTasksText);
+                if (maxTasks < 0) {
+                    System.err.println("Maksymalna liczba zadań nie może być ujemna.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Nieprawidłowa maksymalna liczba zadań.");
+                return;
+            }
+        }
+
+        if (minTasks != null && maxTasks != null && maxTasks < minTasks) {
+            System.err.println("Maksymalna liczba zadań nie może być mniejsza od minimalnej liczby zadań.");
+            return;
+        }
+
+        try {
+            ReportGenerator.generateUsers(selectedDepartment, city, minSalary, maxSalary, minTasks, maxTasks);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    }
+
 
 }

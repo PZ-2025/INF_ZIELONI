@@ -127,6 +127,11 @@ public class TaskReportController implements Initializable{
         if ("wszystkie".equals(department)) department = null;
         if ("wszyscy".equals(empChoiceBox)) userId = null;
 
+        if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
+            System.err.println("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.");
+            return;
+        }
+
         try {
             ReportGenerator.generateTask(taskStatus, startDate, endDate, priority, department, userId);
         }catch (Exception e){

@@ -27,7 +27,7 @@
             <!-- Kategoria -->
             <HBox alignment="CENTER" prefHeight="45.0" prefWidth="440.0" spacing="10">
                 <children>
-                    <Label prefWidth="265.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Kategoria:" />
+                    <Label prefWidth="265.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Dział" />
                     <ChoiceBox fx:id="categoryChoiceBox" prefHeight="25.0" prefWidth="166.0">
                     </ChoiceBox>
                 </children>
@@ -48,11 +48,17 @@
                     <TextField fx:id="maxQuantityField" prefWidth="166.0" promptText="Wprowadź ilość maksymalną" />
                 </children>
             </HBox>
+         <HBox alignment="CENTER" prefHeight="45.0" prefWidth="440.0" spacing="10">
+            <children>
+               <Label prefWidth="265.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Kierownik działu" />
+               <ChoiceBox fx:id="menagerChoiceBox" prefHeight="25.0" prefWidth="166.0" />
+            </children>
+         </HBox>
 
             <!-- Przyciski -->
             <HBox alignment="CENTER" prefHeight="94.0" prefWidth="440.0" spacing="20">
                 <children>
-                    <Button fx:id="generateButton" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;" text="Generuj" />
+                    <Button fx:id="generateButton" onAction="#generateWarehouseButton" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;" text="Generuj" />
                     <Button fx:id="clearButton" onAction="#handleClearTask" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;" text="Wyczyść" />
                 </children>
             </HBox>

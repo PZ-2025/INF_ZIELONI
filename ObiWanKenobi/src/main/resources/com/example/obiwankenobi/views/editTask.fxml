@@ -72,7 +72,7 @@
          <HBox alignment="CENTER" prefHeight="75.0" prefWidth="540.0" spacing="20">
             <children>
                <Button fx:id="addTaskButton" onAction="#saveTask" prefHeight="40" prefWidth="140" style="-fx-background-color: #27ae60; -fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" text="Zapisz" textFill="WHITE" />
-               <Button fx:id="clearTaskButton" onAction="#handleClearTask" prefHeight="40" prefWidth="140" style="-fx-background-color: #7D0A0A; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-font-size: 16px;" text="Wyczyść" />
+               <Button fx:id="clearTaskButton" onAction="#handleClearTask" prefHeight="40" prefWidth="140" style="-fx-background-color:  #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-font-size: 16px;" text="Wyczyść" />
             </children>
          </HBox>
       </VBox>

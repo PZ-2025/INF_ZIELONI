@@ -11,7 +11,7 @@
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" styleClass="parent" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.MainController">
 
    <children>
-      
+
       <AnchorPane layoutY="96.0" prefHeight="506.0" prefWidth="1000.0" style="-fx-border-color: #0C3105; -fx-border-width: 5;" styleClass="pane">
          <children>
             <Label alignment="CENTER" layoutX="93.0" layoutY="82.0" prefHeight="74.0" prefWidth="260.0" styleClass="textBigPane" text="Obi" textAlignment="CENTER" textFill="FORESTGREEN">

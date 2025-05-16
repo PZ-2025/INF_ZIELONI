@@ -20,10 +20,9 @@
          </padding>
          <HBox prefHeight="90.0" prefWidth="552.0">
             <children>
-      
                <!-- Nagłówek -->
                <Label prefHeight="35.0" prefWidth="536.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #145a32;" text="Dodaj nowe zadanie" />
-      
+
                <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleClose" prefHeight="29.0" prefWidth="51.0" style="-fx-text-fill: #145a32; -fx-background-color: #f9f9f9; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 5;" text="X" />
             </children>
          </HBox>
@@ -72,7 +71,7 @@
          <HBox alignment="CENTER" prefHeight="75.0" prefWidth="540.0" spacing="20">
             <children>
                <Button fx:id="addTaskButton" onAction="#saveTask" prefHeight="40" prefWidth="140" style="-fx-background-color: #27ae60; -fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" text="Dodaj" textFill="WHITE" />
-               <Button fx:id="clearTaskButton" onAction="#handleClearTask" prefHeight="40" prefWidth="140" style="-fx-background-color: #7D0A0A; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-font-size: 16px;" text="Wyczyść" />
+               <Button fx:id="clearTaskButton" onAction="#handleClearTask" prefHeight="40" prefWidth="140" style="-fx-background-color:  #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-font-size: 16px;" text="Wyczyść" />
             </children>
          </HBox>
       </VBox>

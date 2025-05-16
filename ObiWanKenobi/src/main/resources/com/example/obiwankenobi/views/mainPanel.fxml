@@ -6,73 +6,53 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #B3FFB3;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.UserController">
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.UserController">
     <children>
-        <!-- Nagłówek -->
-        <HBox prefHeight="100.0" prefWidth="400.0" style="-fx-background-color: #0C3105;">
-            <children>
-            <Label fx:id="userName" prefHeight="53.0" prefWidth="170.0" styleClass="textBig">
-               <HBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="10.0" top="20.0" />
-               </HBox.margin>
-            </Label>
-            <Label fx:id="userId" prefHeight="53.0" prefWidth="45.0" styleClass="textBig">
-               <HBox.margin>
-                  <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
-               </HBox.margin>
-            </Label>
-                <Label alignment="CENTER" contentDisplay="RIGHT" prefHeight="53.0" prefWidth="240.0" styleClass="textBig" text="Twoje Zadania" textAlignment="RIGHT" textFill="WHITE">
-                    <font>
-                        <Font name="System Bold" size="24.0" />
-                    </font>
-                    <HBox.margin>
-                        <Insets bottom="20.0" left="10.0" top="20.0" />
-                    </HBox.margin>
-                </Label>
-                <Button onAction="#refreshTasks" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #0C3105; -fx-border-color: #0C3105; -fx-background-radius: 5;">
-                    <graphic>
-                        <ImageView>
-                            <Image url="@../img/refresh.png" />
-                        </ImageView>
-                    </graphic>
-               <HBox.margin>
-                  <Insets right="2.0" top="13.0" />
-               </HBox.margin>
-                </Button>
-            </children>
-        </HBox>
+        <VBox spacing="20" style="-fx-background-color: #f9f9f9;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <padding>
+                <Insets bottom="30" left="30" right="30" top="30" />
+            </padding>
 
-        <!-- ScrollPane dla listy zadań -->
-        <ScrollPane hbarPolicy="NEVER" prefHeight="400.0" prefWidth="580.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #0C3105;">
-         <content>
-            <GridPane fx:id="taskGrid" prefHeight="10.0" prefWidth="0.0">
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-         </content>
-         <VBox.margin>
-            <Insets left="10.0" right="10.0" top="10.0" />
-         </VBox.margin>
-        </ScrollPane>
+            <!-- Nagłówek -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <children>
+                    <Label fx:id="userName" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #145a32;" />
+                    <Label fx:id="userId" style="-fx-font-size: 20px; -fx-text-fill: #333; -fx-font-weight: bold;" />
+                    <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #145a32;" text="Twoje Zadania" />
+                    <Region prefHeight="40.0" prefWidth="113.0" HBox.hgrow="ALWAYS" />
+                    <Button onAction="#refreshTasks" prefHeight="40" prefWidth="40" style="-fx-background-color: transparent;">
+                        <graphic>
+                            <ImageView fitHeight="24" fitWidth="24">
+                                <Image url="@../img/refresh.png" />
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </children>
+            </HBox>
 
-        <!-- Przycisk powrotu -->
-      <Button fx:id="logoutBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="461.0" layoutY="551.0" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #7D0A0A;" text="wyloguj" textAlignment="CENTER" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="20.0" />
-         </font>
-         <padding>
-            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-         </padding>
-         <VBox.margin>
-            <Insets left="245.0" right="245.0" top="20.0" />
-         </VBox.margin>
-      </Button>
+            <!-- ScrollPane z GridPane na zadania -->
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" vbarPolicy="AS_NEEDED">
+                <content>
+                    <GridPane fx:id="taskGrid" vgap="10">
+                        <padding>
+                            <Insets bottom="10" top="10" />
+                        </padding>
+                    </GridPane>
+                </content>
+            </ScrollPane>
+
+            <!-- Przycisk wylogowania -->
+            <HBox alignment="CENTER">
+                <children>
+                    <Button fx:id="logoutBtn" onAction="#logout" prefHeight="45" prefWidth="160" style="-fx-background-color:  #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 8;" text="Wyloguj" />
+                </children>
+            </HBox>
+        </VBox>
     </children>
-</VBox>
+</AnchorPane>

@@ -18,10 +18,10 @@ import java.util.regex.Pattern;
 public class ForgotPassController {
 
     @FXML
-    private TextField emailField;
+    TextField emailField;
 
     @FXML
-    private Button closeButton;
+    Button closeButton;
 
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final String DEFAULT_PASSWORD = "zaq1@WSX"; // domyślne hasło
@@ -35,7 +35,7 @@ public class ForgotPassController {
             try {
                 handlePasswordReset();
             } catch (SQLException e) {
-                showAlert("Błąd", "Błąd podczas resetowania hasła.");
+//                showAlert("Błąd", "Błąd podczas resetowania hasła.");
                 e.printStackTrace();
             }
         });
@@ -45,25 +45,25 @@ public class ForgotPassController {
      * Obsługuje reset hasła użytkownika po wprowadzeniu e-maila.
      */
     @FXML
-    private void handlePasswordReset() throws SQLException {
+    void handlePasswordReset() throws SQLException {
         String email = emailField.getText();
 
         if (email.isEmpty()) {
-            showAlert("Uwaga", "Proszę uzupełnić pole e-mail!");
+//            showAlert("Uwaga", "Proszę uzupełnić pole e-mail!");
             return;
         }
 
         if (!Pattern.matches(EMAIL_REGEX, email)) {
-            showAlert("Uwaga", "Podano niepoprawny adres e-mail!");
+//            showAlert("Uwaga", "Podano niepoprawny adres e-mail!");
             return;
         }
 
         if (isEmailExists(email)) {
             resetPassword(email);
-            showAlert("Sukces", "Hasło zostało zresetowane dla: " + email);
+//            showAlert("Sukces", "Hasło zostało zresetowane dla: " + email);
             closeWindow();
         } else {
-            showAlert("Błąd", "E-mail nie istnieje w systemie.");
+//            showAlert("Błąd", "E-mail nie istnieje w systemie.");
         }
     }
 
@@ -73,7 +73,7 @@ public class ForgotPassController {
      * @param email e-mail do sprawdzenia
      * @return true jeśli istnieje, false w przeciwnym razie
      */
-    private boolean isEmailExists(String email) {
+    boolean isEmailExists(String email) {
         String query = "SELECT 1 FROM users WHERE email = ? LIMIT 1";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -86,7 +86,7 @@ public class ForgotPassController {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Błąd", "Błąd połączenia z bazą danych.");
+//            showAlert("Błąd", "Błąd połączenia z bazą danych.");
             return false;
         }
     }
@@ -107,12 +107,12 @@ public class ForgotPassController {
 
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated == 0) {
-                showAlert("Błąd", "Nie udało się zmienić hasła.");
+//                showAlert("Błąd", "Nie udało się zmienić hasła.");
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Błąd", "Wystąpił problem z aktualizacją hasła.");
+//            showAlert("Błąd", "Wystąpił problem z aktualizacją hasła.");
         }
     }
 
@@ -132,17 +132,4 @@ public class ForgotPassController {
         stage.close();
     }
 
-    /**
-     * Pokazuje alert z przekazanym tytułem i wiadomością.
-     *
-     * @param title   tytuł alertu
-     * @param message treść wiadomości
-     */
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 }

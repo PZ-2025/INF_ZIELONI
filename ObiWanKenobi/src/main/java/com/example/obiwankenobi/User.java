@@ -73,6 +73,8 @@ public class User {
         this.department = department;
     }
 
+    public User(){}
+
     /**
      * Zwraca hasło użytkownika.
      *

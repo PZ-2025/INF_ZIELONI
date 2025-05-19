@@ -46,13 +46,13 @@ public class ReportController implements Initializable {
     private static final DeviceRgb HEADER_BACKGROUND = new DeviceRgb(200, 200, 200);
 
     @FXML
-    private DatePicker startDate;
+    DatePicker startDate;
 
     @FXML
-    private DatePicker endDate;
+    DatePicker endDate;
 
     @FXML
-    private ChoiceBox<String> departmentChoiceBox;
+    ChoiceBox<String> departmentChoiceBox;
 
     /**
      * Inicjalizuje kontroler. Wczytuje listę działów do rozwijanej listy (ChoiceBox).

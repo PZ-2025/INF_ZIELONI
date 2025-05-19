@@ -20,15 +20,15 @@ public class TaskReportController implements Initializable{
 
     public Button closeButton;
     @FXML
-    private ChoiceBox<String> statusChoiceBox;
+    public ChoiceBox<String> statusChoiceBox;
     public DatePicker startDatePicker;
     public DatePicker endDatePicker;
     @FXML
-    private ChoiceBox<String> priorityChoiceBox;
+    public ChoiceBox<String> priorityChoiceBox;
     @FXML
-    private ChoiceBox<String> departmentChoiceBox;
+    public ChoiceBox<String> departmentChoiceBox;
     @FXML
-    private ChoiceBox<String> employeeChoiceBox;
+    public ChoiceBox<String> employeeChoiceBox;
     public Button generateButton;
     public Button clearButton;
 
@@ -103,7 +103,7 @@ public class TaskReportController implements Initializable{
     }
 
     @FXML
-    private void generateTaskButton() throws SQLException {
+    public void generateTaskButton() throws SQLException {
 
         String taskStatus = statusChoiceBox.getValue();
         LocalDate startDate = startDatePicker.getValue();

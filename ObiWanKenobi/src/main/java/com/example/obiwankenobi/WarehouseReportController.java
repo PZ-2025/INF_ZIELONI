@@ -93,7 +93,7 @@ public class WarehouseReportController implements Initializable {
 
     }
     @FXML
-    private void generateWarehouseButton() throws SQLException {
+    public void generateWarehouseButton() throws SQLException {
         String selectedDepartment = categoryChoiceBox.getValue();
         String selectedManager = menagerChoiceBox.getValue();
         String minQtyText = minQuantityField.getText();

@@ -129,7 +129,7 @@ public class ManagerController {
                 textBox.setPrefHeight(78.0);
                 textBox.setPrefWidth(298.0);
 
-                Label taskNumberLabel = new Label("Zadanie " + taskNumber++);
+                Label taskNumberLabel = new Label("Zadanie id: " + id);
                 taskNumberLabel.getStyleClass().add("textSmallDark");
                 taskNumberLabel.setStyle("-fx-font-weight: bold;");
 

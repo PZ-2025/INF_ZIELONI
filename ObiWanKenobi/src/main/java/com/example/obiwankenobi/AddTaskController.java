@@ -36,6 +36,9 @@ public class AddTaskController implements Initializable {
     private Button clearTaskButton;
 
     @FXML
+    private ChoiceBox<String> priorityChoiceBox;
+
+    @FXML
     public Button closeButton;
 
     @FXML
@@ -93,6 +96,10 @@ public class AddTaskController implements Initializable {
         taskDeadlineField.valueProperty().addListener((observable, oldValue, newValue) -> {
             resetFieldStyle(taskDeadlineField);
         });
+
+        priorityChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            resetFieldStyle(priorityChoiceBox);
+        });
     }
 
     /**
@@ -116,12 +123,14 @@ public class AddTaskController implements Initializable {
         taskDescriptionField.clear();
         employeeChoiceBox.setValue(null);
         taskDeadlineField.setValue(LocalDate.now());
+        priorityChoiceBox.setValue(null);
 
         // Resetowanie stylów wszystkich pól
         resetFieldStyle(taskTitleField);
         resetFieldStyle(taskDescriptionField);
         resetFieldStyle(employeeChoiceBox);
         resetFieldStyle(taskDeadlineField);
+        resetFieldStyle(priorityChoiceBox);
     }
 
     /**
@@ -175,6 +184,7 @@ public class AddTaskController implements Initializable {
         resetFieldStyle(taskDescriptionField);
         resetFieldStyle(employeeChoiceBox);
         resetFieldStyle(taskDeadlineField);
+        resetFieldStyle(priorityChoiceBox);
 
 
         if (taskTitleField.getText() == null || taskTitleField.getText().trim().isEmpty()) {
@@ -194,6 +204,12 @@ public class AddTaskController implements Initializable {
         if (employeeChoiceBox.getValue() == null) {
             errorMessage.append("Należy wybrać pracownika!\n");
             animateFieldError(employeeChoiceBox);
+            isValid = false;
+        }
+
+        if (priorityChoiceBox.getValue() == null) {
+            errorMessage.append("Należy wybrać priorytet!\n");
+            animateFieldError(priorityChoiceBox);
             isValid = false;
         }
 
@@ -228,10 +244,11 @@ public class AddTaskController implements Initializable {
             String description = taskDescriptionField.getText().trim();
             LocalDate deadline = taskDeadlineField.getValue();
             String choiceBox = employeeChoiceBox.getValue();
+            String priority = priorityChoiceBox.getValue();
 
             try {
                 int userId = Integer.parseInt(choiceBox.split(":")[0].trim());
-                saveTaskToDb(title, description, userId, deadline);
+                saveTaskToDb(title, description, userId, deadline, priority);
 
                 handleClearTask(null);
             } catch (NumberFormatException e) {
@@ -258,7 +275,7 @@ public class AddTaskController implements Initializable {
      * @throws SQLException w przypadku błędów SQL
      * @throws IOException  w przypadku błędów I/O
      */
-    private void saveTaskToDb(String title, String description, int user_id, LocalDate deadline)
+    private void saveTaskToDb(String title, String description, int user_id, LocalDate deadline, String priority)
             throws SQLException, IOException {
         Connection con = null;
         PreparedStatement statement = null;
@@ -266,13 +283,14 @@ public class AddTaskController implements Initializable {
         try {
             con = DatabaseConnection.getConnection();
 
-            String sql = "INSERT INTO tasks (title, description, user_id, status, deadline) VALUES (?, ?, ?, 'Nie rozpoczete', ?)";
+            String sql = "INSERT INTO tasks (title, description, user_id, status, deadline, priority) VALUES (?, ?, ?, 'Nie rozpoczete', ?, ?)";
             statement = con.prepareStatement(sql);
 
             statement.setString(1, title);
             statement.setString(2, description);
             statement.setInt(3, user_id);
             statement.setDate(4, Date.valueOf(deadline));
+            statement.setString(5, priority);
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {

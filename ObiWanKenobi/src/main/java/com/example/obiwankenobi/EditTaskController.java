@@ -26,10 +26,10 @@ public class EditTaskController implements Initializable {
     @FXML public Button closeButton;
     @FXML public ChoiceBox<String> employeeChoiceBox;
     @FXML public DatePicker taskDeadlineField;
-    @FXML public TextField taskPriorityField;
     @FXML public TextArea taskDescriptionField;
     @FXML public TextField taskTitleField;
-
+    @FXML
+    private ChoiceBox<String> priorityChoiceBox;
     // Style CSS dla elementów z błędem
     private final String errorStyle = "-fx-border-color: red; -fx-border-width: 2px; -fx-border-radius: 6; -fx-background-radius: 6";
     private final String normalStyle = "";
@@ -63,8 +63,8 @@ public class EditTaskController implements Initializable {
             resetFieldStyle(taskDescriptionField);
         });
 
-        taskPriorityField.textProperty().addListener((observable, oldValue, newValue) -> {
-            resetFieldStyle(taskPriorityField);
+        priorityChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            resetFieldStyle(priorityChoiceBox);
         });
 
         employeeChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -99,7 +99,7 @@ public class EditTaskController implements Initializable {
         this.taskId = taskId;
         taskTitleField.setText(title);
         taskDescriptionField.setText(description);
-        taskPriorityField.setText(priority);
+        priorityChoiceBox.setValue(priority);
         taskDeadlineField.setValue(deadline);
         employeeChoiceBox.setValue(userId + ": " + userName);
     }
@@ -121,7 +121,7 @@ public class EditTaskController implements Initializable {
     private void handleClearTask() {
         taskTitleField.clear();
         taskDescriptionField.clear();
-        taskPriorityField.clear();
+        priorityChoiceBox.setValue(null);
         taskDeadlineField.setValue(LocalDate.now());
         employeeChoiceBox.setValue(null);
     }
@@ -142,7 +142,7 @@ public class EditTaskController implements Initializable {
         String title = taskTitleField.getText();
         String description = taskDescriptionField.getText();
         LocalDate deadline = taskDeadlineField.getValue();
-        String priority = taskPriorityField.getText();
+        String priority = priorityChoiceBox.getValue();
         String selectedUser = employeeChoiceBox.getValue();
 
         if (selectedUser == null) {
@@ -259,7 +259,7 @@ public class EditTaskController implements Initializable {
         resetFieldStyle(taskDeadlineField);
         resetFieldStyle(taskDescriptionField);
         resetFieldStyle(taskTitleField);
-        resetFieldStyle(taskPriorityField);
+        resetFieldStyle(priorityChoiceBox);
         resetFieldStyle(taskDeadlineField);
 
         // Sprawdzenie czy tytuł zadania został wprowadzony
@@ -276,9 +276,9 @@ public class EditTaskController implements Initializable {
             isValid = false;
         }
 
-        if (taskPriorityField.getText() == null || taskPriorityField.getText().trim().isEmpty()) {
-            errorMessage.append("priorytet nie może być pusty!\n");
-            animateFieldError(taskPriorityField);
+        if (priorityChoiceBox.getValue() == null) {
+            errorMessage.append("Należy wybrać priorytet!\n");
+            animateFieldError(priorityChoiceBox);
             isValid = false;
         }
 

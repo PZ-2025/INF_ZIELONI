@@ -202,7 +202,7 @@ public class UserReportController implements Initializable{
 
     private void shakeNode(Node node) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(50), node);
-        node.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+        node.setStyle("-fx-border-color: red; -fx-border-width: 4;");
         tt.setFromX(0);
         tt.setByX(10);
         tt.setCycleCount(20);

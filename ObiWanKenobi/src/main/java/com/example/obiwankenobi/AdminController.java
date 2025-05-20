@@ -17,6 +17,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.converter.FloatStringConverter;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,6 +50,9 @@ public class AdminController {
     /** Kolumna z imieniem */
     @FXML
     private TableColumn<User, String> nameColumn;
+
+    @FXML
+    private TableColumn<User, Float> salaryColumn;
 
     @FXML
     private TableColumn<User, String> cityColumn;
@@ -90,12 +95,13 @@ public class AdminController {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         scndNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         passColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
+        salaryColumn.setCellValueFactory(new PropertyValueFactory<>("salary"));
         cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
         departmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
 
         String query = "SELECT users.id, users.first_name, users.last_name, users.city, users.email, users.password, " +
-                "roles.name AS role, departments.name AS department " +
+                "roles.name AS role, departments.name AS department, users.salary " +
                 "FROM users " +
                 "LEFT JOIN roles ON users.role_id = roles.id " +
                 "LEFT JOIN departments ON users.department_id = departments.id " +
@@ -112,6 +118,7 @@ public class AdminController {
                         rs.getString("last_name"),
                         rs.getString("email"),
                         rs.getString("password"),
+                        rs.getFloat("salary"),
                         rs.getString("city"),
                         rs.getString("role"),
                         rs.getString("department")
@@ -135,6 +142,7 @@ public class AdminController {
         emailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         cityColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         passColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        salaryColumn.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
         departmentColumn.setCellFactory(ComboBoxTableCell.forTableColumn(departments));
         roleColumn.setCellFactory(ComboBoxTableCell.forTableColumn(roles));
 
@@ -143,6 +151,7 @@ public class AdminController {
         emailColumn.setOnEditCommit(event -> updateUserField(event, "email", event.getNewValue()));
         cityColumn.setOnEditCommit(event -> updateUserField(event, "city", event.getNewValue()));
         passColumn.setOnEditCommit(event -> updateUserField(event, "password", event.getNewValue()));
+        salaryColumn.setOnEditCommit(event -> updateUserField(event, "salary", event.getNewValue()));
         departmentColumn.setOnEditCommit(event -> updateUserDepartment(event.getRowValue(), event.getNewValue()));
         roleColumn.setOnEditCommit(event -> updateUserRole(event.getRowValue(), event.getNewValue()));
     }
@@ -177,6 +186,32 @@ public class AdminController {
             }
         }
 
+        if (fieldName.equals("salary")) {
+            try {
+                String strValue = newValue.toString();
+
+                if (!strValue.matches("\\d+(\\.\\d+)?")) {
+                    showAlert(Alert.AlertType.ERROR, "Błąd", "Pensja musi być dodatnią liczbą i zawierać tylko cyfry.");
+                    return;
+                }
+
+                float salaryValue = Float.parseFloat(strValue);
+
+                if (salaryValue <= 0) {
+                    showAlert(Alert.AlertType.ERROR, "Błąd", "Pensja musi być liczbą większą od zera.");
+                    return;
+                }
+
+                newValue = salaryValue;
+
+            } catch (NumberFormatException e) {
+                showAlert(Alert.AlertType.ERROR, "Błąd", "Pensja musi być liczbą.");
+                return;
+            }
+        }
+
+
+
         // Walidacja hasła
         if (fieldName.equals("password")) {
             String password = (String) newValue;
@@ -209,6 +244,9 @@ public class AdminController {
                         break;
                     case "city":
                         user.setCity((String) newValue);
+                        break;
+                    case "salary":
+                        user.setSalary((Float) newValue);
                         break;
                     case "password":
                        user.setPassword((String) newValue);

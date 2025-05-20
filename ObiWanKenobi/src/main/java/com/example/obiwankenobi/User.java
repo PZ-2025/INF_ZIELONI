@@ -26,6 +26,8 @@ public class User {
 
     private String city;
 
+    private Float salary;
+
     /** Dział, do którego należy użytkownik */
     private String department;
 
@@ -40,13 +42,14 @@ public class User {
      * @param role rola użytkownika
      * @param department dział, do którego należy użytkownik
      */
-    public User(int id, String firstName, String lastName, String email, String password, String city, String role, String department) {
+    public User(int id, String firstName, String lastName, String email, String password,  Float salary, String city, String role, String department) {
         this.userId = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.city = city;
         this.password = password;
+        this.salary = salary;
         this.role = role;
         this.department = department;
     }
@@ -62,12 +65,13 @@ public class User {
      * @param role rola użytkownika
      * @param department dział, do którego należy użytkownik
      */
-    public User(String password, String firstName, String lastName, String email, String city, int userId, String role, String department){
+    public User(String password, String firstName, String lastName, String email, String city, Float salary, int userId, String role, String department){
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.city = city;
+        this.salary = salary;
         this.userId = userId;
         this.role = role;
         this.department = department;
@@ -207,5 +211,13 @@ public class User {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Float getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Float salary) {
+        this.salary = salary;
     }
 }

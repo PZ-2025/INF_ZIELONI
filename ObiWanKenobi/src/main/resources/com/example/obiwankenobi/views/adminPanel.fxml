@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="596.0" prefWidth="1100.0" style="-fx-background-color: #B3FFB3;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.AdminController">
+<AnchorPane prefHeight="596.0" prefWidth="1199.0" style="-fx-background-color: #B3FFB3;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.AdminController">
     <children>
-        <HBox prefHeight="100.0" prefWidth="1100.0" style="-fx-background-color: #0C3105; -fx-background-radius: 0 0 15 15;">
+        <HBox prefHeight="100.0" prefWidth="1199.0" style="-fx-background-color: #0C3105; -fx-background-radius: 0 0 15 15;">
             <children>
                 <Label alignment="CENTER" prefHeight="53.0" prefWidth="350.0" styleClass="textBig" text="Panel administratora" textAlignment="CENTER" textFill="WHITE">
                     <HBox.margin>
@@ -23,7 +23,7 @@
                 </Label>
                 <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="110.0" style="-fx-background-color: #7D0A0A; -fx-background-radius: 10; -fx-text-fill: white; -fx-font-weight: bold;" text="Wyloguj">
                     <HBox.margin>
-                        <Insets left="300.0" right="20.0" top="20.0" />
+                        <Insets left="500.0" right="20.0" top="20.0" />
                     </HBox.margin>
                 </Button>
                 <Button alignment="CENTER" mnemonicParsing="false" onAction="#addUser" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #FFC849; -fx-background-radius: 10; -fx-font-weight: bold;" text="Dodaj konto" textAlignment="CENTER">
@@ -40,9 +40,10 @@
                 <TableColumn fx:id="emailColumn" prefWidth="125.0" text="Email" />
             <TableColumn fx:id="cityColumn" prefWidth="118.0" text="Miasto" />
                 <TableColumn fx:id="passColumn" prefWidth="129.0" text="Hasło" />
-                <TableColumn fx:id="departmentColumn" prefWidth="171.0" text="Dział" />
-                <TableColumn fx:id="roleColumn" prefWidth="153.0" text="Stopień" />
-                <TableColumn fx:id="actionColumn" prefWidth="73.0" text="Akcje" />
+            <TableColumn fx:id="salaryColumn" prefWidth="108.0" text="Wynagrodzenie" />
+                <TableColumn fx:id="departmentColumn" prefWidth="161.0" text="Dział" />
+                <TableColumn fx:id="roleColumn" prefWidth="126.0" text="Stopień" />
+                <TableColumn fx:id="actionColumn" prefWidth="117.0" text="Akcje" />
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

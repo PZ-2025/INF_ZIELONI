@@ -14,6 +14,8 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import org.example.ReportGenerator;
+import javafx.animation.TranslateTransition;
+import javafx.util.Duration;
 
 public class TaskReportController implements Initializable{
 
@@ -128,6 +130,8 @@ public class TaskReportController implements Initializable{
         if ("wszyscy".equals(empChoiceBox)) userId = null;
 
         if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
+            shakeNode(startDatePicker);
+            shakeNode(endDatePicker);
             System.err.println("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.");
             return;
         }
@@ -138,4 +142,15 @@ public class TaskReportController implements Initializable{
             e.printStackTrace();
         }
     }
+
+    private void shakeNode(Node node) {
+        TranslateTransition tt = new TranslateTransition(Duration.millis(50), node);
+        node.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+        tt.setFromX(0);
+        tt.setByX(10);
+        tt.setCycleCount(20);
+        tt.setAutoReverse(true);
+        tt.play();
+    }
+
 }

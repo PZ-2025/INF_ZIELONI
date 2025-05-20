@@ -32,7 +32,7 @@ public class ReportGenerator {
         public static void generateTask(String status, LocalDate startDate, LocalDate endDate,
                                         String priority, String department, Integer userId) {
             LocalDateTime nowTitle = LocalDateTime.now();
-            DateTimeFormatter formatterTitle = DateTimeFormatter.ofPattern("dd_MM_yyyy");
+            DateTimeFormatter formatterTitle = DateTimeFormatter.ofPattern("dd_MM_yyyy_HHmmss");
             String formattedDateTitle = nowTitle.format(formatterTitle);
 
             String outputPath = "tasksReport_" + formattedDateTitle + ".pdf";
@@ -172,7 +172,7 @@ public class ReportGenerator {
                                          Integer minSalary, Integer maxSalary,
                                          Integer minTasks, Integer maxTasks){
             LocalDateTime nowTitle = LocalDateTime.now();
-            DateTimeFormatter formatterTitle = DateTimeFormatter.ofPattern("dd_MM_yyyy");
+            DateTimeFormatter formatterTitle = DateTimeFormatter.ofPattern("dd_MM_yyyy_HHmmss");
             String formattedDateTitle = nowTitle.format(formatterTitle);
 
             String outputPath = "usersReport_" + formattedDateTitle + ".pdf";
@@ -278,7 +278,7 @@ public class ReportGenerator {
         public static void generateWarehouse(String department, String managerFullName,
                                              Integer minQuantity, Integer maxQuantity){
             LocalDateTime nowTitle = LocalDateTime.now();
-            DateTimeFormatter formatterTitle = DateTimeFormatter.ofPattern("dd_MM_yyyy");
+            DateTimeFormatter formatterTitle = DateTimeFormatter.ofPattern("dd_MM_yyyy_HHmmss");
             String formattedDateTitle = nowTitle.format(formatterTitle);
 
             String outputPath = "warehouseReport_" + formattedDateTitle + ".pdf";

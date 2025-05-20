@@ -11,6 +11,7 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import org.example.ReportGenerator;
 
 import java.io.FileNotFoundException;
@@ -121,10 +123,12 @@ public class UserReportController implements Initializable{
             try {
                 minSalary = Integer.parseInt(minSalaryText);
                 if (minSalary < 0) {
+                    shakeNode(salaryMin);
                     System.err.println("Minimalna pensja nie może być ujemna.");
                     return;
                 }
             } catch (NumberFormatException e) {
+                shakeNode(salaryMin);
                 System.err.println("Nieprawidłowa minimalna pensja.");
                 return;
             }
@@ -134,16 +138,20 @@ public class UserReportController implements Initializable{
             try {
                 maxSalary = Integer.parseInt(maxSalaryText);
                 if (maxSalary < 0) {
+                    shakeNode(salaryMax);
                     System.err.println("Maksymalna pensja nie może być ujemna.");
                     return;
                 }
             } catch (NumberFormatException e) {
+                shakeNode(salaryMax);
                 System.err.println("Nieprawidłowa maksymalna pensja.");
                 return;
             }
         }
 
         if (minSalary != null && maxSalary != null && maxSalary < minSalary) {
+            shakeNode(salaryMin);
+            shakeNode(salaryMax);
             System.err.println("Maksymalna pensja nie może być mniejsza od minimalnej pensji.");
             return;
         }
@@ -152,10 +160,12 @@ public class UserReportController implements Initializable{
             try {
                 minTasks = Integer.parseInt(minTasksText);
                 if (minTasks < 0) {
+                    shakeNode(tasksMin);
                     System.err.println("Minimalna liczba zadań nie może być ujemna.");
                     return;
                 }
             } catch (NumberFormatException e) {
+                shakeNode(tasksMin);
                 System.err.println("Nieprawidłowa minimalna liczba zadań.");
                 return;
             }
@@ -165,16 +175,20 @@ public class UserReportController implements Initializable{
             try {
                 maxTasks = Integer.parseInt(maxTasksText);
                 if (maxTasks < 0) {
+                    shakeNode(tasksMax);
                     System.err.println("Maksymalna liczba zadań nie może być ujemna.");
                     return;
                 }
             } catch (NumberFormatException e) {
+                shakeNode(tasksMax);
                 System.err.println("Nieprawidłowa maksymalna liczba zadań.");
                 return;
             }
         }
 
         if (minTasks != null && maxTasks != null && maxTasks < minTasks) {
+            shakeNode(tasksMin);
+            shakeNode(tasksMax);
             System.err.println("Maksymalna liczba zadań nie może być mniejsza od minimalnej liczby zadań.");
             return;
         }
@@ -184,6 +198,16 @@ public class UserReportController implements Initializable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void shakeNode(Node node) {
+        TranslateTransition tt = new TranslateTransition(Duration.millis(50), node);
+        node.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+        tt.setFromX(0);
+        tt.setByX(10);
+        tt.setCycleCount(20);
+        tt.setAutoReverse(true);
+        tt.play();
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.obiwankenobi;
 
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.ReportGenerator;
 
 import java.net.URL;
@@ -114,10 +116,12 @@ public class WarehouseReportController implements Initializable {
             try {
                 minQty = Integer.parseInt(minQtyText);
                 if (minQty < 0) {
+                    shakeNode(minQuantityField);
                     System.err.println("Minimalna ilość nie może być mniejsza niż 0.");
                     return;
                 }
             } catch (NumberFormatException e) {
+                shakeNode(minQuantityField);
                 System.err.println("Nieprawidłowa minimalna ilość.");
                 return;
             }
@@ -127,16 +131,20 @@ public class WarehouseReportController implements Initializable {
             try {
                 maxQty = Integer.parseInt(maxQtyText);
                 if (maxQty < 0) {
+                    shakeNode(maxQuantityField);
                     System.err.println("Maksymalna ilość nie może być mniejsza niż 0.");
                     return;
                 }
             } catch (NumberFormatException e) {
+                shakeNode(maxQuantityField);
                 System.err.println("Nieprawidłowa maksymalna ilość.");
                 return;
             }
         }
 
         if (minQty != null && maxQty != null && minQty > maxQty) {
+            shakeNode(minQuantityField);
+            shakeNode(maxQuantityField);
             System.err.println("Minimalna ilość nie może być większa niż maksymalna.");
             return;
         }
@@ -148,5 +156,13 @@ public class WarehouseReportController implements Initializable {
         }
     }
 
-
+    private void shakeNode(Node node) {
+        TranslateTransition tt = new TranslateTransition(Duration.millis(50), node);
+        node.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+        tt.setFromX(0);
+        tt.setByX(10);
+        tt.setCycleCount(20);
+        tt.setAutoReverse(true);
+        tt.play();
+    }
 }

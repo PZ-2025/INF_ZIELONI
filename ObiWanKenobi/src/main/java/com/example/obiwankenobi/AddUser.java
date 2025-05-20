@@ -1,13 +1,16 @@
 package com.example.obiwankenobi;
 
+import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -37,6 +40,9 @@ public class AddUser {
      */
     @FXML
     protected TextField addEmail;
+
+    @FXML
+    private TextField addSalary;
 
     /**
      * Pole tekstowe na imię
@@ -127,11 +133,11 @@ public class AddUser {
      * @throws SQLException jeśli wystąpi błąd SQL
      * @throws IOException  jeśli wystąpi błąd wejścia/wyjścia
      */
-    private void saveUserToDB(String name, String scndName, String email, String password, String city, int depId, int roleId)
+    private void saveUserToDB(String name, String scndName, String email, String password, String city, Float salary, int depId, int roleId)
             throws SQLException, IOException {
         Connection con = DatabaseConnection.getConnection();
 
-        String query = "INSERT INTO users (email, password, first_name, last_name, city, department_id, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO users (email, password, first_name, last_name, city, salary, department_id, role_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = con.prepareStatement(query);
 
         statement.setString(1, email);
@@ -139,8 +145,9 @@ public class AddUser {
         statement.setString(3, name);
         statement.setString(4, scndName);
         statement.setString(5, city);
-        statement.setInt(6, depId);
-        statement.setInt(7, roleId);
+        statement.setFloat(6, salary);
+        statement.setInt(7, depId);
+        statement.setInt(8, roleId);
 
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
@@ -176,29 +183,108 @@ public class AddUser {
         String email = addEmail.getText();
         String password = addPass.getText();
         String city = addCity.getText();
-
         String roleSelect = addRole.getValue();
         String depSelect = addDep.getValue();
 
-        boolean nameValid = validateNameAndSurname();
-        boolean emailValid = isEmailValid();
-        boolean emailExists = isEmailExists(email);
-        boolean passValid = validatePassword();
-        boolean selectionsValid = validateSelections(roleSelect, depSelect);
+        boolean hasError = false;
 
-        if (!emailValid || emailExists || !passValid || !nameValid || !selectionsValid) {
+        if (!validateNameAndSurname()) {
+            shakeNode(addName);
+            shakeNode(addScndName);
+            hasError = true;
+        }
+
+        // Walidacja emaila
+        if (!isEmailValid()) {
+            shakeNode(addEmail);
+            hasError = true;
+        }
+
+        if (isEmailExists(email)) {
+            shakeNode(addEmail);
+            hasError = true;
+        }
+
+        // Walidacja hasła
+        if (!validatePassword()) {
+            shakeNode(addPass);
+            hasError = true;
+        }
+
+        if (!validateCity()) {
+            hasError = true;
+        }
+
+        // Walidacja wyborów z ComboBoxów
+        if (!validateSelections(roleSelect, depSelect)) {
+            shakeNode(addRole);
+            shakeNode(addDep);
+            hasError = true;
+        }
+
+        Float salary = validateSalary();
+        if (salary == null) {
+            hasError = true;
+        }
+
+        if (hasError) {
             return;
         }
 
         int roleId = Integer.parseInt(roleSelect.split(":")[0].trim());
         int depId = Integer.parseInt(depSelect.split(":")[0].trim());
 
-        saveUserToDB(name, scndName, email, password, city, depId, roleId);
+        saveUserToDB(name, scndName, email, password, city, salary, depId, roleId);
 
         if (adminController != null) {
             adminController.refreshTable();
         }
     }
+
+    /**
+     * Sprawdza poprawność wprowadzonej pensji.
+     * Jeśli jest błędna, ustawia czerwony obrys i animację.
+     *
+     * @return Float wartość pensji jeśli poprawna, null w przeciwnym wypadku
+     */
+    private Float validateSalary() {
+        String salaryText = addSalary.getText();
+        if (salaryText == null || salaryText.trim().isEmpty()) {
+            shakeNode(addSalary);
+            return null;
+        }
+
+        try {
+            Float salary = Float.parseFloat(salaryText);
+            if (salary < 0) {
+                shakeNode(addSalary);
+                return null;
+            }
+            addSalary.setStyle(null);
+            return salary;
+        } catch (NumberFormatException e) {
+            shakeNode(addSalary);
+            return null;
+        }
+    }
+
+    /**
+     * Sprawdza, czy pole miasto nie jest puste.
+     * Jeśli jest puste, ustawia czerwony obrys i animację.
+     *
+     * @return true jeśli miasto jest poprawnie wprowadzone, false w przeciwnym wypadku
+     */
+    private boolean validateCity() {
+        String city = addCity.getText().trim();
+        if (city.isEmpty()) {
+            shakeNode(addCity);
+            return false;
+        }
+        addCity.setStyle(null);
+        return true;
+    }
+
+
 
     /**
      * Sprawdza, czy podany adres e-mail istnieje już w bazie danych.
@@ -214,8 +300,6 @@ public class AddUser {
         ResultSet resultSet = statement.executeQuery();
         resultSet.next();
         if (resultSet.getInt(1) > 0) {
-            addEmail.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
-            new animatefx.animation.Shake(addEmail).play();
             return true;
         }
         return false;
@@ -233,8 +317,6 @@ public class AddUser {
 
 
         if (!email.matches(emailRegex)) {
-            addEmail.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
-            new animatefx.animation.Shake(addEmail).play();
             return false;
         } else {
             addEmail.setStyle(null);
@@ -265,8 +347,6 @@ public class AddUser {
         addPass.setStyle(null);
 
         if (!isPasswordSecure(password)) {
-            addPass.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
-            new animatefx.animation.Shake(addPass).play();
             return false;
         }
 
@@ -287,16 +367,12 @@ public class AddUser {
         boolean valid = true;
 
         if (name.isEmpty()) {
-            addName.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
-            new animatefx.animation.Shake(addName).play();
             valid = false;
         } else {
             addName.setStyle(null);
         }
 
         if (scndName.isEmpty()) {
-            addScndName.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
-            new animatefx.animation.Shake(addScndName).play();
             valid = false;
         } else {
             addScndName.setStyle(null);
@@ -317,16 +393,12 @@ public class AddUser {
         boolean valid = true;
 
         if (roleSelect == null) {
-            addRole.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
-            new animatefx.animation.Shake(addRole).play();
             valid = false;
         } else {
             addRole.setStyle(null);
         }
 
         if (depSelect == null) {
-            addDep.setStyle("-fx-border-color: red ; -fx-border-width: 2px ; -fx-border-radius: 3 ;");
-            new animatefx.animation.Shake(addDep).play();
             valid = false;
         } else {
             addDep.setStyle(null);
@@ -335,5 +407,16 @@ public class AddUser {
 
         return valid;
     }
+
+    private void shakeNode(Node node) {
+        TranslateTransition tt = new TranslateTransition(Duration.millis(50), node);
+        node.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+        tt.setFromX(0);
+        tt.setByX(10);
+        tt.setCycleCount(20);
+        tt.setAutoReverse(true);
+        tt.play();
+    }
+
 
 }

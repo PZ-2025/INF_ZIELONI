@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #0C3105;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.AddUser">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="400.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #0C3105;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.AddUser">
    <children>
       <HBox prefHeight="100.0" prefWidth="400.0" style="-fx-background-color: #0C3105;">
          <children>
@@ -114,6 +114,29 @@
                </HBox.margin>
             </TextField>
          </children>
+      </HBox>
+      <HBox>
+         <children>
+            <Label prefHeight="30.0" prefWidth="100.0" styleClass="textSmallDark" text="Pensja:">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="20.0" top="5.0" />
+               </HBox.margin>
+            </Label>
+            <TextField id="newName" fx:id="addSalary" prefHeight="30.0" prefWidth="200.0" promptText="pensja" style="-fx-background-color: white;" styleClass="inputUser">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+         <VBox.margin>
+            <Insets left="10.0" top="20.0" />
+         </VBox.margin>
       </HBox>
       <HBox>
          <children>

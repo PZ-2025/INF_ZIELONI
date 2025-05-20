@@ -5,212 +5,96 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="400.0" style="-fx-background-color: #B3FFB3; -fx-border-color: #0C3105;" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.AddUser">
+<AnchorPane prefHeight="600.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.AddUser">
+
    <children>
-      <HBox prefHeight="100.0" prefWidth="400.0" style="-fx-background-color: #0C3105;">
-         <children>
-            <Label alignment="CENTER" prefWidth="350.0" styleClass="textBig" text="Dodaj użytkownika" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="25.0" right="25.0" top="20.0" />
-               </HBox.margin>
-            </Label>
-         </children>
-      </HBox>
-      <HBox>
-         <VBox.margin>
-            <Insets left="10.0" top="20.0" />
-         </VBox.margin>
-         <children>
-            <Label prefHeight="30.0" prefWidth="100.0" styleClass="textSmallDark" text="Imię:">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" top="5.0" />
-               </HBox.margin>
-            </Label>
-            <TextField id="newName" fx:id="addName" prefHeight="30.0" prefWidth="200.0" promptText="imie" style="-fx-background-color: white;" styleClass="inputUser">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </TextField>
-         </children>
-      </HBox>
-      <HBox>
-         <VBox.margin>
-            <Insets left="10.0" top="20.0" />
-         </VBox.margin>
-         <children>
-            <Label prefWidth="100.0" styleClass="textSmallDark" text="Nazwisko:">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" top="5.0" />
-               </HBox.margin>
-            </Label>
-            <TextField id="newSurname" fx:id="addScndName" prefHeight="30.0" prefWidth="200.0" promptText="nazwisko" style="-fx-background-color: white;" styleClass="inputUser">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </TextField>
-         </children>
-      </HBox>
-      <HBox>
-         <VBox.margin>
-            <Insets left="10.0" top="20.0" />
-         </VBox.margin>
-         <children>
-            <Label prefWidth="100.0" styleClass="textSmallDark" text="E-mail:">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" top="5.0" />
-               </HBox.margin>
-            </Label>
-            <TextField id="newEmail" fx:id="addEmail" prefHeight="30.0" prefWidth="200.0" promptText="nazwa@domena.com" style="-fx-background-color: white;" styleClass="inputUser">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </TextField>
-         </children>
-      </HBox>
-      <HBox>
-         <VBox.margin>
-            <Insets left="10.0" top="20.0" />
-         </VBox.margin>
-         <children>
-            <Label prefWidth="100.0" styleClass="textSmallDark" text="Hasło:">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" top="5.0" />
-               </HBox.margin>
-            </Label>
-            <TextField id="newPassword" fx:id="addPass" prefHeight="30.0" prefWidth="200.0" promptText="haslo" style="-fx-background-color: white;" styleClass="inputUser">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </TextField>
-         </children>
-      </HBox>
-      <HBox>
-         <children>
-            <Label prefHeight="30.0" prefWidth="100.0" styleClass="textSmallDark" text="Pensja:">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" top="5.0" />
-               </HBox.margin>
-            </Label>
-            <TextField id="newName" fx:id="addSalary" prefHeight="30.0" prefWidth="200.0" promptText="pensja" style="-fx-background-color: white;" styleClass="inputUser">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </TextField>
-         </children>
-         <VBox.margin>
-            <Insets left="10.0" top="20.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <children>
-            <Label prefWidth="100.0" styleClass="textSmallDark" text="Miasto">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" top="5.0" />
-               </HBox.margin>
-            </Label>
-            <TextField id="newCity" fx:id="addCity" prefHeight="30.0" prefWidth="200.0" promptText="miasto" style="-fx-background-color: white;" styleClass="inputUser">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </TextField>
-         </children>
-         <VBox.margin>
-            <Insets left="10.0" top="20.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox>
-         <VBox.margin>
-            <Insets left="10.0" top="20.0" />
-         </VBox.margin>
-         <children>
-            <Label prefWidth="100.0" styleClass="textSmallDark" text="Rola:">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" top="5.0" />
-               </HBox.margin>
-            </Label>
-            <ChoiceBox fx:id="addRole" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: white;" styleClass="inputUser">
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </ChoiceBox>
-         </children>
-      </HBox>
-      <HBox>
-         <VBox.margin>
-            <Insets left="10.0" top="20.0" />
-         </VBox.margin>
-         <children>
-            <Label prefWidth="100.0" styleClass="textSmallDark" text="Dział:">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="20.0" top="5.0" />
-               </HBox.margin>
-            </Label>
-            <ChoiceBox fx:id="addDep" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: white;" styleClass="inputUser">
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </ChoiceBox>
-         </children>
-      </HBox>
-      <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#saveUser" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: FFC849;" text="dodaj" textAlignment="CENTER">
-         <VBox.margin>
-            <Insets left="125.0" right="125.0" top="15.0" />
-         </VBox.margin>
-         <font>
-            <Font name="System Bold" size="20.0" />
-         </font>
+      <VBox prefHeight="648.0" prefWidth="539.0" spacing="20" style="-fx-background-color: #f9f9f9; -fx-border-color: #f0f0f0; -fx-border-width: 4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0">
          <padding>
-            <Insets left="10.0" right="10.0" />
+            <Insets bottom="30" left="30" right="30" top="30" />
          </padding>
-      </Button>
+
+         <!-- Nagłówek -->
+         <HBox alignment="CENTER_LEFT">
+            <children>
+               <Label prefHeight="35.0" prefWidth="404.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #145a32;" text="Dodaj użytkownika" />
+               <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleClose" prefHeight="29.0" prefWidth="51.0" style="-fx-text-fill: #145a32; -fx-background-color: #f9f9f9; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 5;" text="X" />
+            </children>
+         </HBox>
+
+         <!-- Imię -->
+         <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="440.0" spacing="10">
+            <children>
+               <Label prefHeight="17.0" prefWidth="150.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Imię:" />
+               <TextField fx:id="addName" prefWidth="280.0" promptText="imie" />
+            </children>
+         </HBox>
+
+         <!-- Nazwisko -->
+         <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="10">
+            <children>
+               <Label prefWidth="150.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Nazwisko:" />
+               <TextField fx:id="addScndName" prefWidth="280.0" promptText="nazwisko" />
+            </children>
+         </HBox>
+
+         <!-- E-mail -->
+         <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="10">
+            <children>
+               <Label prefWidth="150.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="E-mail:" />
+               <TextField fx:id="addEmail" prefWidth="280.0" promptText="nazwa@domena.com" />
+            </children>
+         </HBox>
+
+         <!-- Hasło -->
+         <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="10">
+            <children>
+               <Label prefWidth="150.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Hasło:" />
+               <TextField fx:id="addPass" prefWidth="280.0" promptText="hasło" />
+            </children>
+         </HBox>
+
+         <!-- Pensja -->
+         <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="10">
+            <children>
+               <Label prefWidth="150.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Pensja:" />
+               <TextField fx:id="addSalary" prefWidth="280.0" promptText="pensja" />
+            </children>
+         </HBox>
+
+         <!-- Miasto -->
+         <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="10">
+            <children>
+               <Label prefWidth="150.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Miasto:" />
+               <TextField fx:id="addCity" prefWidth="280.0" promptText="miasto" />
+            </children>
+         </HBox>
+
+         <!-- Rola -->
+         <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="10">
+            <children>
+               <Label prefWidth="150.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Rola:" />
+               <ChoiceBox fx:id="addRole" prefWidth="280.0" style="-fx-border-color: #27ae60; -fx-background-radius: 8; -fx-border-radius: 8;" />
+            </children>
+         </HBox>
+
+         <!-- Dział -->
+         <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="10">
+            <children>
+               <Label prefWidth="150.0" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="Dział:" />
+               <ChoiceBox fx:id="addDep" prefWidth="280.0" style="-fx-border-color: #27ae60; -fx-background-radius: 8; -fx-border-radius: 8;" />
+            </children>
+         </HBox>
+
+         <!-- Przycisk dodawania -->
+         <HBox alignment="CENTER" prefHeight="87.0" prefWidth="440.0" spacing="20">
+            <children>
+               <Button fx:id="saveButton" onAction="#saveUser" prefHeight="35.0" prefWidth="142.0" style="-fx-background-color: #27ae60; -fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8;" text="Dodaj" />
+            </children>
+         </HBox>
+      </VBox>
    </children>
-</VBox>
+</AnchorPane>

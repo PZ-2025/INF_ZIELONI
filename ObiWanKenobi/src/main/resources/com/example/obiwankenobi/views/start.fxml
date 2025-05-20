@@ -8,37 +8,36 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="390.0" style="-fx-border-color: #B3FFB3;" styleClass="panel" stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.MainController">
+<VBox fx:id="vbox" alignment="TOP_CENTER" prefHeight="600.0" prefWidth="390.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0.3, 0, 5); -fx-padding: 30;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.obiwankenobi.MainController">
+
    <children>
-      <ImageView fitHeight="106.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="153.0" fitWidth="153.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../img/logo.jpg" />
+            <Image url="@../img/logo2.png" />
          </image>
          <VBox.margin>
-            <Insets left="135.0" right="135.0" top="50.0" />
+            <Insets bottom="20.0" top="40.0" />
          </VBox.margin>
       </ImageView>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="53.0" prefWidth="330.0" styleClass="textBig" stylesheets="@../style/style.css" text="Witamy ponownie" textFill="WHITE">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <font>
-            <Font name="System Bold" size="36.0" />
-         </font>
+
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="148.0" prefWidth="330.0" style="-fx-font-family: 'Alata'; -fx-font-weight: bold; -fx-font-size: 28px; -fx-text-fill: #145a32;" text="Witamy ponownie">
          <VBox.margin>
-            <Insets left="25.0" right="20.0" top="40.0" />
+            <Insets bottom="30.0" top="20.0" />
          </VBox.margin>
       </Label>
-      <Button id="startButton" mnemonicParsing="false" onAction="#openLogin" prefHeight="70.0" prefWidth="130.0" style="-fx-background-color: FFC849;" stylesheets="@../style/style.css" text="start">
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
+      <VBox alignment="CENTER" prefHeight="208.0" prefWidth="330.0">
          <VBox.margin>
-            <Insets left="130.0" right="130.0" top="50.0" />
+            <Insets top="30.0" />
          </VBox.margin>
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Button>
+         <children>
+      
+            <Button fx:id="startButton" onAction="#openLogin" prefHeight="60.0" prefWidth="180.0" style="-fx-background-color: #27ae60; -fx-background-radius: 15; -fx-text-fill: #ffffff; -fx-font-size: 20px; -fx-font-weight: bold;">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <text>Start</text>
+            </Button>
+         </children>
+      </VBox>
    </children>
 </VBox>

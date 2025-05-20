@@ -12,34 +12,38 @@
 
    <children>
 
-      <AnchorPane layoutY="96.0" prefHeight="506.0" prefWidth="1000.0" style="-fx-border-color: #0C3105; -fx-border-width: 5;" styleClass="pane">
+      <AnchorPane layoutY="96.0" prefHeight="506.0" prefWidth="1000.0" style="-fx-background-color: #f0f0f0;" styleClass="pane">
          <children>
-            <Label alignment="CENTER" layoutX="93.0" layoutY="82.0" prefHeight="74.0" prefWidth="260.0" styleClass="textBigPane" text="Obi" textAlignment="CENTER" textFill="FORESTGREEN">
-               <font>
-                  <Font name="System Bold" size="40.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" layoutX="197.0" layoutY="179.0" prefHeight="74.0" prefWidth="260.0" styleClass="textBigPane" text="Wan" textAlignment="CENTER" textFill="FORESTGREEN">
-               <font>
-                  <Font name="System Bold" size="40.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" layoutX="93.0" layoutY="278.0" prefHeight="74.0" prefWidth="260.0" styleClass="textBigPane" text="Kenobi" textAlignment="CENTER" textFill="FORESTGREEN">
-               <font>
-                  <Font name="System Bold" size="40.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="239.0" fitWidth="268.0" layoutX="611.0" layoutY="105.0" pickOnBounds="true" preserveRatio="true">
+            <VBox alignment="CENTER" layoutX="103.0" layoutY="82.0" prefHeight="317.0" prefWidth="354.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="74.0" prefWidth="356.0" styleClass="textBigPane" text="Obi" textAlignment="CENTER" textFill="FORESTGREEN">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="74.0" prefWidth="430.0" styleClass="textBigPane" text="Wan" textAlignment="CENTER" textFill="FORESTGREEN">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="74.0" prefWidth="356.0" styleClass="textBigPane" text="Kenobi" textAlignment="CENTER" textFill="FORESTGREEN">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <ImageView fitHeight="239.0" fitWidth="268.0" layoutX="612.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../img/logo.jpg" />
+                  <Image url="@../img/logo2.png" />
                </image>
             </ImageView>
 
-            <Button fx:id="closeButton" layoutX="946.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleClose" style="-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 5;" text="X" />
+            <Button fx:id="closeButton" layoutX="935.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleClose" prefHeight="29.0" prefWidth="51.0" style="-fx-text-fill: #145a32; -fx-background-color: #f0f0f0; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 5;" text="X" />
          </children>
       </AnchorPane>
 
-
-      <VBox id="vbox" fx:id="vbox" layoutX="36.0" layoutY="49.0" prefHeight="600.0" prefWidth="390.0" styleClass="white" stylesheets="@../style/style.css" AnchorPane.leftAnchor="100.0" />
+                        
+                              <VBox id="vbox" fx:id="vbox" layoutX="36.0" layoutY="49.0" prefHeight="600.0" prefWidth="390.0" style="-fx-background-radius: 2;" styleClass="white" stylesheets="@../style/style.css" AnchorPane.leftAnchor="100.0" />
    </children>
 </AnchorPane>

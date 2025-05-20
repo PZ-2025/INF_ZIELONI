@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -23,6 +24,7 @@ import java.sql.SQLException;
  */
 public class AddUser {
 
+    public Button closeButton;
     /**
      * Pole wyboru działu
      */
@@ -119,6 +121,12 @@ public class AddUser {
             deps.add(resultSet2.getInt("id") + ": " + resultSet2.getString("name"));
         }
         addDep.setItems(deps);
+    }
+
+    @FXML
+    private void handleClose() {
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+        stage.close();
     }
 
     /**

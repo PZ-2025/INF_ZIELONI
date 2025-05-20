@@ -270,7 +270,7 @@ public class AdminController {
             private final Button deleteButton = new Button("Usuń");
 
             {
-                deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-size: 15px;");
+                deleteButton.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-font-size: 14px;");
                 deleteButton.setOnAction(event -> {
                     User user = getTableView().getItems().get(getIndex());
                     deleteUser(user);
@@ -536,8 +536,8 @@ public class AdminController {
         addUserController.setAdminController(this);  // Przekaż referencję
 
         Stage stage = new Stage();
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(new Scene(parent));
-        stage.initStyle(StageStyle.UTILITY);
         stage.show();
     }
 

@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -206,7 +207,16 @@ public class ManagerController {
                     editBtn.setDisable(true);
                 }
 
+                if (!"Oczekujace".equalsIgnoreCase(status)) {
+                    confirmBtn.setVisible(false);
+                }
+
                 confirmBtn.setOnAction(e -> {
+                    if (!"Oczekujace".equalsIgnoreCase(status)) {
+                        showInfoAlert("Tylko zadania ze statusem 'Oczekujace' mogą być zatwierdzane.");
+                        return;
+                    }
+
                     try (Connection conn1 = DatabaseConnection.getConnection();
                          PreparedStatement stmt1 = conn1.prepareStatement("UPDATE tasks SET status = ? WHERE id = ?")) {
 
@@ -233,23 +243,32 @@ public class ManagerController {
                 deleteBtn.setPrefSize(60, 30);
 
                 deleteBtn.setOnAction(e -> {
-                    try (Connection conn2 = DatabaseConnection.getConnection();
-                         PreparedStatement stmt2 = conn2.prepareStatement("DELETE FROM tasks WHERE id = ?")) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Potwierdzenie usunięcia");
+                    alert.setHeaderText("Czy na pewno chcesz usunąć to zadanie?");
+                    alert.setContentText("Zadanie ID: " + id + "\nTytuł: " + title);
 
-                        stmt2.setInt(1, id);
-                        int rowsAffected = stmt2.executeUpdate();
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                            try (Connection conn2 = DatabaseConnection.getConnection();
+                                 PreparedStatement stmt2 = conn2.prepareStatement("DELETE FROM tasks WHERE id = ?")) {
 
-                        if (rowsAffected > 0) {
-                            showInfoAlert("Zadanie zostało usunięte.");
-                            refreshTaskList();
-                        } else {
-                            showErrorAlert("Nie udało się usunąć zadania.");
+                                stmt2.setInt(1, id);
+                                int rowsAffected = stmt2.executeUpdate();
+
+                                if (rowsAffected > 0) {
+                                    showInfoAlert("Zadanie zostało usunięte.");
+                                    refreshTaskList();
+                                } else {
+                                    showErrorAlert("Nie udało się usunąć zadania.");
+                                }
+
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                                showErrorAlert("Błąd podczas usuwania zadania.");
+                            }
                         }
-
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                        showErrorAlert("Błąd podczas usuwania zadania.");
-                    }
+                    });
                 });
 
                 // Opakowanie przycisków w VBox i ustawienie na prawo

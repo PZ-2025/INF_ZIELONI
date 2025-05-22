@@ -273,18 +273,31 @@ public class AdminController {
                 deleteButton.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-font-size: 14px;");
                 deleteButton.setOnAction(event -> {
                     User user = getTableView().getItems().get(getIndex());
-                    deleteUser(user);
+                    showConfirmationDialog(user);
                 });
             }
 
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(deleteButton);
-                }
+                setGraphic(empty ? null : deleteButton);
+            }
+        });
+    }
+
+    /**
+     * Wyświetlenie monitu o potwierdzenie usunięcia użytkownika.
+     * Po zatwierdzeniu wywołuje metodę usunięcia danego użytkownika.
+     */
+    private void showConfirmationDialog(User user) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Potwierdzenie usunięcia");
+        alert.setHeaderText("Czy na pewno chcesz usunąć tego użytkownika?");
+        alert.setContentText("Użytkownik: " + user.getFirstName() + " " + user.getLastName());
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == javafx.scene.control.ButtonType.OK) {
+                deleteUser(user); // wykonanie usuwania dopiero po zatwierdzeniu
             }
         });
     }

@@ -190,10 +190,11 @@ public class AdminController {
             try {
                 String strValue = newValue.toString();
 
-                if (!strValue.matches("\\d+(\\.\\d+)?")) {
-                    showAlert(Alert.AlertType.ERROR, "Błąd", "Pensja musi być dodatnią liczbą i zawierać tylko cyfry.");
+                if (!strValue.matches("\\d+(\\.\\d{1,2})?")) {
+                    showAlert(Alert.AlertType.ERROR, "Błąd", "Pensja nie moze byc ujemna i nie moze miec wiecej niz 2 miejsca po kropce");
                     return;
                 }
+
 
                 float salaryValue = Float.parseFloat(strValue);
 

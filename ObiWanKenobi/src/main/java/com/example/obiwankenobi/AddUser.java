@@ -262,6 +262,12 @@ public class AddUser {
             return null;
         }
 
+
+        if (!salaryText.matches("^\\d+(\\.\\d{1,2})?$")) {
+            shakeNode(addSalary);
+            return null;
+        }
+
         try {
             Float salary = Float.parseFloat(salaryText);
             if (salary < 0) {

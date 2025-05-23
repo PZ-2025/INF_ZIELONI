@@ -20,13 +20,15 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReportGenerator {
 
     private static final DeviceRgb HEADER_BACKGROUND = new DeviceRgb(200, 200, 200);
 
 /**
- * Generuje raport zadań w trakcie realizacji w formacie PDF.
+ * Generuje raport zadań w formacie PDF.
  *
  */
         public static void generateTask(String status, LocalDate startDate, LocalDate endDate,
@@ -84,16 +86,23 @@ public class ReportGenerator {
                 document.add(new Paragraph("Raport zadan").setBold().setFontSize(18));
                 document.add(new Paragraph("\n"));
 
-                Table table = new Table(UnitValue.createPercentArray(new float[]{0.5f, 2, 3, 2, 2, 2, 2}));
+                Table table = new Table(UnitValue.createPercentArray(new float[]{1, 4, 6, 3, 2, 2, 3}));
                 table.setWidth(UnitValue.createPercentValue(100));
+                table.setAutoLayout();
 
                 table.addHeaderCell(new Cell().add(new Paragraph("ID")).setBold().setBackgroundColor(HEADER_BACKGROUND));
                 table.addHeaderCell(new Cell().add(new Paragraph("Tytul")).setBold().setBackgroundColor(HEADER_BACKGROUND));
                 table.addHeaderCell(new Cell().add(new Paragraph("Opis")).setBold().setBackgroundColor(HEADER_BACKGROUND));
-                table.addHeaderCell(new Cell().add(new Paragraph("Termin")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+                table.addHeaderCell(new Cell().add(new Paragraph("Termin koncowy")).setBold().setBackgroundColor(HEADER_BACKGROUND));
                 table.addHeaderCell(new Cell().add(new Paragraph("Status")).setBold().setBackgroundColor(HEADER_BACKGROUND));
                 table.addHeaderCell(new Cell().add(new Paragraph("Priorytet")).setBold().setBackgroundColor(HEADER_BACKGROUND));
                 table.addHeaderCell(new Cell().add(new Paragraph("Przydzielony")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+
+                int totalTasks = 0;
+                Map<String, Integer> statusCounts = new HashMap<>();
+
+                int totalStatus = 0;
+                Map<String, Integer> priorityCounts = new HashMap<>();
 
                 while (rs.next()) {
                     table.addCell(String.valueOf(rs.getInt("id")));
@@ -106,6 +115,14 @@ public class ReportGenerator {
                             ? rs.getString("first_name") + " " + rs.getString("last_name")
                             : "Brak";
                     table.addCell(assignee);
+
+                    totalTasks++;
+                    String statusValue = rs.getString("status");
+                    statusCounts.put(statusValue, statusCounts.getOrDefault(statusValue, 0) + 1);
+
+                    totalStatus++;
+                    String priorityStatus = rs.getString("priority");
+                    priorityCounts.put(priorityStatus, priorityCounts.getOrDefault(priorityStatus, 0) + 1);
                 }
 
                 document.add(new Paragraph("\n"));
@@ -135,6 +152,34 @@ public class ReportGenerator {
                 }
 
                 document.add(table);
+                document.add(new Paragraph("\n"));
+
+                document.add(new Paragraph("\nPodsumowanie").setBold().setFontSize(14));
+                document.add(new Paragraph("Laczna liczba zadan: " + totalTasks).setFontSize(12));
+                document.add(new Paragraph("\n"));
+
+                Table summaryTable = new Table(UnitValue.createPercentArray(new float[]{2, 4, 1}));
+                summaryTable.setWidth(UnitValue.createPercentValue(70));
+
+                summaryTable.addHeaderCell(new Cell().add(new Paragraph("Kategoria")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+                summaryTable.addHeaderCell(new Cell().add(new Paragraph("Typ")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+                summaryTable.addHeaderCell(new Cell().add(new Paragraph("Liczba")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+
+                // Wiersze: statusy
+                for (Map.Entry<String, Integer> entry : statusCounts.entrySet()) {
+                    summaryTable.addCell(new Cell().add(new Paragraph("Status")));
+                    summaryTable.addCell(new Cell().add(new Paragraph(entry.getKey())));
+                    summaryTable.addCell(new Cell().add(new Paragraph(String.valueOf(entry.getValue()))));
+                }
+
+                // Wiersze: priorytety
+                for (Map.Entry<String, Integer> entry : priorityCounts.entrySet()) {
+                    summaryTable.addCell(new Cell().add(new Paragraph("Priorytet")));
+                    summaryTable.addCell(new Cell().add(new Paragraph(entry.getKey())));
+                    summaryTable.addCell(new Cell().add(new Paragraph(String.valueOf(entry.getValue()))));
+                }
+
+                document.add(summaryTable);
                 document.add(new Paragraph("\n\n"));
 
                 Table signatureTable = new Table(UnitValue.createPercentArray(new float[]{2, 1, 2}));
@@ -167,7 +212,10 @@ public class ReportGenerator {
 
 
 
-
+    /**
+     * Generuje raport uzytkowników w formacie PDF.
+     *
+     */
         public static void generateUsers(String department, String city,
                                          Integer minSalary, Integer maxSalary,
                                          Integer minTasks, Integer maxTasks){
@@ -232,6 +280,8 @@ public class ReportGenerator {
                 table.addHeaderCell(new Cell().add(new Paragraph("Pensja")).setBold());
                 table.addHeaderCell(new Cell().add(new Paragraph("Zadania")).setBold());
 
+                int countUsers = 0;
+
                 while (rs.next()) {
                     table.addCell(rs.getString("first_name"));
                     table.addCell(rs.getString("last_name"));
@@ -239,9 +289,15 @@ public class ReportGenerator {
                     table.addCell(rs.getString("department"));
                     table.addCell(String.valueOf(rs.getInt("salary")));
                     table.addCell(String.valueOf(rs.getInt("task_count")));
+                    countUsers++;
                 }
 
                 document.add(table);
+                document.add(new Paragraph("\n"));
+
+                document.add(new Paragraph("Podsumowanie:\n").setBold());
+                document.add(new Paragraph("Znaleziono: " + countUsers + " uzytkownikow"));
+
                 document.add(new Paragraph("\n\n"));
 
                 Table signatureTable = new Table(UnitValue.createPercentArray(new float[]{2, 1, 2}));
@@ -273,7 +329,10 @@ public class ReportGenerator {
         }
 
 
-
+    /**
+     * Generuje raport stanu magazynowego w formacie PDF.
+     *
+     */
 
         public static void generateWarehouse(String department, String managerFullName,
                                              Integer minQuantity, Integer maxQuantity){
@@ -346,11 +405,14 @@ public class ReportGenerator {
                 table.addHeaderCell(new Cell().add(new Paragraph("Produkt")).setBold().setBackgroundColor(HEADER_BACKGROUND));
                 table.addHeaderCell(new Cell().add(new Paragraph("Ilosc")).setBold().setBackgroundColor(HEADER_BACKGROUND));
 
+                int countRows = 0;
+
                 while (rs.next()) {
                     String deptName = rs.getString("department_name");
                     String manager = rs.getString("first_name") + " " + rs.getString("last_name");
                     String item = rs.getString("item_name");
                     int qty = rs.getInt("quantity");
+                    countRows++;
 
                     table.addCell(deptName);
                     table.addCell(manager);
@@ -359,6 +421,11 @@ public class ReportGenerator {
                 }
 
                 document.add(table);
+                document.add(new Paragraph("\n"));
+
+                document.add(new Paragraph("Podsumowanie:\n").setBold());
+                document.add(new Paragraph("Znaleziono: " + countRows + " rekordow"));
+
                 document.add(new Paragraph("\n\n"));
 
                 Table signatureTable = new Table(UnitValue.createPercentArray(new float[]{2, 1, 2}))

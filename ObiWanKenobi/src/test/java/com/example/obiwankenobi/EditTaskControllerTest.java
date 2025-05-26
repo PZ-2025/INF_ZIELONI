@@ -30,6 +30,7 @@ class EditTaskControllerTest {
         controller.taskDescriptionField = new TextArea();
         controller.employeeChoiceBox = new ChoiceBox<>();
         controller.taskDeadlineField = new DatePicker();
+        controller.priorityChoiceBox = new ChoiceBox<>();
     }
 
     @Test

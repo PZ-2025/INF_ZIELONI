@@ -36,7 +36,7 @@ public class AddTaskController implements Initializable {
     private Button clearTaskButton;
 
     @FXML
-    private ChoiceBox<String> priorityChoiceBox;
+    public ChoiceBox<String> priorityChoiceBox;
 
     @FXML
     public Button closeButton;

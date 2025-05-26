@@ -7,10 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -248,8 +245,12 @@ public class ManagerController {
                     alert.setHeaderText("Czy na pewno chcesz usunąć to zadanie?");
                     alert.setContentText("Zadanie ID: " + id + "\nTytuł: " + title);
 
+                    ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+                    ButtonType cancelButton = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
+                    alert.getButtonTypes().setAll(okButton, cancelButton);
+
                     alert.showAndWait().ifPresent(response -> {
-                        if (response == ButtonType.OK) {
+                        if (response == okButton) {
                             try (Connection conn2 = DatabaseConnection.getConnection();
                                  PreparedStatement stmt2 = conn2.prepareStatement("DELETE FROM tasks WHERE id = ?")) {
 

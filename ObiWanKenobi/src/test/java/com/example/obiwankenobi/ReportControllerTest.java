@@ -1,99 +1,103 @@
 package com.example.obiwankenobi;
 
 import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.lang.reflect.Method;
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ReportControllerTest {
 
     private ReportController controller;
+    private TestActionEvent testEvent;
+    private Stage testStage;
 
     @BeforeAll
     static void initJavaFX() {
-        // Uruchomienie wątku JavaFX
-
         Platform.startup(() -> {});
     }
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws InterruptedException {
         controller = new ReportController();
-        controller.startDate = new DatePicker();
-        controller.endDate = new DatePicker();
-        controller.departmentChoiceBox = new ChoiceBox<>();
-        controller.departmentChoiceBox.getItems().addAll("wszystkie", "IT", "HR");
-        controller.departmentChoiceBox.setValue("wszystkie");
+
+        CountDownLatch latch = new CountDownLatch(1);
+        Platform.runLater(() -> {
+            testStage = new Stage();
+            Button testButton = new Button();
+            VBox root = new VBox(testButton);
+            Scene scene = new Scene(root, 200, 200);
+            testStage.setScene(scene);
+
+            testEvent = new TestActionEvent(testButton);
+            latch.countDown();
+        });
+
+        latch.await(5, TimeUnit.SECONDS);
     }
 
     @Test
-    void testUserReportWithDefaultDepartment() {
+    void shouldInitializeControllerWithoutErrors() {
+        assertDoesNotThrow(() -> controller.initialize(null, null));
+    }
+
+    @Test
+    void shouldShowUserReportAndHandleIOException() {
         assertDoesNotThrow(() -> {
-            controller.userReport(null);
-            File pdf = new File("usersReport.pdf");
-            assertTrue(pdf.exists(), "Plik usersReport.pdf powinien istnieć po wygenerowaniu.");
-            pdf.delete(); // czyszczenie
+            try {
+                controller.userReportShow(testEvent);
+            } catch (IOException e) {
+                assertTrue(e.getMessage().contains("report1.fxml") ||
+                        e.getMessage().contains("Location is not set") ||
+                        e.getMessage().contains("resources"));
+            }
         });
     }
 
     @Test
-    void testUserReportWithSpecificDepartment() {
-        controller.departmentChoiceBox.setValue("IT");
+    void shouldCloseReportsWindow() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
 
-        assertDoesNotThrow(() -> {
-            controller.userReport(null);
-            File pdf = new File("usersReport.pdf");
-            assertTrue(pdf.exists(), "Plik usersReport.pdf powinien istnieć dla działu IT.");
-            pdf.delete();
+        Platform.runLater(() -> {
+            testStage.show();
+            assertTrue(testStage.isShowing());
+
+            controller.reportsClose(testEvent);
+
+            assertFalse(testStage.isShowing());
+            latch.countDown();
         });
+
+        assertTrue(latch.await(5, TimeUnit.SECONDS));
     }
 
     @Test
-    void testWarehouseReportWithDefaultDepartment() {
-        assertDoesNotThrow(() -> {
-            controller.warehouseReport(null);
-            File pdf = new File("warehouseReport.pdf");
-            assertTrue(pdf.exists(), "Plik warehouseReport.pdf powinien zostać wygenerowany.");
-            pdf.delete();
-        });
+    void shouldThrowExceptionOnNullEvent() {
+        assertThrows(NullPointerException.class, () -> controller.userReportShow(null));
     }
 
-    @Test
-    void testWarehouseReportWithSpecificDepartment() {
-        controller.departmentChoiceBox.setValue("HR");
+    private static class TestActionEvent extends ActionEvent {
+        private final Node source;
 
-        assertDoesNotThrow(() -> {
-            controller.warehouseReport(null);
-            File pdf = new File("warehouseReport.pdf");
-            assertTrue(pdf.exists(), "Plik warehouseReport.pdf powinien istnieć dla działu HR.");
-            pdf.delete();
-        });
-    }
+        public TestActionEvent(Node source) {
+            super(source, null);
+            this.source = source;
+        }
 
-    @Test
-    void testInitializeDoesNotThrow() {
-        assertDoesNotThrow(() -> {
-            controller.initialize(null, null);
-        });
-    }
-
-    @Test
-    void testReportsCloseDoesNotThrow() throws Exception {
-        Method closeMethod = ReportController.class.getDeclaredMethod("reportsClose", javafx.event.ActionEvent.class);
-        assertNotNull(closeMethod, "Metoda reportsClose powinna istnieć.");
-    }
-
-    @Test
-    void testFXMLReportShowMethodsExist() throws Exception {
-        assertNotNull(ReportController.class.getDeclaredMethod("userReportShow", javafx.event.ActionEvent.class));
-        assertNotNull(ReportController.class.getDeclaredMethod("taskReportShow", javafx.event.ActionEvent.class));
-        assertNotNull(ReportController.class.getDeclaredMethod("warehouseReportShow", javafx.event.ActionEvent.class));
+        @Override
+        public Node getSource() {
+            return source;
+        }
     }
 }

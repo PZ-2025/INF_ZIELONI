@@ -15,7 +15,7 @@ public class DatabaseConnection {
     private static String USER = "root";
 
     /** Hasło użytkownika bazy danych */
-    private static String PASSWORD = "";
+    private static String PASSWORD = "admin";
 
     /**
      * Ustawia niestandardowe dane połączenia – używane np. w testach.
@@ -41,7 +41,7 @@ public class DatabaseConnection {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("Połączono z bazą danych");
         } catch (SQLException e) {
-            // Logowanie błędu oraz informacja dla programisty
+
             System.err.println("Nieudane połączenie z bazą danych");
             e.printStackTrace();
         }

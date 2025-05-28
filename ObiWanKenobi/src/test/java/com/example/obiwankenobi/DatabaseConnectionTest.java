@@ -11,7 +11,7 @@ public class DatabaseConnectionTest {
     @Test
     void testSuccessfulConnection() {
         DatabaseConnection.setConfig(
-                "jdbc:mysql://localhost:3306/obiwanshop", "root", ""
+                "jdbc:mysql://localhost:3306/obiwanshop", "root", "admin"
         );
 
         Connection conn = DatabaseConnection.getConnection();

@@ -108,11 +108,10 @@ public class MainController implements Initializable {
      * @param field pole, które ma być animowane
      */
     private void shakeAndFlashField(javafx.scene.Node field) {
-        // Zapisujemy oryginalną pozycję X
+
         double originalX = field.getTranslateX();
 
-        // Tworzymy animację migania koloru (czerwona ramka)
-        Timeline colorAnimation = new Timeline(
+         Timeline colorAnimation = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(field.styleProperty(), errorStyle)),
                 new KeyFrame(Duration.millis(200), new KeyValue(field.styleProperty(), normalStyle)),
                 new KeyFrame(Duration.millis(400), new KeyValue(field.styleProperty(), errorStyle)),
@@ -120,7 +119,7 @@ public class MainController implements Initializable {
                 new KeyFrame(Duration.millis(800), new KeyValue(field.styleProperty(), errorStyle))
         );
 
-        // Tworzymy animację poruszania się na boki
+
         Timeline shakeAnimation = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(field.translateXProperty(), originalX)),
                 new KeyFrame(Duration.millis(100), new KeyValue(field.translateXProperty(), originalX - 10)),
@@ -133,13 +132,13 @@ public class MainController implements Initializable {
                 new KeyFrame(Duration.millis(800), new KeyValue(field.translateXProperty(), originalX))
         );
 
-        // Łączymy obie animacje w jedną
+
         ParallelTransition parallelTransition = new ParallelTransition(colorAnimation, shakeAnimation);
 
-        // Po zakończeniu animacji ustawiamy styl błędu
+
         parallelTransition.setOnFinished(event -> field.setStyle(errorStyle));
 
-        // Odtwarzamy animację
+
         parallelTransition.play();
     }
 
@@ -151,29 +150,29 @@ public class MainController implements Initializable {
      */
     @FXML
     private void login(ActionEvent event) {
-        // Resetujemy style pól przed walidacją
+
         resetFieldStyle(loginMail);
         resetFieldStyle(loginPassword);
 
-        // Walidacja danych wejściowych
+
         boolean isValid = true;
         StringBuilder errorMessage = new StringBuilder();
 
-        // Sprawdzenie pola login (email)
+
         if (loginMail.getText() == null || loginMail.getText().trim().isEmpty()) {
             errorMessage.append("Pole email nie może być puste!\n");
             shakeAndFlashField(loginMail);
             isValid = false;
         }
 
-        // Sprawdzenie pola hasło
+
         if (loginPassword.getText() == null || loginPassword.getText().trim().isEmpty()) {
             errorMessage.append("Pole hasło nie może być puste!\n");
             shakeAndFlashField(loginPassword);
             isValid = false;
         }
 
-        // Jeśli podstawowa walidacja nie przeszła, wyświetlamy błąd i kończymy
+
         if (!isValid) {
             showErrorAlert(errorMessage.toString());
             return;
@@ -204,7 +203,7 @@ public class MainController implements Initializable {
                     showErrorAlert("Nieznana rola użytkownika!");
                 }
             } else {
-                // Gdy dane uwierzytelniania są nieprawidłowe, uruchamiamy animację dla obu pól
+
                 shakeAndFlashField(loginMail);
                 shakeAndFlashField(loginPassword);
                 showErrorAlert("Nieprawidłowy email lub hasło");
@@ -231,7 +230,7 @@ public class MainController implements Initializable {
                 vbox.getChildren().clear();
                 vbox.getChildren().setAll(fxml);
 
-                // Szukamy pól formularza po załadowaniu widoku
+               
                 if (vbox.lookup("#loginMail") != null) {
                     loginMail = (TextField) vbox.lookup("#loginMail");
                     loginMail.setStyle("-fx-text-fill: black;");

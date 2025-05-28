@@ -15,7 +15,7 @@ public class DatabaseConnection {
     private static String USER = "root";
 
     /** Hasło użytkownika bazy danych */
-    private static String PASSWORD = "";
+    private static String PASSWORD = "admin";
 
     /**
      * Ustawia niestandardowe dane połączenia – używane np. w testach.

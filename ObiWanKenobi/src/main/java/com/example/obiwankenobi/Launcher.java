@@ -6,12 +6,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  * Główna klasa uruchamiająca aplikację JavaFX.
@@ -32,7 +34,6 @@ public class Launcher extends Application {
         }
 
         try {
-
             String batFilePath = findStartBatFile();
             if (batFilePath == null) {
                 showErrorAndExit("Nie znaleziono pliku start_mysql.bat");
@@ -52,7 +53,6 @@ public class Launcher extends Application {
                     "-Verb", "RunAs",
                     "-Wait"
             );
-
 
             pb.directory(new java.io.File(batFilePath).getParentFile());
 
@@ -85,17 +85,22 @@ public class Launcher extends Application {
         String[] possiblePaths = {
 
                 System.getProperty("user.dir") + "\\start_mysql.bat",
-
                 "start_mysql.bat",
-
                 "src\\main\\resources\\start_mysql.bat",
-
                 "target\\classes\\start_mysql.bat",
-
-                "D:\\PZ\\INF_ZIELONI\\ObiWanKenobi\\start_mysql.bat"
+                System.getProperty("user.dir") + "\\..\\start_mysql.bat",
+                new java.io.File(System.getProperty("user.dir")).getParent() + "\\start_mysql.bat",
+                System.getProperty("user.dir") + "\\ObiWanKenobi\\start_mysql.bat",
+                System.getProperty("user.dir") + "\\obiwankenobi\\start_mysql.bat",
+                System.getProperty("user.dir") + "\\obiwan\\start_mysql.bat"
         };
 
-        return findBatFile(possiblePaths, "start_mysql.bat");
+        String result = findBatFile(possiblePaths, "start_mysql.bat");
+        if (result != null) {
+            return result;
+        }
+
+        return findBatFileRecursively(new java.io.File(System.getProperty("user.dir")), "start_mysql.bat", 3);
     }
 
     /**
@@ -103,19 +108,63 @@ public class Launcher extends Application {
      */
     private String findStopBatFile() {
         String[] possiblePaths = {
-
                 System.getProperty("user.dir") + "\\stop_mysql.bat",
-
                 "stop_mysql.bat",
-
                 "src\\main\\resources\\stop_mysql.bat",
-
                 "target\\classes\\stop_mysql.bat",
-
-                "D:\\PZ\\INF_ZIELONI\\ObiWanKenobi\\stop_mysql.bat"
+                System.getProperty("user.dir") + "\\..\\stop_mysql.bat",
+                new java.io.File(System.getProperty("user.dir")).getParent() + "\\stop_mysql.bat",
+                System.getProperty("user.dir") + "\\ObiWanKenobi\\stop_mysql.bat",
+                System.getProperty("user.dir") + "\\obiwankenobi\\stop_mysql.bat",
+                System.getProperty("user.dir") + "\\obiwan\\stop_mysql.bat"
         };
 
-        return findBatFile(possiblePaths, "stop_mysql.bat");
+        String result = findBatFile(possiblePaths, "stop_mysql.bat");
+        if (result != null) {
+            return result;
+        }
+
+        return findBatFileRecursively(new java.io.File(System.getProperty("user.dir")), "stop_mysql.bat", 3);
+    }
+
+    /**
+     * Rekursywnie przeszukuje katalogi w poszukiwaniu pliku .bat
+     * @param directory katalog do przeszukania
+     * @param fileName nazwa pliku do znalezienia
+     * @param maxDepth maksymalna głębokość przeszukiwania
+     * @return ścieżka do pliku lub null jeśli nie znaleziono
+     */
+    private String findBatFileRecursively(java.io.File directory, String fileName, int maxDepth) {
+        if (!directory.exists() || !directory.isDirectory() || maxDepth <= 0) {
+            return null;
+        }
+
+        System.out.println("Przeszukuję rekursywnie: " + directory.getAbsolutePath());
+
+        java.io.File targetFile = new java.io.File(directory, fileName);
+        if (targetFile.exists() && targetFile.canRead()) {
+            System.out.println("Znaleziono plik rekursywnie: " + targetFile.getAbsolutePath());
+            return targetFile.getAbsolutePath();
+        }
+
+        java.io.File[] subdirs = directory.listFiles(java.io.File::isDirectory);
+        if (subdirs != null) {
+            for (java.io.File subdir : subdirs) {
+                String dirName = subdir.getName().toLowerCase();
+                if (dirName.equals(".git") || dirName.equals(".idea") ||
+                        dirName.equals("target") || dirName.equals("build") ||
+                        dirName.equals("node_modules") || dirName.startsWith(".")) {
+                    continue;
+                }
+
+                String result = findBatFileRecursively(subdir, fileName, maxDepth - 1);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -179,11 +228,10 @@ public class Launcher extends Application {
         }
 
         try {
-
+            // Znajdź plik stop_mysql.bat
             String stopBatFilePath = findStopBatFile();
             if (stopBatFilePath == null) {
                 System.err.println("Nie znaleziono pliku stop_mysql.bat - próbuję alternatywne metody zatrzymania");
-
                 tryAlternativeStop();
                 return;
             }
@@ -199,7 +247,6 @@ public class Launcher extends Application {
                     "-Verb", "RunAs",
                     "-Wait"
             );
-
 
             pb.directory(new java.io.File(stopBatFilePath).getParentFile());
 
@@ -223,7 +270,6 @@ public class Launcher extends Application {
         } catch (IOException | InterruptedException e) {
             System.err.println("Błąd podczas zatrzymywania MySQL: " + e.getMessage());
             e.printStackTrace();
-
             tryAlternativeStop();
         }
     }
@@ -264,9 +310,7 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
         startMySQL();
-
 
         Parent root = FXMLLoader.load(getClass().getResource("/com/example/obiwankenobi/views/pane.fxml"));
         Scene scene = new Scene(root);

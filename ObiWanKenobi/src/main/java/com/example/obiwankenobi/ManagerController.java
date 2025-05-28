@@ -27,6 +27,7 @@ import java.sql.*;
  */
 public class ManagerController {
 
+    public Button closeButton;
     @FXML
     private Button StatusWareHauseBtn;
 
@@ -45,11 +46,20 @@ public class ManagerController {
     }
 
     /**
-     * Obsługuje akcję dodawania nowego zadania.
-     * Otwiera nowe okno dialogowe z formularzem dodawania zadania.
-     *
-     * @param event kliknięcie przycisku "Dodaj zadanie"
+     * Obsługuje akcję zamknięcia okna.
      */
+    @FXML
+    private void handleClose() {
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+        stage.close();
+    }
+
+        /**
+         * Obsługuje akcję dodawania nowego zadania.
+         * Otwiera nowe okno dialogowe z formularzem dodawania zadania.
+         *
+         * @param event kliknięcie przycisku "Dodaj zadanie"
+         */
     @FXML
     void addTask(ActionEvent event) {
         try {
@@ -118,7 +128,7 @@ public class ManagerController {
 
                 HBox taskBox = new HBox();
                 taskBox.setSpacing(10);
-                taskBox.setStyle("-fx-background-color: #91ee91; -fx-padding: 10;");
+                taskBox.setStyle("-fx-padding: 10; -fx-background-color: white;");
                 taskBox.setPrefHeight(78.0);
                 taskBox.setPrefWidth(619.0);
                 taskBox.setAlignment(Pos.CENTER_LEFT);
@@ -128,12 +138,10 @@ public class ManagerController {
                 textBox.setPrefWidth(298.0);
 
                 Label taskNumberLabel = new Label("Zadanie id: " + id);
-                taskNumberLabel.getStyleClass().add("textSmallDark");
-                taskNumberLabel.setStyle("-fx-font-weight: bold;");
+                taskNumberLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #145a32");
 
                 // Tytuł zadania
                 Label titleLabel = new Label(title);
-                titleLabel.getStyleClass().add("textSmallDark");
                 titleLabel.setPrefSize(254, 38);
                 titleLabel.setWrapText(true);
                 titleLabel.setMaxWidth(250);
@@ -141,7 +149,6 @@ public class ManagerController {
                 // Data deadline
                 String deadlineText = (deadline != null ? deadline.toLocalDateTime().toLocalDate().toString() : "Brak terminu");
                 Label deadlineLabel = new Label(deadlineText);
-                deadlineLabel.getStyleClass().add("textSmallDark");
                 deadlineLabel.setPrefSize(254, 38);
                 deadlineLabel.setWrapText(true);
                 deadlineLabel.setMaxWidth(250);
@@ -150,14 +157,13 @@ public class ManagerController {
 
                 // Status zadania
                 Label statusLabel = new Label(status);
-                statusLabel.getStyleClass().add("textSmallDark");
                 statusLabel.setPrefHeight(38);
                 statusLabel.setMaxWidth(150);
 
                 // Przycisk edycji zadania
                 Button editBtn = new Button("Edytuj");
-                editBtn.setStyle("-fx-background-color: #FFC849; -fx-font-size: 12px;");
-                editBtn.setPrefSize(60, 30);
+                editBtn.setStyle("-fx-background-color: #FFC849; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;");
+                editBtn.setPrefSize(110, 30);
 
                 // edycja zadania
                 editBtn.setOnAction(e -> {
@@ -196,8 +202,8 @@ public class ManagerController {
 
                 // Przycisk zatwierdzania zadania
                 Button confirmBtn = new Button("Zatwierdź");
-                confirmBtn.setStyle("-fx-background-color: #0C5A18; -fx-font-size: 12px;");
-                confirmBtn.setPrefSize(80, 30);
+                confirmBtn.setStyle("-fx-background-color: #27ae60; -fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold;");
+                confirmBtn.setPrefSize(110, 30);
 
                 if ("Zakonczone".equalsIgnoreCase(status)) {
                     confirmBtn.setDisable(true);
@@ -236,8 +242,8 @@ public class ManagerController {
 
                 // Przycisk usuwania zadania
                 Button deleteBtn = new Button("Usuń");
-                deleteBtn.setStyle("-fx-background-color: #7D0A0A; -fx-font-size: 12px;");
-                deleteBtn.setPrefSize(60, 30);
+                deleteBtn.setStyle("-fx-background-color: #c0392b; -fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold");
+                deleteBtn.setPrefSize(110, 30);
 
                 deleteBtn.setOnAction(e -> {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

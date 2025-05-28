@@ -44,14 +44,15 @@ public class Launcher extends Application {
             System.out.println("Uruchamianie MySQL jako administrator...");
 
 
+            String command = String.format(
+                    "Start-Process cmd -ArgumentList '/c,\"%s\"' -Verb RunAs -Wait",
+                    batFilePath.replace("\\", "\\\\")
+            );
+
             ProcessBuilder pb = new ProcessBuilder(
                     "powershell",
                     "-Command",
-                    "Start-Process",
-                    "-FilePath", "cmd",
-                    "-ArgumentList", "/c,\"" + batFilePath + "\"",
-                    "-Verb", "RunAs",
-                    "-Wait"
+                    command
             );
 
             pb.directory(new java.io.File(batFilePath).getParentFile());

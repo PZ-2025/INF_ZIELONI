@@ -208,8 +208,6 @@ public class AdminController {
             }
         }
 
-
-
         // Walidacja hasła
         if (fieldName.equals("password")) {
             String password = (String) newValue;

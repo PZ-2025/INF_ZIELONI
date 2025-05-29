@@ -20,21 +20,45 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+/**
+ * Kontroler raportu magazynowego.
+ * Odpowiada za zarządzanie filtrami raportowania oraz generowanie raportów magazynu.
+ */
 public class WarehouseReportController implements Initializable {
+
+    /** Przycisk zamykający okno raportu. */
     public Button closeButton;
+
+    /** Pole wyboru kategorii magazynowej. */
     public ChoiceBox<String> categoryChoiceBox;
+
+    /** Pole wyboru menedżera magazynu. */
     public ChoiceBox<String> menagerChoiceBox;
+
+    /** Pola tekstowe do określenia ilości produktów. */
     public TextField minQuantityField;
     public TextField maxQuantityField;
+
+    /** Przycisk generujący raport. */
     public Button generateButton;
+
+    /** Przycisk czyszczący formularz. */
     public Button clearButton;
 
+    /**
+     * Inicjalizuje kontroler, ładuje dostępne kategorie magazynowe oraz menedżerów.
+     * @param url URL dla pliku FXML
+     * @param resourceBundle Zasoby lokalizacyjne
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadDeps();
         loadMenagers();
     }
 
+    /**
+     * Ładuje dostępne działy magazynowe z bazy danych do pola wyboru.
+     */
     private void loadDeps() {
         try (Connection connection = DatabaseConnection.getConnection()) {
             String sql = "SELECT name FROM departments ORDER BY name";
@@ -58,6 +82,9 @@ public class WarehouseReportController implements Initializable {
         }
     }
 
+    /**
+     * Ładuje listę menedżerów magazynu z bazy danych do pola wyboru.
+     */
     private void loadMenagers(){
         try (Connection connection = DatabaseConnection.getConnection()){
             String sql = "SELECT first_name, last_name FROM users WHERE role_id = 3";
@@ -81,11 +108,20 @@ public class WarehouseReportController implements Initializable {
         }
     }
 
+    /**
+     * Zamyka okno raportu.
+     * @param event Zdarzenie zamknięcia okna
+     */
     @FXML
     void reportClose(ActionEvent event) {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
     }
+
+    /**
+     * Czyści wszystkie pola formularza raportu.
+     * @param event Zdarzenie kliknięcia przycisku czyszczenia
+     */
     @FXML
     void handleClearTask(ActionEvent event) {
         categoryChoiceBox.setValue("wszystkie");
@@ -94,6 +130,11 @@ public class WarehouseReportController implements Initializable {
         menagerChoiceBox.setValue("wszyscy");
 
     }
+
+    /**
+     * Generuje raport magazynowy na podstawie wybranych filtrów.
+     * @throws SQLException W przypadku błędów bazy danych
+     */
     @FXML
     public void generateWarehouseButton() throws SQLException {
         String selectedDepartment = categoryChoiceBox.getValue();
@@ -156,6 +197,10 @@ public class WarehouseReportController implements Initializable {
         }
     }
 
+    /**
+     * Tworzy efekt drżenia dla podanego węzła, wizualnie wyróżniając go.
+     * @param node Węzeł do potrząśnięcia
+     */
     private void shakeNode(Node node) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(50), node);
         node.setStyle("-fx-border-color: red; -fx-border-width: 2;");

@@ -309,6 +309,11 @@ public class Launcher extends Application {
         }
     }
 
+    /**
+     * Uruchamia aplikację JavaFX i inicjalizuje MySQL.
+     * @param stage Główne okno aplikacji JavaFX
+     * @throws Exception W przypadku błędów związanych z inicjalizacją
+     */
     @Override
     public void start(Stage stage) throws Exception {
         startMySQL();
@@ -335,6 +340,10 @@ public class Launcher extends Application {
         stage.show();
     }
 
+    /**
+     * Zatrzymuje aplikację JavaFX i zatrzymuje MySQL.
+     * @throws Exception W przypadku błędów przy zatrzymywaniu aplikacji
+     */
     @Override
     public void stop() throws Exception {
         System.out.println("Zatrzymywanie aplikacji JavaFX...");
@@ -342,6 +351,11 @@ public class Launcher extends Application {
         super.stop();
     }
 
+    /**
+     * Główna metoda aplikacji uruchamiająca JavaFX.
+     * @param args Argumenty przekazane do aplikacji
+     * @throws SQLException W przypadku błędów związanych z bazą danych
+     */
     public static void main(String[] args) throws SQLException {
         launch(args);
     }

@@ -123,6 +123,10 @@ public class AddUser {
         addDep.setItems(deps);
     }
 
+    /**
+     * Zamyka aktualne okno aplikacji.
+     * Pobiera scenę z przycisku zamknięcia i zamyka powiązany etap (Stage).
+     */
     @FXML
     private void handleClose() {
         Stage stage = (Stage) closeButton.getScene().getWindow();
@@ -298,8 +302,6 @@ public class AddUser {
         return true;
     }
 
-
-
     /**
      * Sprawdza, czy podany adres e-mail istnieje już w bazie danych.
      *
@@ -422,6 +424,11 @@ public class AddUser {
         return valid;
     }
 
+    /**
+     * Tworzy efekt drżenia dla podanego węzła, wizualnie wyróżniając go.
+     *
+     * @param node Węzeł, który ma być potrząsany
+     */
     private void shakeNode(Node node) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(50), node);
         node.setStyle("-fx-border-color: red; -fx-border-width: 2;");
@@ -431,6 +438,5 @@ public class AddUser {
         tt.setAutoReverse(true);
         tt.play();
     }
-
 
 }

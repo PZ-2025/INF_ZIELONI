@@ -143,6 +143,10 @@ public class TaskInfo {
         }
     }
 
+    /**
+     * Zamyka aktualne okno aplikacji.
+     * Pobiera scenę z przycisku zamknięcia i zamyka powiązany etap (Stage).
+     */
     @FXML
     private void handleClose() {
         Stage stage = (Stage) closeButton.getScene().getWindow();

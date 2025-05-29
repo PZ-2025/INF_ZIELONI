@@ -230,23 +230,6 @@ public class EditTaskController implements Initializable {
     }
 
     /**
-     * Wyświetla alert z określonym typem, tytułem i treścią.
-     *
-     * @param type typ alertu
-     * @param title tytuł alertu
-     * @param content treść alertu
-     */
-    /*
-    private void showAlert(Alert.AlertType type, String title, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-    */
-
-    /**
      * Sprawdza poprawność danych wprowadzonych do formularza.
      *
      * @return true jeśli dane są poprawne, false w przeciwnym razie

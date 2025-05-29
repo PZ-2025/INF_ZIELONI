@@ -17,9 +17,13 @@ import org.example.ReportGenerator;
 import javafx.animation.TranslateTransition;
 import javafx.util.Duration;
 
+/**
+ * Kontroler raportu zadań.
+ * Obsługuje wybór kryteriów raportowania oraz generowanie raportów na podstawie danych.
+ */
 public class TaskReportController implements Initializable{
 
-
+    /** Przycisk zamykający okno raportu. */
     public Button closeButton;
     @FXML
     public ChoiceBox<String> statusChoiceBox;
@@ -31,9 +35,18 @@ public class TaskReportController implements Initializable{
     public ChoiceBox<String> departmentChoiceBox;
     @FXML
     public ChoiceBox<String> employeeChoiceBox;
+
+    /** Przycisk do generowania raportu. */
     public Button generateButton;
+
+    /** Przycisk do czyszczenia wyborów w formularzu. */
     public Button clearButton;
 
+    /**
+     * Inicjalizuje kontroler, ustawiając domyślne wartości dla pól wyboru.
+     * @param url URL dla pliku FXML
+     * @param resourceBundle Zasoby lokalizacyjne
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -43,6 +56,10 @@ public class TaskReportController implements Initializable{
         loadDeps();
         loadEmps();
     }
+
+    /**
+     * Ładuje listę dostępnych działów z bazy danych do pola wyboru.
+     */
     private void loadDeps() {
         try (Connection connection = DatabaseConnection.getConnection()) {
             String sql = "SELECT name FROM departments ORDER BY name";
@@ -64,6 +81,9 @@ public class TaskReportController implements Initializable{
         }
     }
 
+    /**
+     * Ładuje listę pracowników z bazy danych do pola wyboru.
+     */
     private void loadEmps() {
         try (Connection connection = DatabaseConnection.getConnection()) {
             String sql = "SELECT * FROM users ORDER BY id ASC";
@@ -89,11 +109,20 @@ public class TaskReportController implements Initializable{
         }
     }
 
+    /**
+     * Zamyka okno raportu.
+     * @param event Zdarzenie wywołujące zamknięcie okna
+     */
     @FXML
     void reportClose(ActionEvent event) {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
     }
+
+    /**
+     * Resetuje wszystkie wybory w formularzu raportu.
+     * @param event Zdarzenie wywołujące czyszczenie formularza
+     */
     @FXML
     void handleClearTask(ActionEvent event) {
         startDatePicker.setValue(null);
@@ -104,6 +133,10 @@ public class TaskReportController implements Initializable{
         statusChoiceBox.setValue("wszystkie");
     }
 
+    /**
+     * Generuje raport zadań na podstawie wybranych kryteriów.
+     * @throws SQLException W przypadku błędów związanych z bazą danych
+     */
     @FXML
     public void generateTaskButton() throws SQLException {
 
@@ -143,6 +176,10 @@ public class TaskReportController implements Initializable{
         }
     }
 
+    /**
+     * Tworzy efekt drżenia dla podanego węzła, wizualnie wyróżniając go.
+     * @param node Węzeł, który ma być potrząsany
+     */
     private void shakeNode(Node node) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(50), node);
         node.setStyle("-fx-border-color: red; -fx-border-width: 2;");

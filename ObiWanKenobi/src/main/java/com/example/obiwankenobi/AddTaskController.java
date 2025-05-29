@@ -173,8 +173,6 @@ public class AddTaskController implements Initializable {
      *
      * @return true jeśli dane są poprawne, false w przeciwnym przypadku
      */
-
-
     public boolean validateInputData() {
         boolean isValid = true;
         StringBuilder errorMessage = new StringBuilder();
@@ -320,15 +318,6 @@ public class AddTaskController implements Initializable {
         }
     }
 
-
-    /**
-     * Wyświetla alert z określonym typem, tytułem i treścią.
-     *
-     * @param type typ alertu
-     * @param title tytuł alertu
-     * @param content treść alertu
-     */
-
     /**
      * Pobiera listę pracowników z bazy danych do wyświetlenia w ChoiceBox.
      *
@@ -381,5 +370,3 @@ public class AddTaskController implements Initializable {
     }
 
 }
-
-

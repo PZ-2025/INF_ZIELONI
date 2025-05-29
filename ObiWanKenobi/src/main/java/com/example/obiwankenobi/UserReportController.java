@@ -42,27 +42,47 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Kontroler odpowiedzialny za generowanie raportów użytkowników.
+ */
 public class UserReportController implements Initializable{
 
+    /** Przycisk zamykający okno raportu. */
     public Button closeButton;
+
+    /** Pole tekstowe do wpisania miasta. */
     @FXML
     private TextField cityField;
+
+    /** Pole wyboru działu użytkownika. */
     @FXML
     private ChoiceBox<String> departmentChoiceBox;
+
+    /** Pola tekstowe do określenia przedziału wynagrodzeń. */
     @FXML
     private TextField salaryMax;
     @FXML
     private TextField salaryMin;
+
+    /** Pola tekstowe do określenia liczby zadań użytkownika. */
     @FXML
     private TextField tasksMax;
     @FXML
     private TextField tasksMin;
 
+    /**
+     * Inicjalizuje kontroler, ładując listę dostępnych działów.
+     * @param location Lokalizacja zasobów
+     * @param resources Zasoby dla widoku
+     */
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
         loadDeps();
     }
 
+    /**
+     * Ładuje dostępne działy z bazy danych do pola wyboru.
+     */
     private void loadDeps() {
         try (Connection connection = DatabaseConnection.getConnection()) {
             String sql = "SELECT name FROM departments ORDER BY name";
@@ -85,11 +105,21 @@ public class UserReportController implements Initializable{
             e.printStackTrace();
         }
     }
+
+    /**
+     * Zamyka okno raportu.
+     * @param event Zdarzenie zamknięcia okna
+     */
     @FXML
     void reportClose(ActionEvent event) {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
     }
+
+    /**
+     * Czyści wszystkie pola formularza raportu.
+     * @param event Zdarzenie kliknięcia przycisku czyszczenia
+     */
     @FXML
     void handleClearTask(ActionEvent event) {
         cityField.clear();
@@ -100,6 +130,10 @@ public class UserReportController implements Initializable{
         salaryMin.clear();
     }
 
+    /**
+     * Generuje raport użytkowników na podstawie wybranych kryteriów.
+     * @throws SQLException W przypadku błędów bazy danych
+     */
     @FXML
     private void generateUsersButton() throws SQLException {
 
@@ -201,6 +235,10 @@ public class UserReportController implements Initializable{
         }
     }
 
+    /**
+     * Tworzy efekt drżenia dla podanego węzła, wizualnie wyróżniając go.
+     * @param node Węzeł do potrząśnięcia
+     */
     private void shakeNode(Node node) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(50), node);
         node.setStyle("-fx-border-color: red; -fx-border-width: 2;");
@@ -210,6 +248,5 @@ public class UserReportController implements Initializable{
         tt.setAutoReverse(true);
         tt.play();
     }
-
 
 }

@@ -130,6 +130,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Odświeża listę zadań użytkownika.
+     *
+     * @param event zdarzenie kliknięcia przycisku
+     */
     @FXML
     private void refreshTasks(ActionEvent event) {
         loadContent();

@@ -201,7 +201,7 @@ public class ManagerController {
                 });
 
                 // Przycisk zatwierdzania zadania
-                Button confirmBtn = new Button("Zatwierdź");
+                Button confirmBtn = new Button("Zakończ");
                 confirmBtn.setStyle("-fx-background-color: #27ae60; -fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold;");
                 confirmBtn.setPrefSize(110, 30);
 
@@ -228,15 +228,15 @@ public class ManagerController {
                         int rowsAffected = stmt1.executeUpdate();
 
                         if (rowsAffected > 0) {
-                            showInfoAlert("Zadanie zostało zatwierdzone.");
+                            showInfoAlert("Zadanie zostało zakończone.");
                             refreshTaskList();
                         } else {
-                            showErrorAlert("Nie udało się zatwierdzić zadania.");
+                            showErrorAlert("Nie udało się zakończyć zadania.");
                         }
 
                     } catch (SQLException ex) {
                         ex.printStackTrace();
-                        showErrorAlert("Błąd podczas zatwierdzania zadania.");
+                        showErrorAlert("Błąd podczas zakańczania zadania.");
                     }
                 });
 
@@ -355,14 +355,15 @@ public class ManagerController {
             tableView.getColumns().addAll(depCol, itemCol, amountCol);
             tableView.setItems(fetchWarehouseData());
 
-            tableView.setPrefHeight(400);
+            tableView.setPrefHeight(350);
             tableView.setPrefWidth(600);
             tableView.setStyle("-fx-background-color: white;");
 
             taskListContainer.getChildren().add(tableView);
 
             Button backBtn = new Button("Pokaż zadania");
-            backBtn.setStyle("-fx-background-color: #FFC849; -fx-text-fill: white;");
+            backBtn.setStyle("-fx-background-color: #FFC849; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 6;");
+            backBtn.setPrefSize(171, 41);
             backBtn.setOnAction(e -> {
                 addTaskBtn.setVisible(true);
                 StatusWareHauseBtn.setVisible(true);

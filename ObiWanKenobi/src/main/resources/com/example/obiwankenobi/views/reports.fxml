@@ -18,7 +18,7 @@
          <HBox>
             <children>
                <Label prefHeight="45.0" prefWidth="400.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #145a32;" text="Raporty" />
-               <Button fx:id="reportsClose" onAction="#reportsClose" mnemonicParsing="false" prefHeight="21.0" prefWidth="40.0" style="-fx-text-fill: #145a32; -fx-background-color: #f9f9f9; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 5;" text="X" />
+               <Button fx:id="reportsClose" mnemonicParsing="false" onAction="#reportsClose" prefHeight="21.0" prefWidth="40.0" style="-fx-text-fill: #145a32; -fx-background-color: #f9f9f9; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 5;" text="X" />
             </children>
          </HBox>
 
@@ -26,19 +26,19 @@
          <VBox alignment="CENTER" prefHeight="292.0" prefWidth="440.0" spacing="20">
             <HBox alignment="CENTER" spacing="10">
                <Label contentDisplay="CENTER" prefHeight="48.0" prefWidth="371.0" style="-fx-font-size: 16px; -fx-text-fill: #333;" text="Raport pracowników" />
-               <Button onAction="#userReportShow" prefHeight="35.0" prefWidth="75.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-font-size: 13;" text="Pobierz" />
+               <Button onAction="#userReportShow" prefHeight="35.0" prefWidth="80.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-font-size: 13;" text="Wybierz" />
             </HBox>
 
             <HBox alignment="CENTER" spacing="10">
                <Label prefHeight="59.0" prefWidth="371.0" style="-fx-font-size: 16px; -fx-text-fill: #333;" text="Raport zadań" />
-               <Button onAction="#taskReportShow" prefHeight="35.0" prefWidth="75.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-font-size: 13;" text="Pobierz" />
+               <Button onAction="#taskReportShow" prefHeight="35.0" prefWidth="80.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-font-size: 13;" text="Wybierz" />
             </HBox>
 
             <HBox alignment="CENTER" spacing="10">
                <Label prefHeight="48.0" prefWidth="370.0" style="-fx-font-size: 16px; -fx-text-fill: #333;" text="Raport magazynowy" />
-               <Button onAction="#warehouseReportShow" prefHeight="35.0" prefWidth="75.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-font-size: 13;" text="Pobierz" />
+               <Button onAction="#warehouseReportShow" prefHeight="35.0" prefWidth="80.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-font-size: 13;" text="Wybierz" />
             </HBox>
-            <Button fx:id="clearButton" onAction="#reportsClose" contentDisplay="CENTER" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;" text="Powrót" />
+            <Button fx:id="clearButton" contentDisplay="CENTER" onAction="#reportsClose" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;" text="Powrót" />
          </VBox>
       </VBox>
    </children>

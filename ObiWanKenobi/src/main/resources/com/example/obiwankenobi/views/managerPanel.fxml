@@ -31,7 +31,7 @@
                 <Button fx:id="addTaskBtn" onAction="#addTask" prefHeight="45" prefWidth="164.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8;" text="Dodaj Zadanie" />
 
                 <Button fx:id="StatusWareHauseBtn" onAction="#StatusWareHause" prefHeight="45" prefWidth="171.0" style="-fx-background-color: #FFC849; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 8;" text="Stan magazynu" />
-                <Button fx:id="logoutBtn" onAction="#logout" prefHeight="40" prefWidth="150" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 8;" text="Wyloguj" />
+                <Button fx:id="logoutBtn" onAction="#logout" prefHeight="45.0" prefWidth="150" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 8;" text="Wyloguj" />
             </children>
         </HBox>
 

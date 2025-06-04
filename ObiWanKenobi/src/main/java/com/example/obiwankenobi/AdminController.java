@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 /**
  * Kontroler widoku panelu administratora.
@@ -80,6 +82,8 @@ public class AdminController {
         loadUsers();
         enableEditing();
         addDeleteButtonToTable();
+
+        salaryColumn.setStyle("-fx-alignment: CENTER-RIGHT;");
     }
 
     /**
@@ -139,7 +143,30 @@ public class AdminController {
         emailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         cityColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         passColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        salaryColumn.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
+        salaryColumn.setCellFactory(column -> {
+            TextFieldTableCell<User, Float> cell = new TextFieldTableCell<>(new StringConverter<Float>() {
+                private final DecimalFormat df = new DecimalFormat("#0.00");
+
+                @Override
+                public String toString(Float value) {
+                    return value == null ? "" : df.format(value);
+                }
+
+                @Override
+                public Float fromString(String string) {
+                    try {
+                        if (string == null || string.trim().isEmpty()) {
+                            return 0.0f;
+                        }
+                        return Float.parseFloat(string);
+                    } catch (NumberFormatException e) {
+                        return 0.0f;
+                    }
+                }
+            });
+            cell.setStyle("-fx-alignment: CENTER-RIGHT;");
+            return cell;
+        });
         departmentColumn.setCellFactory(ComboBoxTableCell.forTableColumn(departments));
         roleColumn.setCellFactory(ComboBoxTableCell.forTableColumn(roles));
 

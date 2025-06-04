@@ -176,7 +176,7 @@ public class UserController {
 
                 Date taskDueDate = resultSet.getDate("deadline");
                 if (taskDueDate != null && taskDueDate.before(Date.valueOf(LocalDate.now()))) {
-                    taskMain.setStyle("-fx-background-color: #ff6189;");
+                    taskMain.setStyle("-fx-background-color: red;");
                 }
 
                 taskGrid.add(taskMain, 0, row++);

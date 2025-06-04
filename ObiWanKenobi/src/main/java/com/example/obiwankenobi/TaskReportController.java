@@ -171,8 +171,21 @@ public class TaskReportController implements Initializable{
 
         try {
             ReportGenerator.generateTask(taskStatus, startDate, endDate, priority, department, userId);
-        }catch (Exception e){
+
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+            alert.setTitle("Raport wygenerowany");
+            alert.setHeaderText(null);
+            alert.setContentText("Raport zadan zostal pomyslnie wygenerowany");
+            alert.showAndWait();
+
+        } catch (Exception e) {
             e.printStackTrace();
+
+            javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            errorAlert.setTitle("Blad generowania raportu");
+            errorAlert.setHeaderText("Nie udalo sie wygenerowac raportu");
+            errorAlert.setContentText("Wystapil blad: " + e.getMessage());
+            errorAlert.showAndWait();
         }
     }
 

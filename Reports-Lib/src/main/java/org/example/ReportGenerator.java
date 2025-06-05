@@ -31,7 +31,7 @@ public class ReportGenerator {
  * Generuje raport zadań w formacie PDF.
  *
  */
-        public static void generateTask(String status, LocalDate startDate, LocalDate endDate,
+        public static String generateTask(String status, LocalDate startDate, LocalDate endDate,
                                         String priority, String department, Integer userId) {
             LocalDateTime nowTitle = LocalDateTime.now();
             DateTimeFormatter formatterTitle = DateTimeFormatter.ofPattern("dd_MM_yyyy_HHmmss");
@@ -203,10 +203,15 @@ public class ReportGenerator {
                 document.add(signatureTable);
                 document.close();
 
-                System.out.println("Raport zostal wygenerowany: " + outputPath);
+                java.io.File file = new java.io.File(outputPath);
+                String fullPath = file.getAbsolutePath();
 
+                System.out.println("Raport magazynowy zostal wygenerowany: " + fullPath);
+
+                return fullPath;
             } catch (Exception e) {
                 e.printStackTrace();
+                return  null;
             }
         }
 
@@ -216,7 +221,7 @@ public class ReportGenerator {
      * Generuje raport uzytkowników w formacie PDF.
      *
      */
-        public static void generateUsers(String department, String city,
+        public static String generateUsers(String department, String city,
                                          Integer minSalary, Integer maxSalary,
                                          Integer minTasks, Integer maxTasks){
             LocalDateTime nowTitle = LocalDateTime.now();
@@ -321,10 +326,15 @@ public class ReportGenerator {
                 document.add(signatureTable);
                 document.close();
 
-                System.out.println("Raport zostal wygenerowany: " + outputPath);
+                java.io.File file = new java.io.File(outputPath);
+                String fullPath = file.getAbsolutePath();
 
+                System.out.println("Raport zostal wygenerowany: " + fullPath);
+
+                return fullPath;
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
         }
 
@@ -334,126 +344,141 @@ public class ReportGenerator {
      *
      */
 
-        public static void generateWarehouse(String department, String managerFullName,
-                                             Integer minQuantity, Integer maxQuantity){
-            LocalDateTime nowTitle = LocalDateTime.now();
-            DateTimeFormatter formatterTitle = DateTimeFormatter.ofPattern("dd_MM_yyyy_HHmmss");
-            String formattedDateTitle = nowTitle.format(formatterTitle);
+    /**
+     * Generuje raport stanu magazynowego w formacie PDF.
+     * @return ścieżka do wygenerowanego pliku PDF
+     */
+    /**
+     * Generuje raport stanu magazynowego w formacie PDF.
+     * @return ścieżka do wygenerowanego pliku PDF
+     */
+    public static String generateWarehouse(String department, String managerFullName,
+                                           Integer minQuantity, Integer maxQuantity){
+        LocalDateTime nowTitle = LocalDateTime.now();
+        DateTimeFormatter formatterTitle = DateTimeFormatter.ofPattern("dd_MM_yyyy_HHmmss");
+        String formattedDateTitle = nowTitle.format(formatterTitle);
 
-            String outputPath = "warehouseReport_" + formattedDateTitle + ".pdf";
+        String outputPath = "warehouseReport_" + formattedDateTitle + ".pdf";
 
-            StringBuilder sql = new StringBuilder("""
-                        SELECT 
-                            d.name AS department_name,
-                            u.first_name,
-                            u.last_name,
-                            i.name AS item_name,
-                            i.quantity
-                        FROM items i
-                        JOIN warehouses w ON i.warehouse_id = w.id
-                        JOIN departments d ON w.department_id = d.id
-                        JOIN users u ON d.manager_id = u.id
-                        WHERE 1=1
-                    """);
+        StringBuilder sql = new StringBuilder("""
+                SELECT 
+                    d.name AS department_name,
+                    u.first_name,
+                    u.last_name,
+                    i.name AS item_name,
+                    i.quantity
+                FROM items i
+                JOIN warehouses w ON i.warehouse_id = w.id
+                JOIN departments d ON w.department_id = d.id
+                JOIN users u ON d.manager_id = u.id
+                WHERE 1=1
+            """);
 
-            boolean hasDept = department != null && !department.equals("wszystkie");
-            boolean hasManager = managerFullName != null && !managerFullName.equals("wszyscy");
+        boolean hasDept = department != null && !department.equals("wszystkie");
+        boolean hasManager = managerFullName != null && !managerFullName.equals("wszyscy");
+
+        if (hasDept && hasManager) {
+            sql.append(" AND (d.name = ? OR CONCAT(u.first_name, ' ', u.last_name) = ?)");
+        } else {
+            if (hasDept) sql.append(" AND d.name = ?");
+            if (hasManager) sql.append(" AND CONCAT(u.first_name, ' ', u.last_name) = ?");
+        }
+
+        if (minQuantity != null) sql.append(" AND i.quantity >= ?");
+        if (maxQuantity != null) sql.append(" AND i.quantity <= ?");
+        sql.append(" ORDER BY d.name ASC");
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PdfWriter writer = new PdfWriter(outputPath);
+             PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+
+            int paramIndex = 1;
 
             if (hasDept && hasManager) {
-                sql.append(" AND (d.name = ? OR CONCAT(u.first_name, ' ', u.last_name) = ?)");
+                stmt.setString(paramIndex++, department);
+                stmt.setString(paramIndex++, managerFullName);
             } else {
-                if (hasDept) sql.append(" AND d.name = ?");
-                if (hasManager) sql.append(" AND CONCAT(u.first_name, ' ', u.last_name) = ?");
+                if (hasDept) stmt.setString(paramIndex++, department);
+                if (hasManager) stmt.setString(paramIndex++, managerFullName);
             }
 
-            if (minQuantity != null) sql.append(" AND i.quantity >= ?");
-            if (maxQuantity != null) sql.append(" AND i.quantity <= ?");
-            sql.append(" ORDER BY d.name ASC");
+            if (minQuantity != null) stmt.setInt(paramIndex++, minQuantity);
+            if (maxQuantity != null) stmt.setInt(paramIndex++, maxQuantity);
 
+            ResultSet rs = stmt.executeQuery();
 
-            try (Connection connection = DatabaseConnection.getConnection();
-                 PdfWriter writer = new PdfWriter(outputPath);
-                 PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+            Document document = new Document(new PdfDocument(writer), PageSize.A4);
+            document.setMargins(50, 30, 50, 30);
 
-                int paramIndex = 1;
+            document.add(new Paragraph("Raport magazynowy").setBold().setFontSize(18));
+            document.add(new Paragraph("\n"));
 
-                if (hasDept && hasManager) {
-                    stmt.setString(paramIndex++, department);
-                    stmt.setString(paramIndex++, managerFullName);
-                } else {
-                    if (hasDept) stmt.setString(paramIndex++, department);
-                    if (hasManager) stmt.setString(paramIndex++, managerFullName);
-                }
+            Table table = new Table(UnitValue.createPercentArray(new float[]{3, 2, 3, 2}))
+                    .setWidth(UnitValue.createPercentValue(100));
 
-                if (minQuantity != null) stmt.setInt(paramIndex++, minQuantity);
-                if (maxQuantity != null) stmt.setInt(paramIndex++, maxQuantity);
+            table.addHeaderCell(new Cell().add(new Paragraph("Dzial")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+            table.addHeaderCell(new Cell().add(new Paragraph("Kierownik")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+            table.addHeaderCell(new Cell().add(new Paragraph("Produkt")).setBold().setBackgroundColor(HEADER_BACKGROUND));
+            table.addHeaderCell(new Cell().add(new Paragraph("Ilosc")).setBold().setBackgroundColor(HEADER_BACKGROUND));
 
+            int countRows = 0;
 
-                ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                String deptName = rs.getString("department_name");
+                String manager = rs.getString("first_name") + " " + rs.getString("last_name");
+                String item = rs.getString("item_name");
+                int qty = rs.getInt("quantity");
+                countRows++;
 
-                Document document = new Document(new PdfDocument(writer), PageSize.A4);
-                document.setMargins(50, 30, 50, 30);
-
-                document.add(new Paragraph("Raport magazynowy").setBold().setFontSize(18));
-                document.add(new Paragraph("\n"));
-
-                Table table = new Table(UnitValue.createPercentArray(new float[]{3, 2, 3, 2}))
-                        .setWidth(UnitValue.createPercentValue(100));
-
-                table.addHeaderCell(new Cell().add(new Paragraph("Dzial")).setBold().setBackgroundColor(HEADER_BACKGROUND));
-                table.addHeaderCell(new Cell().add(new Paragraph("Kierownik")).setBold().setBackgroundColor(HEADER_BACKGROUND));
-                table.addHeaderCell(new Cell().add(new Paragraph("Produkt")).setBold().setBackgroundColor(HEADER_BACKGROUND));
-                table.addHeaderCell(new Cell().add(new Paragraph("Ilosc")).setBold().setBackgroundColor(HEADER_BACKGROUND));
-
-                int countRows = 0;
-
-                while (rs.next()) {
-                    String deptName = rs.getString("department_name");
-                    String manager = rs.getString("first_name") + " " + rs.getString("last_name");
-                    String item = rs.getString("item_name");
-                    int qty = rs.getInt("quantity");
-                    countRows++;
-
-                    table.addCell(deptName);
-                    table.addCell(manager);
-                    table.addCell(item);
-                    table.addCell(String.valueOf(qty));
-                }
-
-                document.add(table);
-                document.add(new Paragraph("\n"));
-
-                document.add(new Paragraph("Podsumowanie:\n").setBold());
-                document.add(new Paragraph("Znaleziono: " + countRows + " rekordow"));
-
-                document.add(new Paragraph("\n\n"));
-
-                Table signatureTable = new Table(UnitValue.createPercentArray(new float[]{2, 1, 2}))
-                        .setWidth(UnitValue.createPercentValue(100));
-
-                String formattedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
-                Cell footer = new Cell()
-                        .add(new Paragraph("Raport zostal wygenerowany automatycznie dnia: " + formattedDate))
-                        .setBold().setBorder(Border.NO_BORDER);
-                Cell empty = new Cell().setBorder(Border.NO_BORDER);
-                Cell signature = new Cell()
-                        .add(new Paragraph("________________________________"))
-                        .add(new Paragraph("podpis osoby odbierajacej"))
-                        .setBorder(Border.NO_BORDER)
-                        .setTextAlignment(TextAlignment.CENTER);
-
-                signatureTable.addCell(footer);
-                signatureTable.addCell(empty);
-                signatureTable.addCell(signature);
-
-                document.add(signatureTable);
-                document.close();
-
-                System.out.println("Raport magazynowy zostal wygenerowany: " + outputPath);
-
-            } catch (Exception e) {
-                e.printStackTrace();
+                table.addCell(deptName);
+                table.addCell(manager);
+                table.addCell(item);
+                table.addCell(String.valueOf(qty));
             }
+
+            document.add(table);
+            document.add(new Paragraph("\n"));
+
+            document.add(new Paragraph("Podsumowanie:\n").setBold());
+            document.add(new Paragraph("Znaleziono: " + countRows + " rekordow"));
+
+            document.add(new Paragraph("\n\n"));
+
+            Table signatureTable = new Table(UnitValue.createPercentArray(new float[]{2, 1, 2}))
+                    .setWidth(UnitValue.createPercentValue(100));
+
+            String formattedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+            Cell footer = new Cell()
+                    .add(new Paragraph("Raport zostal wygenerowany automatycznie dnia: " + formattedDate))
+                    .setBold().setBorder(Border.NO_BORDER);
+            Cell empty = new Cell().setBorder(Border.NO_BORDER);
+            Cell signature = new Cell()
+                    .add(new Paragraph("________________________________"))
+                    .add(new Paragraph("podpis osoby odbierajacej"))
+                    .setBorder(Border.NO_BORDER)
+                    .setTextAlignment(TextAlignment.CENTER);
+
+            signatureTable.addCell(footer);
+            signatureTable.addCell(empty);
+            signatureTable.addCell(signature);
+
+            document.add(signatureTable);
+            document.close();
+
+
+            java.io.File file = new java.io.File(outputPath);
+            String fullPath = file.getAbsolutePath();
+
+            System.out.println("Raport magazynowy zostal wygenerowany: " + fullPath);
+
+
+            return fullPath;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return null;
         }
+    }
 
 }

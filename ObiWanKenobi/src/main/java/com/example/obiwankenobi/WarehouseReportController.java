@@ -135,8 +135,14 @@ public class WarehouseReportController implements Initializable {
      * Generuje raport magazynowy na podstawie wybranych filtrów.
      * @throws SQLException W przypadku błędów bazy danych
      */
+    /**
+     * Generuje raport magazynowy na podstawie wybranych filtrów.
+     * @throws SQLException W przypadku błędów bazy danych
+     */
     @FXML
     public void generateWarehouseButton() throws SQLException {
+
+
         String selectedDepartment = categoryChoiceBox.getValue();
         String selectedManager = menagerChoiceBox.getValue();
         String minQtyText = minQuantityField.getText();
@@ -191,21 +197,28 @@ public class WarehouseReportController implements Initializable {
         }
 
         try {
-            ReportGenerator.generateWarehouse(selectedDepartment, selectedManager, minQty, maxQty);
+
+            String reportPath = ReportGenerator.generateWarehouse(selectedDepartment, selectedManager, minQty, maxQty);
 
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
             alert.setTitle("Raport wygenerowany");
             alert.setHeaderText(null);
-            alert.setContentText("Raport magazynowy zostal pomyslnie wygenerowany");
-            alert.showAndWait();
 
+
+            String message = "Raport magazynowy został pomyślnie wygenerowany";
+            if (reportPath != null && !reportPath.isEmpty()) {
+                message += "\n\nŚcieżka zapisu: " + reportPath;
+            }
+
+            alert.setContentText(message);
+            alert.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
 
             javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            errorAlert.setTitle("Blad generowania raportu");
-            errorAlert.setHeaderText("Nie udalo sie wygenerowac raportu");
-            errorAlert.setContentText("Wystapil blad: " + e.getMessage());
+            errorAlert.setTitle("Błąd generowania raportu");
+            errorAlert.setHeaderText("Nie udało się wygenerować raportu");
+            errorAlert.setContentText("Wystąpił błąd: " + e.getMessage());
             errorAlert.showAndWait();
         }
     }

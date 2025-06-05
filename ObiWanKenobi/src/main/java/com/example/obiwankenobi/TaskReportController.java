@@ -170,14 +170,21 @@ public class TaskReportController implements Initializable{
         }
 
         try {
-            ReportGenerator.generateTask(taskStatus, startDate, endDate, priority, department, userId);
+
+            String reportPath = ReportGenerator.generateTask(taskStatus, startDate, endDate, priority, department, userId);
+
 
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
             alert.setTitle("Raport wygenerowany");
             alert.setHeaderText(null);
-            alert.setContentText("Raport zadan zostal pomyslnie wygenerowany");
-            alert.showAndWait();
 
+            String message = "Raport magazynowy został pomyślnie wygenerowany";
+            if (reportPath != null && !reportPath.isEmpty()) {
+                message += "\n\nŚcieżka zapisu: " + reportPath;
+            }
+
+            alert.setContentText(message);
+            alert.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
 

@@ -229,14 +229,20 @@ public class UserReportController implements Initializable{
         }
 
         try {
-            ReportGenerator.generateUsers(selectedDepartment, city, minSalary, maxSalary, minTasks, maxTasks);
+            String reportPath = ReportGenerator.generateUsers(selectedDepartment, city, minSalary, maxSalary, minTasks, maxTasks);
 
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
             alert.setTitle("Raport wygenerowany");
             alert.setHeaderText(null);
-            alert.setContentText("Raport uzytkowników zostal pomyslnie wygenerowany");
-            alert.showAndWait();
 
+
+            String message = "Raport magazynowy został pomyślnie wygenerowany";
+            if (reportPath != null && !reportPath.isEmpty()) {
+                message += "\n\nŚcieżka zapisu: " + reportPath;
+            }
+
+            alert.setContentText(message);
+            alert.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
 

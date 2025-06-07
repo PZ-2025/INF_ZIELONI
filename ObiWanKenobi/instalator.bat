@@ -3,6 +3,15 @@ echo ================================================
 echo    Tworzenie instalatora ObiWanKenobi
 echo ================================================
 
+echo.
+echo Krok 0: Budowanie projektu Maven...
+
+REM Uruchom mvn clean
+call mvn clean
+
+REM Uruchom mvn package z pominięciem testów
+call mvn package -DskipTests
+
 REM Sprawdź czy istnieje target directory
 if not exist "target" (
     echo BŁĄD: Brak folderu target! Uruchom najpierw: mvn clean package
@@ -26,6 +35,8 @@ if exist "myruntime" (
 echo.
 echo Krok 1: Tworzenie custom runtime...
 echo Używane moduły: java.base,java.desktop,java.logging,java.prefs,java.xml,java.sql,java.naming,java.transaction.xa,java.management,java.security.jgss,javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web
+
+
 
 REM Sprawdź czy istnieje JDK
 if not exist "C:\Program Files\Java\jdk-23\jmods" (
@@ -53,6 +64,18 @@ if not exist "myruntime" (
     pause
     exit /b 1
 )
+
+echo.
+echo Krok 1.1: Kopiowanie plików SQL do runtime...
+
+REM Kopiujemy pliki
+copy data.sql myruntime\
+copy Db.sql myruntime\
+copy start_mysql.bat myruntime\
+copy stop_mysql.bat myruntime\
+
+echo Skrypty SQL zostały skopiowane.
+
 
 echo Runtime utworzony pomyślnie!
 

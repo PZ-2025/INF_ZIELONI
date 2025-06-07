@@ -9,7 +9,7 @@ echo Krok 0: Budowanie projektu Maven...
 REM Uruchom mvn clean
 call mvn clean
 
-REM Uruchom mvn package z pominięciem testów
+REM Uruchom mvn package
 call mvn package -DskipTests
 
 REM Sprawdź czy istnieje target directory
